@@ -45,7 +45,7 @@ export default function HomePage() {
 
       <section className="brand-hero" id="inicio">
         <div className="brand-hero-copy">
-          <p className="brand-eyebrow">Conteúdo estratégico. Decisões já tomadas.</p>
+          <p className="brand-eyebrow">Menos tempo a criar. Mais tempo para trabalhar.</p>
           <h1>A forma mais simples de manter a sua comunicação ativa, mesmo quando a sua agenda está cheia.</h1>
           <p className="brand-lead">Conteúdo estratégico preparado para profissionais que preferem trabalhar com clientes em vez de passar horas a pensar no que publicar.</p>
           <div className="brand-actions">
@@ -54,8 +54,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="brand-hero-mark" aria-hidden="true">
-          <div className="brand-mark-halo" />
-          <img src="/aa-monogram-official.png" alt="" />
+          <img src="/aa-monogram-official.svg" alt="" />
           <p>Hoje já está tratado.</p>
         </div>
       </section>
@@ -72,7 +71,7 @@ export default function HomePage() {
         </div>
         <div className="aa-library-card" aria-label="Biblioteca de edições especializadas">
           <div className="aa-library-top"><span>AGENDA ATIVA<sup>™</sup></span><small>Biblioteca Editorial</small></div>
-          <div className="aa-library-monogram"><img src="/aa-monogram-official.png" alt="" /></div>
+          <div className="aa-library-monogram"><img src="/aa-monogram-official.svg" alt="" /></div>
           <div className="aa-library-editions">
             <p><span>01</span> Wedding Edition</p>
             <p><span>02</span> Estética Edition</p>
@@ -163,7 +162,7 @@ export default function HomePage() {
 
       <section className="aa-professionals">
         <div className="brand-shell">
-          <div className="aa-section-heading"><p className="brand-kicker">08 — Para quem</p><h2>Criada para profissionais ocupados.</h2></div>
+          <div className="aa-section-heading"><p className="brand-kicker">08 — Para quem</p><h2>Para profissionais cuja agenda vem primeiro.</h2></div>
           <div className="aa-professional-list">
             {professionals.map((professional, index) => <p key={professional}><span>0{index + 1}</span>{professional}</p>)}
           </div>
@@ -178,7 +177,7 @@ export default function HomePage() {
       </section>
 
       <section className="brand-final">
-        <img src="/aa-monogram-official.png" alt="" />
+        <img src="/aa-monogram-official.svg" alt="" />
         <p className="aa-final-wordmark">AGENDA ATIVA<sup>™</sup></p>
         <p className="brand-signature">Hoje já está tratado.</p>
         <h2>Menos tempo a criar conteúdo.<br />Mais tempo para trabalhar.</h2>
@@ -186,7 +185,7 @@ export default function HomePage() {
       </section>
 
       <footer className="brand-footer">
-        <a className="brand-wordmark" href="#inicio">AGENDA ATIVA<sup>™</sup></a><p>Conteúdo estratégico para agendas reais.</p><p>© 2026 Agenda Ativa™</p>
+        <a className="brand-wordmark" href="#inicio">AGENDA ATIVA<sup>™</sup></a><p className="brand-footer-signature">Hoje já está tratado.</p><p>© 2026 Agenda Ativa™</p>
       </footer>
     </main>
   );
