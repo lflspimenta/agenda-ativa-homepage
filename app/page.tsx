@@ -13,7 +13,7 @@ const benefits = [
   "Legendas preparadas",
   "CTA incluída",
   "Estratégia definida",
-  "Menos de 5 minutos por dia",
+  "Menos de 1 minuto por dia",
   "Acesso imediato"
 ];
 
@@ -27,7 +27,7 @@ const professionals = [
 
 const faqs = [
   ["O que é a Agenda Ativa™?", "É uma biblioteca de edições especializadas com 30 dias de conteúdo estratégico, preparado para adaptar e publicar."],
-  ["Preciso de usar IA ou escrever prompts?", "Não. Todo o conteúdo chega preparado. Não existem prompts, configurações ou folhas em branco."],
+  ["O que preciso de fazer para começar?", "Nada. O conteúdo já sai escrito e pronto."],
   ["Como recebo o acesso?", "O acesso à edição disponível é enviado imediatamente após a confirmação da compra."],
   ["Posso adaptar o conteúdo à minha marca?", "Sim. A estrutura, a legenda e a estratégia estão definidas, mas pode ajustar o tom e usar as suas próprias imagens."],
   ["Vão existir novas edições?", "Sim. A Agenda Ativa™ continuará a crescer com edições dedicadas a diferentes áreas profissionais."]
@@ -93,7 +93,7 @@ export default function HomePage() {
           <div className="aa-promise-lines">
             <p>Não vendemos IA.</p>
             <p>Não vendemos prompts.</p>
-            <p>Não vendemos calendários editoriais.</p>
+            <p>Vendemos legendas já escritas.</p>
           </div>
           <p className="aa-promise-bridge">Vendemos algo muito mais simples:</p>
           <h2>Hoje já está tratado.</h2>
@@ -114,7 +114,7 @@ export default function HomePage() {
                 <div className="aa-step-cards">
                   <article><span>01</span><h3>Escolha a sua edição.</h3></article>
                   <article><span>02</span><h3>Receba acesso imediato.</h3></article>
-                  <article><span>03</span><h3>Copie.<br />Adapte.<br />Publique.</h3></article>
+                  <article><span>03</span><h3>Abres.<br />Copias.<br />Colas.<br />Publicas.</h3></article>
                 </div>
               </div>
             </details>
@@ -148,14 +148,19 @@ export default function HomePage() {
                 <div className="aa-inside-copy">
                   <h2>Abre e encontra o dia resolvido.</h2>
                   <p>Sem menus desnecessários. Apenas o conteúdo que precisa, preparado para usar.</p>
-                  <p className="aa-inside-note">Menos de cinco minutos entre abrir e publicar.</p>
+                  <p className="aa-inside-note">Menos de 1 minuto entre abrir e publicar.</p>
                 </div>
                 <div className="aa-product-mockup">
                   <div className="aa-mockup-brand"><span>AGENDA ATIVA<sup>™</sup></span><small>Wedding Edition</small></div>
                   <p className="aa-mockup-status">Hoje já está tratado.</p>
-                  <small className="aa-mockup-day">DIA 12 — CONTEÚDO DE HOJE</small>
-                  <h3>3 erros que os noivos cometem ao escolher o venue.</h3>
-                  <ul><li>Conteúdo preparado</li><li>Legenda pronta</li><li>CTA incluída</li></ul>
+                  <small className="aa-mockup-day">DIA 1 — CONTEÚDO DE HOJE</small>
+                  <h3>Como escolher o fotógrafo ideal para o seu casamento sem arrependimentos.</h3>
+                  <div className="aa-mockup-caption">
+                    <p>Escolher o fotógrafo do casamento não é apenas escolher imagens bonitas. É escolher a pessoa que vai guardar a memória de um dos dias mais importantes da sua vida.</p>
+                    <p>Antes de decidir, veja portefólios completos, confirme se o estilo combina convosco e perceba como o profissional conduz os momentos mais delicados do dia.</p>
+                    <p>A melhor escolha é aquela que vos deixa tranquilos antes, durante e depois do casamento.</p>
+                  </div>
+                  <p className="aa-mockup-cta"><strong>CTA:</strong> Guarde este post para quando começar a procurar fornecedores.</p>
                   <button type="button">Copiar conteúdo</button>
                 </div>
               </div>

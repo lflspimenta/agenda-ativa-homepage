@@ -2,6 +2,18 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/") {
+    return NextResponse.rewrite(
+      new URL("/agenda-ativa-homepage-final.html", request.url)
+    );
+  }
+
+  if (request.nextUrl.pathname === "/wedding") {
+    return NextResponse.rewrite(
+      new URL("/agenda-wedding-final.html", request.url)
+    );
+  }
+
   const response = NextResponse.next({
     request: {
       headers: request.headers
@@ -43,5 +55,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/agenda/:path*"]
+  matcher: ["/", "/wedding", "/agenda/:path*"]
 };
