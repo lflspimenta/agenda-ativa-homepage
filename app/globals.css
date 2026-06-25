@@ -1464,13 +1464,13 @@ html{scroll-behavior:smooth}
 .brand-nav-cta{justify-self:end;border-bottom:1px solid var(--bronze);padding:8px 0;color:var(--bronze)!important;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
 .brand-hero{
   width:min(1320px,calc(100% - 64px));
-  min-height:760px;
+  min-height:700px;
   margin:0 auto;
   display:grid;
-  grid-template-columns:minmax(0,1.22fr) minmax(360px,.78fr);
-  gap:70px;
+  grid-template-columns:minmax(0,1.3fr) minmax(330px,.7fr);
+  gap:64px;
   align-items:center;
-  padding:90px 0 110px;
+  padding:78px 0 92px;
 }
 .brand-eyebrow,.brand-kicker,.brand-section-number{
   color:var(--bronze);
@@ -1480,13 +1480,13 @@ html{scroll-behavior:smooth}
   text-transform:uppercase;
 }
 .brand-hero h1{
-  max-width:790px;
+  max-width:760px;
   margin:25px 0 28px;
   font-family:var(--font-cormorant),serif;
-  font-size:clamp(62px,6.5vw,96px);
-  line-height:.92;
+  font-size:clamp(56px,5.65vw,82px);
+  line-height:.98;
   font-weight:400;
-  letter-spacing:-.025em;
+  letter-spacing:-.018em;
 }
 .brand-lead{max-width:620px;color:#5d5854;font-size:17px;line-height:1.75}
 .brand-actions{display:flex;align-items:center;gap:26px;margin-top:42px}
@@ -1580,7 +1580,7 @@ html{scroll-behavior:smooth}
 @media(max-width:900px){
   .brand-shell,.brand-nav,.brand-hero{width:min(100% - 40px,700px)}
   .brand-nav{grid-template-columns:1fr auto}.brand-nav-links{display:none}
-  .brand-hero{grid-template-columns:1fr;min-height:auto;padding:80px 0}.brand-hero-mark{min-height:410px}
+  .brand-hero{grid-template-columns:1fr;min-height:auto;padding:70px 0 76px}.brand-hero-mark{min-height:360px}
   .brand-intro,.brand-problem-grid,.brand-not-content,.brand-receive,.brand-editions-heading,.brand-experience,.brand-for-who-grid,.brand-difference-grid,.brand-faq{grid-template-columns:1fr;gap:50px}
   .brand-intro,.brand-not-content,.brand-receive,.brand-experience,.brand-difference,.brand-faq{padding:100px 0}
   .brand-process,.brand-editions,.brand-for-who,.brand-problem{padding:100px 0}
@@ -1591,14 +1591,125 @@ html{scroll-behavior:smooth}
 @media(max-width:560px){
   .brand-shell,.brand-nav,.brand-hero{width:calc(100% - 32px)}
   .brand-nav{height:76px}.brand-wordmark{font-size:20px}.brand-nav-cta{font-size:8px}
-  .brand-hero{padding:60px 0 75px;gap:30px}.brand-hero h1{font-size:51px}.brand-lead{font-size:15px}.brand-actions{align-items:stretch;flex-direction:column}.brand-button-text{align-self:flex-start}
-  .brand-hero-mark{min-height:330px}.brand-hero-mark img{width:175px}.brand-hero-mark p{bottom:42px;font-size:23px}
+  .brand-hero{padding:48px 0 56px;gap:20px}.brand-hero h1{max-width:350px;font-size:39px;line-height:1.04;letter-spacing:-.008em}.brand-lead{font-size:14px;line-height:1.7}.brand-actions{align-items:stretch;flex-direction:column}.brand-button-text{align-self:flex-start}
+  .brand-hero-mark{min-height:235px}.brand-hero-mark img{width:145px}.brand-hero-mark p{bottom:20px;font-size:21px}
   .brand-intro h2,.brand-problem h2,.brand-process h2,.brand-receive h2,.brand-editions h2,.brand-experience h2,.brand-for-who h2,.brand-difference h2,.brand-faq h2,.brand-final h2{font-size:44px}
   .brand-intro,.brand-not-content,.brand-receive,.brand-experience,.brand-difference,.brand-faq{padding:78px 0}.brand-process,.brand-editions,.brand-for-who,.brand-problem{padding:78px 0}
   .brand-intro{gap:35px}.brand-problem-grid{gap:35px}.brand-pullquote{margin-top:40px;font-size:29px}.brand-not-content{gap:55px}.brand-value h2{font-size:43px}
   .brand-edition-grid{grid-template-columns:1fr}.brand-edition-card{min-height:320px}.brand-edition-card h3{margin-top:65px}
   .brand-experience{gap:65px}.brand-for-who-grid{gap:35px}.brand-difference-grid{margin-bottom:55px}.brand-manifesto{grid-template-columns:1fr}.brand-manifesto p,.brand-manifesto p+p{padding:20px 0;border-right:0;border-bottom:1px solid var(--line)}
   .brand-faq{gap:45px}.brand-faq-list summary{font-size:21px}.brand-final{padding:90px 20px}.brand-final h2{font-size:45px}
+}
+
+/* Revisão editorial: hierarquia mais contida abaixo do Hero */
+.aa-about{gap:80px;padding:108px 0}
+.aa-about h2,
+.aa-problem h2,
+.aa-section-heading h2,
+.aa-inside h2,
+.aa-professionals h2{
+  font-size:clamp(46px,4.3vw,58px);
+  line-height:1.02;
+}
+.aa-about h2{margin:20px 0 26px}
+.aa-about-copy>p:not(.brand-kicker){margin-top:16px;font-size:16px;line-height:1.72}
+.aa-short-list{margin-top:30px}
+.aa-short-list span{padding:13px 0;font-size:19px}
+.aa-library-card{min-height:480px;padding:30px}
+.aa-library-monogram{height:210px}
+.aa-library-monogram:before{width:180px;height:180px}
+.aa-library-monogram img{width:115px}
+.aa-library-editions p{padding:10px 0;font-size:17px}
+.aa-library-signature{margin-top:18px;font-size:19px}
+
+.aa-problem{padding:115px 0}
+.aa-problem .brand-kicker{margin-bottom:34px}
+.aa-problem h2{max-width:900px;font-size:clamp(50px,5.2vw,68px)}
+.aa-problem .brand-shell>p:last-child{margin:24px 0 0 30%;font-size:clamp(29px,3vw,40px)}
+
+.aa-promise{padding:112px 0}
+.aa-promise-lines{margin-top:42px}
+.aa-promise-lines p{padding:15px 0;font-size:clamp(27px,2.8vw,38px)}
+.aa-promise-bridge{margin:70px 0 16px}
+.aa-promise h2{font-size:clamp(76px,10vw,150px)}
+
+.aa-how{padding:108px 0}
+.aa-section-heading h2{margin-top:18px}
+.aa-step-cards{gap:14px;margin-top:50px}
+.aa-step-cards article{min-height:250px;padding:25px}
+.aa-step-cards h3{font-size:32px}
+
+.aa-benefits{padding:108px 0}
+.aa-benefit-grid{margin-top:48px}
+.aa-benefit-grid article{min-height:170px;padding:24px}
+.aa-benefit-grid small{top:25px;right:24px;font-size:15px}
+.aa-benefit-grid h3{font-size:25px}
+
+.aa-editions{padding:108px 0}
+.aa-edition-list{margin-top:48px}
+.aa-edition-list article{grid-template-columns:62px 1fr 120px 140px;min-height:88px}
+.aa-edition-list h3{font-size:29px}
+.aa-edition-list a{padding:10px 0}
+
+.aa-inside{grid-template-columns:1fr 430px;gap:82px;padding:112px 0}
+.aa-inside h2{margin:18px 0 24px}
+.aa-inside-note{margin-top:28px!important;padding-top:16px;font-size:22px!important}
+.aa-product-mockup{padding:32px}
+.aa-mockup-status{margin:25px 0 28px;font-size:22px}
+.aa-product-mockup h3{margin:12px 0 22px;font-size:31px}
+.aa-product-mockup ul{gap:9px;padding:18px 0}
+
+.aa-professionals{padding:105px 0}
+.aa-professional-list{margin-top:48px}
+.aa-professional-list p{grid-template-columns:82px 1fr;padding:14px 0;font-size:clamp(27px,3vw,36px)}
+
+.brand-faq{gap:72px;padding:96px 0}
+.brand-faq h2{font-size:56px}
+.brand-faq-list summary{padding:19px 0;font-size:21px}
+.brand-faq-list details p{padding-bottom:20px}
+.brand-final{padding:96px 24px}
+.brand-final h2{font-size:58px;margin-bottom:36px}
+
+@media(max-width:900px){
+  .aa-about{gap:55px;padding:82px 0}
+  .aa-problem,.aa-promise,.aa-how,.aa-benefits,.aa-editions,.aa-inside,.aa-professionals{padding-top:82px;padding-bottom:82px}
+  .aa-step-cards article{min-height:190px}
+  .aa-inside{grid-template-columns:1fr;gap:55px}
+  .brand-faq{padding:78px 0}
+}
+
+@media(max-width:560px){
+  .aa-about h2,
+  .aa-problem h2,
+  .aa-section-heading h2,
+  .aa-inside h2,
+  .aa-professionals h2,
+  .brand-faq h2{
+    font-size:36px;
+    line-height:1.04;
+  }
+  .aa-about,.aa-problem,.aa-promise,.aa-how,.aa-benefits,.aa-editions,.aa-inside,.aa-professionals{padding-top:62px;padding-bottom:62px}
+  .aa-library-card{min-height:440px}
+  .aa-problem h2{font-size:38px}
+  .aa-problem .brand-shell>p:last-child{font-size:27px}
+  .aa-promise-lines p{font-size:25px}
+  .aa-promise-bridge{margin-top:52px}
+  .aa-promise h2{font-size:64px}
+  .aa-step-cards,.aa-benefit-grid,.aa-edition-list,.aa-professional-list{margin-top:36px}
+  .aa-step-cards article{min-height:165px}
+  .aa-step-cards h3{font-size:29px}
+  .aa-benefit-grid article{min-height:145px}
+  .aa-benefit-grid h3{font-size:24px}
+  .aa-edition-list article{min-height:auto;padding:19px 0}
+  .aa-edition-list article:hover{padding:19px 10px}
+  .aa-edition-list h3{font-size:27px}
+  .aa-product-mockup{padding:25px 21px}
+  .aa-product-mockup h3{font-size:28px}
+  .aa-professional-list p{grid-template-columns:46px 1fr;padding:11px 0;font-size:27px}
+  .brand-faq{gap:34px;padding:62px 0}
+  .brand-faq-list summary{font-size:19px}
+  .brand-final{padding:72px 20px}
+  .brand-final h2{font-size:38px}
 }
 
 /* Homepage — secções editoriais abaixo do hero */
@@ -1744,5 +1855,49 @@ html{scroll-behavior:smooth}
   .aa-edition-list h3{font-size:29px}.aa-edition-list small{grid-column:2}.aa-edition-list a,.aa-edition-list article>p{grid-column:2;margin-top:12px}
   .aa-inside{gap:55px}.aa-product-mockup{padding:28px 24px}.aa-product-mockup h3{font-size:31px}
   .aa-professional-list p{grid-template-columns:50px 1fr;font-size:30px}
+}
+
+/* Direção editorial final — manter esta camada por último */
+.aa-about{gap:80px;padding:108px 0}
+.aa-about h2,.aa-problem h2,.aa-section-heading h2,.aa-inside h2,.aa-professionals h2{font-size:clamp(46px,4.3vw,58px);line-height:1.02}
+.aa-about h2{margin:20px 0 26px}
+.aa-about-copy>p:not(.brand-kicker){margin-top:16px;font-size:16px;line-height:1.72}
+.aa-short-list{margin-top:30px}.aa-short-list span{padding:13px 0;font-size:19px}
+.aa-library-card{min-height:480px;padding:30px}.aa-library-monogram{height:210px}.aa-library-monogram:before{width:180px;height:180px}.aa-library-monogram img{width:115px}
+.aa-library-editions p{padding:10px 0;font-size:17px}.aa-library-signature{margin-top:18px;font-size:19px}
+.aa-problem{padding:115px 0}.aa-problem .brand-kicker{margin-bottom:34px}.aa-problem h2{max-width:900px;font-size:clamp(50px,5.2vw,68px)}
+.aa-problem .brand-shell>p:last-child{margin:24px 0 0 30%;font-size:clamp(29px,3vw,40px)}
+.aa-promise{padding:112px 0}.aa-promise-lines{margin-top:42px}.aa-promise-lines p{padding:15px 0;font-size:clamp(27px,2.8vw,38px)}.aa-promise-bridge{margin:70px 0 16px}
+.aa-promise h2{font-size:clamp(76px,10vw,150px)}
+.aa-how{padding:108px 0}.aa-section-heading h2{margin-top:18px}.aa-step-cards{gap:14px;margin-top:50px}.aa-step-cards article{min-height:250px;padding:25px}.aa-step-cards h3{font-size:32px}
+.aa-benefits{padding:108px 0}.aa-benefit-grid{margin-top:48px}.aa-benefit-grid article{min-height:170px;padding:24px}.aa-benefit-grid small{top:25px;right:24px;font-size:15px}.aa-benefit-grid h3{font-size:25px}
+.aa-editions{padding:108px 0}.aa-edition-list{margin-top:48px}.aa-edition-list article{grid-template-columns:62px 1fr 120px 140px;min-height:88px}.aa-edition-list h3{font-size:29px}.aa-edition-list a{padding:10px 0}
+.aa-inside{grid-template-columns:1fr 430px;gap:82px;padding:112px 0}.aa-inside h2{margin:18px 0 24px}.aa-inside-note{margin-top:28px!important;padding-top:16px;font-size:22px!important}
+.aa-product-mockup{padding:32px}.aa-mockup-status{margin:25px 0 28px;font-size:22px}.aa-product-mockup h3{margin:12px 0 22px;font-size:31px}.aa-product-mockup ul{gap:9px;padding:18px 0}
+.aa-professionals{padding:105px 0}.aa-professional-list{margin-top:48px}.aa-professional-list p{grid-template-columns:82px 1fr;padding:14px 0;font-size:clamp(27px,3vw,36px)}
+.brand-faq{gap:72px;padding:96px 0}.brand-faq h2{font-size:56px}.brand-faq-list summary{padding:19px 0;font-size:21px}.brand-faq-list details p{padding-bottom:20px}
+.brand-final{padding:96px 24px}.brand-final h2{font-size:58px;margin-bottom:36px}
+
+@media(max-width:900px){
+  .aa-about{gap:55px;padding:82px 0}
+  .aa-problem,.aa-promise,.aa-how,.aa-benefits,.aa-editions,.aa-inside,.aa-professionals{padding-top:82px;padding-bottom:82px}
+  .aa-step-cards article{min-height:190px}
+  .aa-inside{grid-template-columns:1fr;gap:55px}
+  .brand-faq{padding:78px 0}
+}
+@media(max-width:560px){
+  .aa-about h2,.aa-problem h2,.aa-section-heading h2,.aa-inside h2,.aa-professionals h2,.brand-faq h2{font-size:36px;line-height:1.04}
+  .aa-about,.aa-problem,.aa-promise,.aa-how,.aa-benefits,.aa-editions,.aa-inside,.aa-professionals{padding-top:62px;padding-bottom:62px}
+  .aa-library-card{min-height:440px}
+  .aa-problem h2{font-size:38px}.aa-problem .brand-shell>p:last-child{font-size:27px}
+  .aa-promise-lines p{font-size:25px}.aa-promise-bridge{margin-top:52px}.aa-promise h2{font-size:64px}
+  .aa-step-cards,.aa-benefit-grid,.aa-edition-list,.aa-professional-list{margin-top:36px}
+  .aa-step-cards article{min-height:165px}.aa-step-cards h3{font-size:29px}
+  .aa-benefit-grid article{min-height:145px}.aa-benefit-grid h3{font-size:24px}
+  .aa-edition-list article{min-height:auto;padding:19px 0}.aa-edition-list article:hover{padding:19px 10px}.aa-edition-list h3{font-size:27px}
+  .aa-product-mockup{padding:25px 21px}.aa-product-mockup h3{font-size:28px}
+  .aa-professional-list p{grid-template-columns:46px 1fr;padding:11px 0;font-size:27px}
+  .brand-faq{gap:34px;padding:62px 0}.brand-faq-list summary{font-size:19px}
+  .brand-final{padding:72px 20px}.brand-final h2{font-size:38px}
 }
 
