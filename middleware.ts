@@ -8,6 +8,10 @@ export async function middleware(request: NextRequest) {
     );
   }
 
+  const isProtectedAgenda =
+    request.nextUrl.pathname === "/agenda" ||
+    request.nextUrl.pathname === "/agenda-wedding-final.html";
+
   const response = NextResponse.next({
     request: {
       headers: request.headers
@@ -41,14 +45,36 @@ export async function middleware(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith("/agenda")) {
+  if (isProtectedAgenda && !user?.email) {
     return NextResponse.redirect(new URL("/entrar", request.url));
   }
 
-  if (request.nextUrl.pathname === "/agenda") {
-    return NextResponse.rewrite(
+  if (isProtectedAgenda && user?.email) {
+    const { data: buyer, error } = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", user.email.toLowerCase())
+      .maybeSingle();
+
+    if (error || !buyer) {
+      return NextResponse.redirect(
+        new URL("/entrar?estado=sem_acesso", request.url)
+      );
+    }
+
+    if (request.nextUrl.pathname === "/agenda-wedding-final.html") {
+      return NextResponse.redirect(new URL("/agenda", request.url));
+    }
+
+    const rewrite = NextResponse.rewrite(
       new URL("/agenda-wedding-final.html", request.url)
     );
+
+    response.cookies.getAll().forEach((cookie) => {
+      rewrite.cookies.set(cookie);
+    });
+
+    return rewrite;
   }
 
   return response;
