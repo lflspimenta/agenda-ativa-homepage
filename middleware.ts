@@ -8,12 +8,6 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  if (request.nextUrl.pathname === "/wedding") {
-    return NextResponse.rewrite(
-      new URL("/agenda-wedding-final.html", request.url)
-    );
-  }
-
   const response = NextResponse.next({
     request: {
       headers: request.headers
@@ -51,9 +45,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/entrar", request.url));
   }
 
+  if (request.nextUrl.pathname === "/agenda") {
+    return NextResponse.rewrite(
+      new URL("/agenda-wedding-final.html", request.url)
+    );
+  }
+
   return response;
 }
 
 export const config = {
-  matcher: ["/", "/wedding", "/agenda/:path*"]
+  matcher: ["/", "/agenda/:path*", "/agenda-wedding-final.html"]
 };
