@@ -61,7 +61,7 @@ export default function HomePage() {
 
       <section className="aa-about brand-shell" aria-labelledby="about-title">
         <div className="aa-about-copy">
-          <p className="brand-kicker">01 — A marca</p>
+          <p className="brand-kicker">Agenda Ativa™</p>
           <h2 id="about-title">O que é a Agenda Ativa<sup>™</sup>?</h2>
           <p>A Agenda Ativa™ é uma biblioteca de edições especializadas para profissionais que precisam de comunicar com consistência, mas não têm tempo para criar conteúdo todos os dias.</p>
           <p>Cada edição inclui 30 dias de conteúdo estratégico, pronto a adaptar e publicar.</p>
@@ -83,7 +83,6 @@ export default function HomePage() {
 
       <section className="aa-problem">
         <div className="brand-shell">
-          <p className="brand-kicker">02 — O problema</p>
           <h2>O problema não é falta de ideias.</h2>
           <p>É ter de pensar nelas todos os dias.</p>
         </div>
@@ -91,7 +90,6 @@ export default function HomePage() {
 
       <section className="aa-promise">
         <div className="brand-shell">
-          <p className="brand-kicker">03 — O que vendemos</p>
           <div className="aa-promise-lines">
             <p>Não vendemos IA.</p>
             <p>Não vendemos prompts.</p>
@@ -102,75 +100,81 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="aa-how" id="como-funciona">
+      <section className="aa-explore" id="como-funciona">
         <div className="brand-shell">
-          <div className="aa-section-heading">
-            <p className="brand-kicker">04 — Como funciona</p>
-            <h2>Três passos.<br />Nenhuma complicação.</h2>
+          <div className="aa-explore-intro">
+            <p className="brand-kicker">Descubra a Agenda Ativa™</p>
+            <h2>Tudo o que precisa.<br />Só quando quiser ver.</h2>
           </div>
-          <div className="aa-step-cards">
-            <article><span>01</span><h3>Escolha a sua edição.</h3></article>
-            <article><span>02</span><h3>Receba acesso imediato.</h3></article>
-            <article><span>03</span><h3>Copie.<br />Adapte.<br />Publique.</h3></article>
-          </div>
-        </div>
-      </section>
 
-      <section className="aa-benefits brand-shell">
-        <div className="aa-section-heading">
-          <p className="brand-kicker">05 — O que recebe</p>
-          <h2>Tudo o que precisa.<br />Nada que complique.</h2>
-        </div>
-        <div className="aa-benefit-grid">
-          {benefits.map((benefit, index) => <article key={benefit}><span>✓</span><small>0{index + 1}</small><h3>{benefit}</h3></article>)}
-        </div>
-      </section>
+          <div className="aa-explore-list">
+            <details>
+              <summary><span>Como funciona</span><small>Três passos. Nenhuma complicação.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-step-cards">
+                  <article><span>01</span><h3>Escolha a sua edição.</h3></article>
+                  <article><span>02</span><h3>Receba acesso imediato.</h3></article>
+                  <article><span>03</span><h3>Copie.<br />Adapte.<br />Publique.</h3></article>
+                </div>
+              </div>
+            </details>
 
-      <section className="aa-editions" id="edicoes">
-        <div className="brand-shell">
-          <div className="aa-section-heading aa-section-heading-row">
-            <div><p className="brand-kicker">06 — A biblioteca</p><h2>Escolha a sua edição.</h2></div>
-            <p>Uma marca. Várias especializações.<br />A mesma tranquilidade editorial.</p>
-          </div>
-          <div className="aa-edition-list">
-            {editions.map((edition, index) => (
-              <article className={edition.available ? "is-available" : ""} key={edition.name}>
-                <span>0{index + 1}</span><h3>{edition.name}</h3><small>{edition.status}</small>
-                {edition.available && edition.href ? <a href={edition.href}>Ver edição <b>→</b></a> : <p>Em preparação</p>}
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+            <details>
+              <summary><span>O que recebe</span><small>Conteúdo e estratégia já preparados.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-benefit-grid">
+                  {benefits.map((benefit) => <article key={benefit}><span>✓</span><h3>{benefit}</h3></article>)}
+                </div>
+              </div>
+            </details>
 
-      <section className="aa-inside brand-shell">
-        <div className="aa-inside-copy">
-          <p className="brand-kicker">07 — Como é por dentro</p>
-          <h2>Abre e encontra o dia resolvido.</h2>
-          <p>Sem menus desnecessários. Sem uma nova ferramenta para aprender. Apenas o conteúdo que precisa, preparado para usar.</p>
-          <p className="aa-inside-note">Menos de cinco minutos entre abrir e publicar.</p>
-        </div>
-        <div className="aa-product-mockup">
-          <div className="aa-mockup-brand"><span>AGENDA ATIVA<sup>™</sup></span><small>Wedding Edition</small></div>
-          <p className="aa-mockup-status">Hoje já está tratado.</p>
-          <small className="aa-mockup-day">DIA 12 — CONTEÚDO DE HOJE</small>
-          <h3>3 erros que os noivos cometem ao escolher o venue.</h3>
-          <ul><li>Conteúdo preparado</li><li>Legenda pronta</li><li>CTA incluída</li></ul>
-          <button type="button">Copiar conteúdo</button>
-        </div>
-      </section>
+            <details id="edicoes">
+              <summary><span>Escolha a sua edição</span><small>Uma marca. Várias especializações.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-edition-list">
+                  {editions.map((edition) => (
+                    <article className={edition.available ? "is-available" : ""} key={edition.name}>
+                      <h3>{edition.name}</h3><small>{edition.status}</small>
+                      {edition.available && edition.href ? <a href={edition.href}>Ver edição <b>→</b></a> : <p>Em preparação</p>}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </details>
 
-      <section className="aa-professionals">
-        <div className="brand-shell">
-          <div className="aa-section-heading"><p className="brand-kicker">08 — Para quem</p><h2>Para profissionais cuja agenda vem primeiro.</h2></div>
-          <div className="aa-professional-list">
-            {professionals.map((professional, index) => <p key={professional}><span>0{index + 1}</span>{professional}</p>)}
+            <details>
+              <summary><span>Como é por dentro</span><small>Abra e encontre o dia resolvido.</small><b>+</b></summary>
+              <div className="aa-explore-panel aa-explore-inside">
+                <div className="aa-inside-copy">
+                  <h2>Abre e encontra o dia resolvido.</h2>
+                  <p>Sem menus desnecessários. Apenas o conteúdo que precisa, preparado para usar.</p>
+                  <p className="aa-inside-note">Menos de cinco minutos entre abrir e publicar.</p>
+                </div>
+                <div className="aa-product-mockup">
+                  <div className="aa-mockup-brand"><span>AGENDA ATIVA<sup>™</sup></span><small>Wedding Edition</small></div>
+                  <p className="aa-mockup-status">Hoje já está tratado.</p>
+                  <small className="aa-mockup-day">DIA 12 — CONTEÚDO DE HOJE</small>
+                  <h3>3 erros que os noivos cometem ao escolher o venue.</h3>
+                  <ul><li>Conteúdo preparado</li><li>Legenda pronta</li><li>CTA incluída</li></ul>
+                  <button type="button">Copiar conteúdo</button>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary><span>Para quem é</span><small>Para profissionais cuja agenda vem primeiro.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-professional-list">
+                  {professionals.map((professional) => <p key={professional}>{professional}</p>)}
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </section>
 
       <section className="brand-faq brand-shell" id="faq">
-        <div><p className="brand-kicker">09 — Perguntas frequentes</p><h2>Antes de começar.</h2></div>
+        <div><p className="brand-kicker">Perguntas frequentes</p><h2>Antes de começar.</h2></div>
         <div className="brand-faq-list">
           {faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}
         </div>
