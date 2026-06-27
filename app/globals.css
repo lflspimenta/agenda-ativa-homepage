@@ -1969,6 +1969,7 @@ html{scroll-behavior:smooth}
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* ═══════════════════════════════════════════════
    AGENDA ATIVA™ — HOMEPAGE STYLES
    Adicionar ao final do globals.css existente
@@ -2026,6 +2027,8 @@ html{scroll-behavior:smooth}
   font-size: 18px;
   letter-spacing: .06em;
 =======
+=======
+>>>>>>> parent of 890eafb (Add files via upload)
 /* Agenda Ativa™ Homepage v2 — editorial brand homepage */
 .aa-home-v2{
   --aa-paper:#F7F2EC;
@@ -2221,6 +2224,9 @@ html{scroll-behavior:smooth}
   .aa2-brand-section,.aa2-steps,.aa2-editions{padding:72px 0}.aa2-editorial-title h2{font-size:42px}.aa2-definition-card{padding:30px 24px}.aa2-definition-card h3{font-size:32px}.aa2-definition-card p{font-size:20px}
   .aa2-preview{padding:28px 22px}.aa2-preview h2{font-size:36px}.aa2-preview-card{padding:24px}.aa2-preview-card h3{font-size:29px}
   .aa2-edition-image{height:230px}.aa2-final{padding:68px 22px}.aa2-footer{display:grid;text-align:center;justify-content:center}
+<<<<<<< HEAD
+>>>>>>> parent of 890eafb (Add files via upload)
+=======
 >>>>>>> parent of 890eafb (Add files via upload)
 }
 .aa-logo svg { width: 40px; height: 34px; color: var(--ink); }

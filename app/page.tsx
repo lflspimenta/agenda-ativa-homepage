@@ -3,6 +3,7 @@ import { LoginSessionHandler } from "./entrar/login-session-handler";
 const editions = [
   {
 <<<<<<< HEAD
+<<<<<<< HEAD
     nicho: "Wedding Planner",
     title: "Wedding Edition",
     status: "Disponível",
@@ -214,6 +215,54 @@ export default function HomePage() {
           <a href="#funciona">Como funciona</a>
           <a href="#edicoes">Edições</a>
         </div>
+=======
+    key: "wedding",
+    name: "Wedding Edition",
+    status: "Disponível",
+    href: "/wedding",
+    accent: "Terracota",
+    description: "Para wedding planners que querem manter presença ativa sem perder foco nos noivos.",
+    image: "/wedding_hero_photo_v10_4.png"
+  },
+  {
+    key: "imobiliario",
+    name: "Imobiliário Edition",
+    status: "Disponível",
+    href: "/imobiliario",
+    accent: "Azul petróleo",
+    description: "Para consultores imobiliários que querem ser lembrados antes de serem necessários.",
+    image: "/homepage-imobiliario-hero.png"
+  },
+  {
+    key: "estetica",
+    name: "Estética Edition",
+    status: "Brevemente",
+    href: "#edicoes",
+    accent: "Verde sálvia",
+    description: "Para profissionais de estética que querem comunicar com calma, consistência e confiança.",
+    image: "/produto-preview-mobile.png"
+  }
+];
+
+const upcoming = ["Advogados Edition", "Fotógrafos Edition"];
+
+export default function HomePage() {
+  return (
+    <main className="aa-home-v2">
+      <LoginSessionHandler />
+
+      <nav className="aa2-nav" aria-label="Navegação principal">
+        <a className="aa2-brand" href="#inicio" aria-label="Agenda Ativa, início">
+          <img src="/aa-monogram-official.svg" alt="" />
+          <span></span>
+          <strong>AGENDA ATIVA<sup>™</sup><em>Hoje já está tratado.</em></strong>
+        </a>
+        <div className="aa2-navlinks">
+          <a href="#marca">O que é</a>
+          <a href="#funciona">Como funciona</a>
+          <a href="#edicoes">Edições</a>
+        </div>
+>>>>>>> parent of 890eafb (Add files via upload)
         <a className="aa2-navcta" href="#edicoes">Explorar edições</a>
       </nav>
 
@@ -264,11 +313,15 @@ export default function HomePage() {
           <div className="aa2-definition-card">
             <p>Vendemos tempo recuperado, consistência, clareza e decisões já tomadas.</p>
             <p className="aa2-signature">Hoje já está tratado.</p>
+<<<<<<< HEAD
+>>>>>>> parent of 890eafb (Add files via upload)
+=======
 >>>>>>> parent of 890eafb (Add files via upload)
           </div>
         </div>
       </section>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       {/* EDIÇÕES */}
       <section className="aa-editions" id="edicoes">
@@ -297,6 +350,8 @@ export default function HomePage() {
                   </a>
                 </div>
 =======
+=======
+>>>>>>> parent of 890eafb (Add files via upload)
       <section className="aa2-steps" id="funciona">
         <p className="aa2-kicker">Três passos. Zero complicação.</p>
         <div className="aa2-step-grid">
@@ -334,12 +389,16 @@ export default function HomePage() {
                 <h3>{edition.name}</h3>
                 <p>{edition.description}</p>
                 <a href={edition.href}>{edition.status === "Disponível" ? "Explorar edição" : "Ver em breve"} <span>→</span></a>
+<<<<<<< HEAD
+>>>>>>> parent of 890eafb (Add files via upload)
+=======
 >>>>>>> parent of 890eafb (Add files via upload)
               </div>
             </article>
           ))}
         </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       {/* O QUE RECEBE */}
       <section className="aa-receive">
@@ -413,10 +472,27 @@ export default function HomePage() {
         <a className="aa2-btn" href="#edicoes">Ver edições</a>
       </section>
 
+=======
+        <div className="aa2-upcoming">
+          {upcoming.map((item) => <span key={item}>{item} · Brevemente</span>)}
+        </div>
+      </section>
+
+      <section className="aa2-final">
+        <img src="/aa-monogram-official.svg" alt="" />
+        <p>AGENDA ATIVA<sup>™</sup></p>
+        <h2>Menos tempo a criar conteúdo.<br />Mais tempo para trabalhar.</h2>
+        <a className="aa2-btn" href="#edicoes">Ver edições</a>
+      </section>
+
+>>>>>>> parent of 890eafb (Add files via upload)
       <footer className="aa2-footer">
         <span>Agenda Ativa™</span>
         <span>Hoje já está tratado.</span>
         <span>© 2026</span>
+<<<<<<< HEAD
+>>>>>>> parent of 890eafb (Add files via upload)
+=======
 >>>>>>> parent of 890eafb (Add files via upload)
       </footer>
     </main>
