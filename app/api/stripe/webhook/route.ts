@@ -66,7 +66,9 @@ export async function POST(request: Request) {
 
     const { data: existing } = await admin
       .from("users")
-      .select("email, products")
+      .select(
+        "email, products, wedding_purchase_date, imobiliario_purchase_date"
+      )
       .eq("email", email)
       .maybeSingle();
 
@@ -74,19 +76,34 @@ export async function POST(request: Request) {
       const products: string[] = Array.isArray(existing.products)
         ? existing.products
         : ["wedding"];
+      const updates: {
+        products?: string[];
+        wedding_purchase_date?: string;
+        imobiliario_purchase_date?: string;
+      } = {};
 
       if (!products.includes(product)) {
-        await admin
-          .from("users")
-          .update({ products: [...products, product] })
-          .eq("email", email);
+        updates.products = [...products, product];
+      }
+
+      if (product === "imobiliario" && !existing.imobiliario_purchase_date) {
+        updates.imobiliario_purchase_date = purchaseDate;
+      } else if (product === "wedding" && !existing.wedding_purchase_date) {
+        updates.wedding_purchase_date = purchaseDate;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await admin.from("users").update(updates).eq("email", email);
       }
     } else {
       await admin.from("users").insert({
         email,
         first_name: firstName,
         purchase_date: purchaseDate,
-        products: [product]
+        products: [product],
+        wedding_purchase_date: product === "wedding" ? purchaseDate : null,
+        imobiliario_purchase_date:
+          product === "imobiliario" ? purchaseDate : null
       });
     }
 

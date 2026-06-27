@@ -23,6 +23,16 @@ function escapeHtml(value: string) {
   );
 }
 
+function getAgendaDay(purchaseDate?: string | null) {
+  if (!purchaseDate) return 1;
+
+  const purchasedAt = new Date(purchaseDate).getTime();
+  if (Number.isNaN(purchasedAt)) return 1;
+
+  const elapsedDays = Math.floor((Date.now() - purchasedAt) / 86_400_000);
+  return Math.min(30, Math.max(1, elapsedDays + 1));
+}
+
 export async function GET(request: Request) {
   const supabase = createSupabaseServerClient();
   const {
@@ -37,7 +47,7 @@ export async function GET(request: Request) {
   const admin = createSupabaseAdminClient();
   const { data: buyer, error: buyerError } = await admin
     .from("users")
-    .select("first_name, products")
+    .select("first_name, products, wedding_purchase_date")
     .eq("email", user.email.toLowerCase())
     .maybeSingle();
 
@@ -58,7 +68,10 @@ export async function GET(request: Request) {
   );
   const firstName = buyer.first_name?.trim();
   const greeting = firstName ? `Olá, ${escapeHtml(firstName)}` : "Olá";
-  const html = htmlTemplate.replace("Olá, Ana", greeting);
+  const agendaDay = getAgendaDay(buyer.wedding_purchase_date);
+  const html = htmlTemplate
+    .replace("Olá, Ana", greeting)
+    .replace("renderDay(1);", `renderDay(${agendaDay});`);
 
   return new Response(html, {
     headers: {

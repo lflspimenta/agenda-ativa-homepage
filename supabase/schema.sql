@@ -12,6 +12,8 @@ create table if not exists public.users (
   first_name text,
   products text[] not null default '{}',   -- ex: '{wedding}', '{imobiliario}', '{wedding,imobiliario}'
   purchase_date timestamptz not null,
+  wedding_purchase_date timestamptz,
+  imobiliario_purchase_date timestamptz,
   created_at timestamptz not null default now()
 );
 
