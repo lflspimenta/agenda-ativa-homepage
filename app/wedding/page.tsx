@@ -6,6 +6,9 @@ export default function LandingPage() {
   return (
     <main className="landing">
       <LoginSessionHandler />
+      <a className="landing-back-home" href="/">
+        ← Voltar à homepage
+      </a>
       <section className="landing-hero" aria-label="Agenda Ativa Wedding Planner">
         <div className="landing-hero-desktop">
           <img

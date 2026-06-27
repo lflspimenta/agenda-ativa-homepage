@@ -606,6 +606,30 @@ h1{
   min-height:100vh;
 }
 
+.landing-back-home{
+  position:fixed;
+  top:18px;
+  left:20px;
+  z-index:100;
+  display:inline-flex;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid rgba(31,27,25,.12);
+  border-radius:999px;
+  background:rgba(255,255,255,.9);
+  color:#1f1b19;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-decoration:none;
+  box-shadow:0 8px 24px rgba(31,27,25,.08);
+  backdrop-filter:blur(10px);
+}
+
+.landing-back-home:hover{
+  background:#fff;
+}
+
 .landing a{text-decoration:none}
 .landing-hero{display:block;background:#fff;position:relative;overflow:hidden}
 .landing-hero-desktop{display:block;position:relative}
