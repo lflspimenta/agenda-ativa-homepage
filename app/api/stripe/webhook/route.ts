@@ -10,8 +10,26 @@ function getFirstName(name?: string | null) {
   return name?.trim().split(/\s+/)[0] || null;
 }
 
-function getProductFromSession(session: Stripe.Checkout.Session) {
-  return session.metadata?.product === "imobiliario"
+async function getProductFromSession(
+  stripe: Stripe,
+  session: Stripe.Checkout.Session
+) {
+  if (session.metadata?.product === "imobiliario") {
+    return "imobiliario";
+  }
+
+  const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+    limit: 1,
+    expand: ["data.price.product"]
+  });
+  const product = lineItems.data[0]?.price?.product as
+    | Stripe.Product
+    | string
+    | null
+    | undefined;
+
+  return typeof product !== "string" &&
+    product?.metadata?.product === "imobiliario"
     ? "imobiliario"
     : "wedding";
 }
@@ -44,7 +62,7 @@ export async function POST(request: Request) {
     const admin = createSupabaseAdminClient();
     const purchaseDate = new Date().toISOString();
     const firstName = getFirstName(session.customer_details?.name);
-    const product = getProductFromSession(session);
+    const product = await getProductFromSession(stripe, session);
 
     const { data: existing } = await admin
       .from("users")
