@@ -11,8 +11,12 @@ export async function sendMagicLink(formData: FormData) {
     String(formData.get("produto") || "") === "imobiliario"
       ? "imobiliario"
       : "wedding";
-  const loginUrl =
-    product === "imobiliario" ? "/entrar?produto=imobiliario" : "/entrar";
+  const customerArea = String(formData.get("area") || "") === "1";
+  const loginUrl = customerArea
+    ? "/entrar?area=1"
+    : product === "imobiliario"
+      ? "/entrar?produto=imobiliario"
+      : "/entrar";
 
   if (!email) {
     redirect(`${loginUrl}${loginUrl.includes("?") ? "&" : "?"}estado=email`);
@@ -27,8 +31,9 @@ export async function sendMagicLink(formData: FormData) {
 
   if (
     !userAccess ||
-    !Array.isArray(userAccess.products) ||
-    !userAccess.products.includes(product)
+    (!customerArea &&
+      (!Array.isArray(userAccess.products) ||
+        !userAccess.products.includes(product)))
   ) {
     redirect(
       `${loginUrl}${loginUrl.includes("?") ? "&" : "?"}estado=sem_acesso`
@@ -40,8 +45,11 @@ export async function sendMagicLink(formData: FormData) {
     requiredEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
   );
 
-  const destination =
-    product === "imobiliario" ? "/imobiliario/agenda" : "/agenda";
+  const destination = customerArea
+    ? "/minha-agenda"
+    : product === "imobiliario"
+      ? "/imobiliario/agenda"
+      : "/agenda";
   const redirectTo = `${requiredEnv(
     "NEXT_PUBLIC_APP_URL"
   )}/auth/callback?next=${destination}`;

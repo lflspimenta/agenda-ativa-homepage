@@ -630,6 +630,28 @@ h1{
   background:#fff;
 }
 
+.customer-area{min-height:100vh;background:#fbf8f2;color:#1f1b19;padding-bottom:64px}
+.customer-header{display:flex;justify-content:space-between;align-items:center;padding:22px 7vw;border-bottom:1px solid rgba(31,27,25,.1);background:rgba(255,255,255,.7)}
+.customer-brand{font-weight:700;letter-spacing:.12em;text-decoration:none}
+.customer-home{font-size:12px;font-weight:700;color:#7d6852;text-decoration:none}
+.customer-welcome{padding:64px 7vw 32px;text-align:center}
+.customer-welcome span,.install-card>span{font-size:10px;font-weight:800;letter-spacing:.18em;color:#b08d57}
+.customer-welcome h1{font-family:var(--font-cormorant),serif;font-size:52px;line-height:1;margin:14px 0}
+.customer-welcome p{color:#70665e}
+.customer-products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:900px;margin:20px auto 44px;padding:0 24px}
+.customer-product{min-height:220px;padding:34px;border-radius:18px;color:white;text-decoration:none;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 22px 50px rgba(31,27,25,.13)}
+.customer-product small{letter-spacing:.16em;font-weight:800;opacity:.72}
+.customer-product h2{font-family:var(--font-cormorant),serif;font-size:38px;margin:8px 0}
+.customer-product p{font-size:13px}
+.wedding-product{background:linear-gradient(145deg,#9d5142,#c87964)}
+.imobiliario-product{background:linear-gradient(145deg,#294751,#547381)}
+.install-card{max-width:700px;margin:0 auto;padding:34px;text-align:center;background:white;border:1px solid rgba(31,27,25,.1);border-radius:18px}
+.install-card h2{font-family:var(--font-cormorant),serif;font-size:34px;margin:10px 0}
+.install-card>p{color:#70665e;margin-bottom:20px}
+.install-button{border:0;border-radius:8px;background:#b08d57;color:white;padding:14px 20px;font-weight:800;cursor:pointer}
+.install-help,.install-status{font-size:13px;color:#5f554e}
+@media(max-width:720px){.customer-products{grid-template-columns:1fr}.customer-welcome{padding-top:46px}.customer-welcome h1{font-size:42px}.install-card{margin:0 24px}}
+
 .landing a{text-decoration:none}
 .landing-hero{display:block;background:#fff;position:relative;overflow:hidden}
 .landing-hero-desktop{display:block;position:relative}
