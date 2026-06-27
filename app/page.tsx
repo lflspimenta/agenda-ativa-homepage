@@ -1,193 +1,201 @@
 import { LoginSessionHandler } from "./entrar/login-session-handler";
 
 const editions = [
-  {
-    name: "Wedding Planners",
-    label: "Wedding Edition",
-    status: "Disponível",
-    href: "/wedding",
-    image: "/homepage-assets/wedding-planner.png",
-    accent: "#B55E4A",
-    text: "Continue focada nos noivos. A sua agenda continua ativa.",
-    available: true
-  },
-  {
-    name: "Imobiliário",
-    label: "Imobiliário Edition",
-    status: "Disponível",
-    href: "/imobiliario/",
-    image: "/homepage-assets/imobiliario.png",
-    accent: "#2F4B59",
-    text: "Continue focado nos clientes. A sua presença continua ativa.",
-    available: true
-  },
-  {
-    name: "Psicologia",
-    label: "Psicologia Edition",
-    status: "Brevemente",
-    image: "/homepage-assets/psicologia.png",
-    accent: "#7D8F76",
-    text: "Continue presente para quem precisa de si.",
-    available: false
-  },
-  {
-    name: "Advogados",
-    label: "Advogados Edition",
-    status: "Brevemente",
-    image: "/homepage-assets/advogados.png",
-    accent: "#25282D",
-    text: "Continue focado nos processos. A sua autoridade continua visível.",
-    available: false
-  },
-  {
-    name: "Fotógrafos",
-    label: "Fotografia Edition",
-    status: "Brevemente",
-    image: "/homepage-assets/fotografos.png",
-    accent: "#682E37",
-    text: "Continue atrás da câmara. A sua comunicação continua ativa.",
-    available: false
-  }
+  { name: "Wedding Edition", status: "Disponível", href: "/wedding", available: true },
+  { name: "Estética Edition", status: "Brevemente", available: false },
+  { name: "Imobiliário Edition", status: "Brevemente", available: false },
+  { name: "Advogados Edition", status: "Brevemente", available: false },
+  { name: "Fotógrafos Edition", status: "Brevemente", available: false }
+];
+
+const benefits = [
+  "30 dias de conteúdo",
+  "Legendas preparadas",
+  "CTA incluída",
+  "Estratégia definida",
+  "Menos de 1 minuto por dia",
+  "Acesso imediato"
+];
+
+const professionals = [
+  "Wedding Planners",
+  "Profissionais de Estética",
+  "Consultores Imobiliários",
+  "Advogados",
+  "Fotógrafos"
 ];
 
 const faqs = [
-  ["O que é exatamente a Agenda Ativa™?", "É uma coleção de edições especializadas com conteúdo estratégico pronto a copiar, adaptar e publicar. Cada edição foi pensada para uma profissão específica."],
-  ["É uma ferramenta de IA?", "Não. A Agenda Ativa™ não vende IA, prompts ou ferramentas. Entrega comunicação já preparada para profissionais que querem poupar tempo."],
-  ["Preciso de fazer alguma coisa antes de publicar?", "Só precisa de escolher a edição, copiar o conteúdo do dia, adaptar pequenos detalhes ao seu tom e publicar."],
-  ["O conteúdo é igual para todos os nichos?", "Não. Cada Edition tem contexto, exemplos, linguagem e dores específicas da profissão."],
-  ["É uma subscrição?", "Não. Cada Edition é comprada separadamente, com pagamento único, sem mensalidades e sem subscrições."],
-  ["Posso adaptar os textos à minha marca?", "Sim. A estratégia já está pronta, mas pode ajustar o tom, acrescentar exemplos reais e usar as suas próprias imagens."],
+  ["O que é a Agenda Ativa™?", "É uma biblioteca de edições especializadas com 30 dias de conteúdo estratégico, preparado para adaptar e publicar."],
+  ["O que preciso de fazer para começar?", "Nada. O conteúdo já sai escrito e pronto."],
+  ["Como recebo o acesso?", "O acesso à edição disponível é enviado imediatamente após a confirmação da compra."],
+  ["Posso adaptar o conteúdo à minha marca?", "Sim. A estrutura, a legenda e a estratégia estão definidas, mas pode ajustar o tom e usar as suas próprias imagens."],
+  ["Vão existir novas edições?", "Sim. A Agenda Ativa™ continuará a crescer com edições dedicadas a diferentes áreas profissionais."]
 ];
 
 export default function HomePage() {
   return (
-    <main className="aa-home-v4">
+    <main className="brand-home">
       <LoginSessionHandler />
-
-      <nav className="aa4-nav" aria-label="Navegação principal">
-        <a className="aa4-brand" href="#inicio" aria-label="Agenda Ativa, início">
-          <img src="/aa-monogram-official.svg" alt="" />
-          <span>AGENDA ATIVA<sup>™</sup></span>
-        </a>
-        <div className="aa4-nav-links">
-          <a href="#edicoes">Edições</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#faq">FAQ</a>
-        </div>
-        <a className="aa4-nav-cta" href="#edicoes">Explorar edições →</a>
+      <nav className="brand-nav" aria-label="Navegação principal">
+        <a className="brand-wordmark" href="#inicio" aria-label="Agenda Ativa, início">AGENDA ATIVA<sup>™</sup></a>
+        <div className="brand-nav-links"><a href="#como-funciona">Como funciona</a><a href="#edicoes">Edições</a><a href="#faq">FAQ</a></div>
+        <a className="brand-nav-cta" href="#edicoes">Explorar edições</a>
       </nav>
 
-      <section className="aa4-hero" id="inicio">
-        <div className="aa4-hero-copy">
-          <p className="aa4-kicker">Hoje já está tratado.</p>
-          <h1>A comunicação da sua marca pronta antes do dia começar.</h1>
-          <p>Conteúdo estratégico pronto a copiar, adaptar e publicar. Para profissionais que preferem trabalhar com clientes em vez de perder horas a pensar no que publicar.</p>
-          <a className="aa4-button" href="#edicoes">Explorar edições →</a>
+      <section className="brand-hero" id="inicio">
+        <div className="brand-hero-copy">
+          <p className="brand-eyebrow">Menos tempo a criar. Mais tempo para trabalhar.</p>
+          <h1>A forma mais simples de manter a sua comunicação ativa, mesmo quando a sua agenda está cheia.</h1>
+          <p className="brand-lead">Conteúdo estratégico preparado para profissionais que preferem trabalhar com clientes em vez de passar horas a pensar no que publicar.</p>
+          <div className="brand-actions">
+            <a className="brand-button brand-button-primary" href="#edicoes">Explorar edições</a>
+            <a className="brand-button brand-button-text" href="#como-funciona">Ver como funciona <span>↓</span></a>
+          </div>
         </div>
-        <div className="aa4-hero-visual" aria-hidden="true">
-          <div className="aa4-hero-card aa4-hero-card-main">
-            <img src="/homepage-assets/imobiliario.png" alt="" />
-          </div>
-          <div className="aa4-hero-card aa4-hero-card-small aa4-small-one">
-            <img src="/homepage-assets/wedding-planner.png" alt="" />
-          </div>
-          <div className="aa4-hero-card aa4-hero-card-small aa4-small-two">
-            <img src="/homepage-assets/fotografos.png" alt="" />
-          </div>
+        <div className="brand-hero-mark" aria-hidden="true">
+          <img src="/aa-monogram-official.svg" alt="" />
+          <p>Hoje já está tratado.</p>
         </div>
       </section>
 
-      <section className="aa4-manifesto" aria-labelledby="manifesto-title">
-        <p className="aa4-kicker">A Agenda Ativa™</p>
-        <h2 id="manifesto-title">Não vendemos IA. Não vendemos prompts. Não vendemos calendários editoriais.</h2>
-        <p>Vendemos comunicação já preparada.</p>
+      <section className="aa-about brand-shell" aria-labelledby="about-title">
+        <div className="aa-about-copy">
+          <p className="brand-kicker">Agenda Ativa™</p>
+          <h2 id="about-title">O que é a Agenda Ativa<sup>™</sup>?</h2>
+          <p>A Agenda Ativa™ é uma biblioteca de edições especializadas para profissionais que precisam de comunicar com consistência, mas não têm tempo para criar conteúdo todos os dias.</p>
+          <p>Cada edição inclui 30 dias de conteúdo estratégico, pronto a adaptar e publicar.</p>
+          <div className="aa-short-list">
+            <span>Sem prompts.</span><span>Sem bloqueios.</span><span>Sem folhas em branco.</span><span>Sem horas perdidas.</span>
+          </div>
+        </div>
+        <div className="aa-library-card" aria-label="Biblioteca de edições especializadas">
+          <div className="aa-library-top"><span>AGENDA ATIVA<sup>™</sup></span><small>Biblioteca Editorial</small></div>
+          <div className="aa-library-monogram"><img src="/aa-monogram-official.svg" alt="" /></div>
+          <div className="aa-library-editions">
+            <p><span>01</span> Wedding Edition</p>
+            <p><span>02</span> Estética Edition</p>
+            <p><span>03</span> Imobiliário Edition</p>
+          </div>
+          <p className="aa-library-signature">Hoje já está tratado.</p>
+        </div>
       </section>
 
-      <section className="aa4-editions" id="edicoes" aria-labelledby="editions-title">
-        <div className="aa4-section-head">
-          <p className="aa4-kicker">As edições</p>
-          <h2 id="editions-title">O seu nicho. A sua edição.</h2>
-          <p>Escolha a Edition criada para a sua profissão. A marca é a mesma. O contexto muda.</p>
+      <section className="aa-problem">
+        <div className="brand-shell">
+          <h2>O problema não é falta de ideias.</h2>
+          <p>É ter de pensar nelas todos os dias.</p>
         </div>
+      </section>
 
-        <div className="aa4-edition-grid">
-          {editions.map((edition) => (
-            <article className="aa4-edition-card" key={edition.name} style={{ "--edition-accent": edition.accent } as React.CSSProperties}>
-              <div className="aa4-edition-image">
-                <img src={edition.image} alt={edition.label} />
-                <span>{edition.status}</span>
+      <section className="aa-promise">
+        <div className="brand-shell">
+          <div className="aa-promise-lines">
+            <p>Não vendemos IA.</p>
+            <p>Não vendemos prompts.</p>
+            <p>Vendemos legendas já escritas.</p>
+          </div>
+          <p className="aa-promise-bridge">Vendemos algo muito mais simples:</p>
+          <h2>Hoje já está tratado.</h2>
+        </div>
+      </section>
+
+      <section className="aa-explore" id="como-funciona">
+        <div className="brand-shell">
+          <div className="aa-explore-intro">
+            <p className="brand-kicker">Descubra a Agenda Ativa™</p>
+            <h2>Tudo o que precisa.<br />Só quando quiser ver.</h2>
+          </div>
+
+          <div className="aa-explore-list">
+            <details>
+              <summary><span>Como funciona</span><small>Três passos. Nenhuma complicação.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-step-cards">
+                  <article><span>01</span><h3>Escolha a sua edição.</h3></article>
+                  <article><span>02</span><h3>Receba acesso imediato.</h3></article>
+                  <article><span>03</span><h3>Abres.<br />Copias.<br />Colas.<br />Publicas.</h3></article>
+                </div>
               </div>
-              <div className="aa4-edition-copy">
-                <p>{edition.label}</p>
-                <h3>{edition.name}</h3>
-                <small>{edition.text}</small>
-                {edition.available && edition.href ? (
-                  <a href={edition.href}>Explorar →</a>
-                ) : (
-                  <span className="aa4-soon">Em preparação</span>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="aa4-how" id="como-funciona" aria-labelledby="how-title">
-        <div className="aa4-section-head">
-          <p className="aa4-kicker">Como funciona</p>
-          <h2 id="how-title">Simples como 1, 2, 3.</h2>
-        </div>
-        <div className="aa4-steps">
-          <article><span>01</span><h3>Escolha</h3><p>Selecione a edição que representa o seu trabalho.</p></article>
-          <article><span>02</span><h3>Copie</h3><p>Abra o conteúdo do dia e copie em segundos.</p></article>
-          <article><span>03</span><h3>Publique</h3><p>Adapte ao seu tom e mantenha a presença ativa.</p></article>
-        </div>
-      </section>
-
-      <section className="aa4-split">
-        <div>
-          <p className="aa4-kicker">O que vendemos</p>
-          <ul>
-            <li>Tempo recuperado</li>
-            <li>Consistência sem esforço</li>
-            <li>Clareza</li>
-            <li>Decisões já tomadas</li>
-          </ul>
-        </div>
-        <div>
-          <p className="aa4-kicker">O que não vendemos</p>
-          <ul>
-            <li>IA</li>
-            <li>Prompts</li>
-            <li>Ferramentas complexas</li>
-            <li>Subscrições</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="aa4-faq" id="faq" aria-labelledby="faq-title">
-        <div className="aa4-section-head">
-          <p className="aa4-kicker">Perguntas frequentes</p>
-          <h2 id="faq-title">Tudo o que precisa de saber.</h2>
-        </div>
-        <div className="aa4-faq-grid">
-          {faqs.map(([question, answer]) => (
-            <details key={question}>
-              <summary>{question}<span>+</span></summary>
-              <p>{answer}</p>
             </details>
-          ))}
+
+            <details>
+              <summary><span>O que recebe</span><small>Conteúdo e estratégia já preparados.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-benefit-grid">
+                  {benefits.map((benefit) => <article key={benefit}><span>✓</span><h3>{benefit}</h3></article>)}
+                </div>
+              </div>
+            </details>
+
+            <details id="edicoes">
+              <summary><span>Escolha a sua edição</span><small>Uma marca. Várias especializações.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-edition-list">
+                  {editions.map((edition) => (
+                    <article className={edition.available ? "is-available" : ""} key={edition.name}>
+                      <h3>{edition.name}</h3><small>{edition.status}</small>
+                      {edition.available && edition.href ? <a href={edition.href}>Ver edição <b>→</b></a> : <p>Em preparação</p>}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary><span>Como é por dentro</span><small>Abra e encontre o dia resolvido.</small><b>+</b></summary>
+              <div className="aa-explore-panel aa-explore-inside">
+                <div className="aa-inside-copy">
+                  <h2>Abre e encontra o dia resolvido.</h2>
+                  <p>Sem menus desnecessários. Apenas o conteúdo que precisa, preparado para usar.</p>
+                  <p className="aa-inside-note">Menos de 1 minuto entre abrir e publicar.</p>
+                </div>
+                <div className="aa-product-mockup">
+                  <div className="aa-mockup-brand"><span>AGENDA ATIVA<sup>™</sup></span><small>Wedding Edition</small></div>
+                  <p className="aa-mockup-status">Hoje já está tratado.</p>
+                  <small className="aa-mockup-day">DIA 1 — CONTEÚDO DE HOJE</small>
+                  <h3>Como escolher o fotógrafo ideal para o seu casamento sem arrependimentos.</h3>
+                  <div className="aa-mockup-caption">
+                    <p>Escolher o fotógrafo do casamento não é apenas escolher imagens bonitas. É escolher a pessoa que vai guardar a memória de um dos dias mais importantes da sua vida.</p>
+                    <p>Antes de decidir, veja portefólios completos, confirme se o estilo combina convosco e perceba como o profissional conduz os momentos mais delicados do dia.</p>
+                    <p>A melhor escolha é aquela que vos deixa tranquilos antes, durante e depois do casamento.</p>
+                  </div>
+                  <p className="aa-mockup-cta"><strong>CTA:</strong> Guarde este post para quando começar a procurar fornecedores.</p>
+                  <button type="button">Copiar conteúdo</button>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary><span>Para quem é</span><small>Para profissionais cuja agenda vem primeiro.</small><b>+</b></summary>
+              <div className="aa-explore-panel">
+                <div className="aa-professional-list">
+                  {professionals.map((professional) => <p key={professional}>{professional}</p>)}
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
       </section>
 
-      <section className="aa4-final">
-        <div>
-          <p className="aa4-kicker">Agenda Ativa™</p>
-          <h2>A sua comunicação. <em>Tratada.</em> Todos os dias.</h2>
-          <p>Menos tempo no Instagram. Mais tempo para o que é seu.</p>
-          <a className="aa4-button aa4-button-gold" href="#edicoes">Explorar edições →</a>
+      <section className="brand-faq brand-shell" id="faq">
+        <div><p className="brand-kicker">Perguntas frequentes</p><h2>Antes de começar.</h2></div>
+        <div className="brand-faq-list">
+          {faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}
         </div>
       </section>
+
+      <section className="brand-final">
+        <img src="/aa-monogram-official.svg" alt="" />
+        <p className="aa-final-wordmark">AGENDA ATIVA<sup>™</sup></p>
+        <p className="brand-signature">Hoje já está tratado.</p>
+        <h2>Menos tempo a criar conteúdo.<br />Mais tempo para trabalhar.</h2>
+        <a className="brand-button brand-button-primary" href="#edicoes">Ver edições</a>
+      </section>
+
+      <footer className="brand-footer">
+        <a className="brand-wordmark" href="#inicio">AGENDA ATIVA<sup>™</sup></a><p className="brand-footer-signature">Hoje já está tratado.</p><p>© 2026 Agenda Ativa™</p>
+      </footer>
     </main>
   );
 }

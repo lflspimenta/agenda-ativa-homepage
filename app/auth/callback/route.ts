@@ -6,7 +6,11 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
   const tokenHash = url.searchParams.get("token_hash");
   const type = url.searchParams.get("type");
-  const next = url.searchParams.get("next") || "/agenda";
+  const requestedNext = url.searchParams.get("next");
+  const next =
+    requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
+      ? requestedNext
+      : "/agenda";
   const redirectUrl = new URL(next, url.origin);
   const errorUrl = new URL("/entrar?estado=erro", url.origin);
   const supabase = createSupabaseServerClient();

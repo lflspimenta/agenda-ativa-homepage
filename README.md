@@ -1,48 +1,44 @@
-# Agenda Ativa™ Wedding Planner — MVP
+# Agenda Ativa — Aplicação Principal
 
-Primeira versão funcional da agenda digital premium.
+Esta é a pasta oficial para desenvolvimento e publicação da Agenda Ativa.
+As pastas originais das edições permanecem intactas como cópias de segurança.
 
-## O Que Está Incluído
+## Rotas
 
-- Entrada por email com Magic Link.
-- Conteúdo sequencial por data de compra.
-- Dia atual calculado por `purchase_date`.
-- Limite no Dia 30.
-- Botão para copiar título, legenda e CTA.
-- Webhook Stripe para guardar acesso e enviar Magic Link.
+- `/` — homepage com as edições disponíveis
+- `/wedding` — landing page Wedding Planner
+- `/agenda` — conteúdo premium Wedding Planner
+- `/imobiliario` — landing page Imobiliário
+- `/imobiliario/agenda` — conteúdo premium Imobiliário
+- `/entrar` — entrada de clientes Wedding
+- `/entrar?produto=imobiliario` — entrada de clientes Imobiliário
+
+## Serviços partilhados
+
+Toda a aplicação utiliza:
+
+- um projeto Vercel;
+- um repositório GitHub;
+- um projeto Supabase;
+- uma conta Stripe e um webhook;
+- um Payment Link por edição.
 
 ## Configuração
 
-1. Criar o projeto no Supabase.
-2. Executar `supabase/schema.sql` no SQL Editor do Supabase.
-3. Criar o produto no Stripe:
-   - Nome: `Agenda Ativa™ Wedding Planner`
-   - Preço: `97€`
-   - Pagamento único
-4. Configurar o webhook Stripe para:
-   - `https://SEU-DOMINIO/api/stripe/webhook`
-   - Evento: `checkout.session.completed`
-5. Criar `.env.local` a partir de `.env.example`.
-6. Publicar na Vercel.
+1. Criar `.env.local` com base em `.env.example`.
+2. Executar `supabase/schema.sql` num projeto Supabase novo.
+3. Executar `supabase/migrations/002_imobiliario.sql`.
+4. Criar o Payment Link do Imobiliário no Stripe.
+5. Adicionar ao Payment Link o metadado `product=imobiliario`.
+6. Guardar o link em `NEXT_PUBLIC_STRIPE_IMOBILIARIO_LINK`.
+7. Publicar esta pasta na Vercel.
 
-## Variáveis
+## Conteúdo premium
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+Os ficheiros finais ficam em `private/` e só são devolvidos depois de:
 
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-STRIPE_PRICE_ID=
+1. confirmar a sessão do utilizador;
+2. encontrar o email na tabela `users`;
+3. confirmar que `products` contém a edição pedida.
 
-NEXT_PUBLIC_APP_URL=
-```
-
-## Lógica Do Dia
-
-```txt
-currentDay = min(30, days_since_purchase + 1)
-```
-
-Uma compra feita hoje começa sempre no Dia 1.
+Não colocar os ficheiros premium em `public/`.

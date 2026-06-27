@@ -4,11 +4,16 @@ import { LoginSessionHandler } from "./login-session-handler";
 type LoginPageProps = {
   searchParams?: {
     estado?: string;
+    produto?: string;
   };
 };
 
 export default function LoginPage({ searchParams }: LoginPageProps) {
   const status = searchParams?.estado;
+  const product =
+    searchParams?.produto === "imobiliario" ? "imobiliario" : "wedding";
+  const edition =
+    product === "imobiliario" ? "Edição Imobiliário" : "Wedding Planner Edition";
 
   return (
     <main className="page">
@@ -16,7 +21,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
       <header>
         <div>
           <div className="brand">AGENDA ATIVA™</div>
-          <div className="edition">Wedding Planner Edition</div>
+          <div className="edition">{edition}</div>
         </div>
       </header>
 
@@ -25,6 +30,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
       </section>
 
       <form className="login-card" action={sendMagicLink}>
+        <input type="hidden" name="produto" value={product} />
         <label htmlFor="email">Email de acesso</label>
         <input id="email" name="email" type="email" required placeholder="o-seu-email@exemplo.com" />
         <button className="login-button" type="submit">Receber acesso</button>

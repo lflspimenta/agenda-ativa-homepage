@@ -43,8 +43,10 @@ export function LoginSessionHandler() {
         return;
       }
 
+      const destination =
+        new URLSearchParams(window.location.search).get("next") || "/agenda";
       window.history.replaceState(null, "", "/entrar");
-      window.location.replace("/agenda");
+      window.location.replace(destination);
     }
 
     handleMagicLinkHash();

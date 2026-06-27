@@ -10,6 +10,12 @@ function getFirstName(name?: string | null) {
   return name?.trim().split(/\s+/)[0] || null;
 }
 
+function getProductFromSession(session: Stripe.Checkout.Session) {
+  return session.metadata?.product === "imobiliario"
+    ? "imobiliario"
+    : "wedding";
+}
+
 export async function POST(request: Request) {
   const stripe = new Stripe(requiredEnv("STRIPE_SECRET_KEY"));
   const signature = request.headers.get("stripe-signature");
@@ -38,17 +44,33 @@ export async function POST(request: Request) {
     const admin = createSupabaseAdminClient();
     const purchaseDate = new Date().toISOString();
     const firstName = getFirstName(session.customer_details?.name);
+    const product = getProductFromSession(session);
 
-    await admin
+    const { data: existing } = await admin
       .from("users")
-      .upsert(
-        {
-          email,
-          first_name: firstName,
-          purchase_date: purchaseDate
-        },
-        { onConflict: "email" }
-      );
+      .select("email, products")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (existing) {
+      const products: string[] = Array.isArray(existing.products)
+        ? existing.products
+        : ["wedding"];
+
+      if (!products.includes(product)) {
+        await admin
+          .from("users")
+          .update({ products: [...products, product] })
+          .eq("email", email);
+      }
+    } else {
+      await admin.from("users").insert({
+        email,
+        first_name: firstName,
+        purchase_date: purchaseDate,
+        products: [product]
+      });
+    }
 
     const supabase = createClient(
       requiredEnv("NEXT_PUBLIC_SUPABASE_URL"),
@@ -58,7 +80,9 @@ export async function POST(request: Request) {
     await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${requiredEnv("NEXT_PUBLIC_APP_URL")}/auth/callback`
+        emailRedirectTo: `${requiredEnv("NEXT_PUBLIC_APP_URL")}/auth/callback?next=${
+          product === "imobiliario" ? "/imobiliario/agenda" : "/agenda"
+        }`
       }
     });
   }
