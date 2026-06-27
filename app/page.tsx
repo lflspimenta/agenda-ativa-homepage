@@ -2,167 +2,175 @@ import { LoginSessionHandler } from "./entrar/login-session-handler";
 
 const editions = [
   {
-    title: "Wedding Planners",
+    name: "Wedding Planners",
     label: "Wedding Edition",
     status: "Disponível",
     href: "/wedding",
-    image: "/homepage-assets/edition-wedding.jpg",
-    accent: "terracotta",
-    text: "Continue focada nos noivos. A sua agenda continua ativa."
+    image: "/homepage-assets/wedding-planner.png",
+    accent: "#B55E4A",
+    text: "Continue focada nos noivos. A sua agenda continua ativa.",
+    available: true
   },
   {
-    title: "Imobiliário",
+    name: "Imobiliário",
     label: "Imobiliário Edition",
     status: "Disponível",
-    href: "/imobiliario/index.html",
-    image: "/homepage-assets/imobiliario-office.jpg",
-    accent: "petroleo",
-    text: "Continue focado nos clientes. A sua autoridade continua ativa."
+    href: "/imobiliario/",
+    image: "/homepage-assets/imobiliario.png",
+    accent: "#2F4B59",
+    text: "Continue focado nos clientes. A sua presença continua ativa.",
+    available: true
   },
   {
-    title: "Estética",
-    label: "Estética Edition",
+    name: "Psicologia",
+    label: "Psicologia Edition",
     status: "Brevemente",
-    href: "#faq",
-    image: "/homepage-assets/edition-estetica.jpg",
-    accent: "sage",
-    text: "Entre tratamento e tratamento, a sua presença continua ativa."
+    image: "/homepage-assets/psicologia.png",
+    accent: "#7D8F76",
+    text: "Continue presente para quem precisa de si.",
+    available: false
   },
   {
-    title: "Advogados",
+    name: "Advogados",
     label: "Advogados Edition",
     status: "Brevemente",
-    href: "#faq",
-    image: "/homepage-assets/edition-juridico.jpg",
-    accent: "graphite",
-    text: "A sua autoridade jurídica continua visível, com rigor e clareza."
+    image: "/homepage-assets/advogados.png",
+    accent: "#25282D",
+    text: "Continue focado nos processos. A sua autoridade continua visível.",
+    available: false
   },
   {
-    title: "Fotógrafos",
-    label: "Fotógrafos Edition",
+    name: "Fotógrafos",
+    label: "Fotografia Edition",
     status: "Brevemente",
-    href: "#faq",
-    image: "/homepage-assets/edition-fotografos.jpg",
-    accent: "burgundy",
-    text: "Os clientes do próximo ano começam a escolher agora."
+    image: "/homepage-assets/fotografos.png",
+    accent: "#682E37",
+    text: "Continue atrás da câmara. A sua comunicação continua ativa.",
+    available: false
   }
 ];
 
 const faqs = [
-  ["O que é exatamente a Agenda Ativa™?", "É uma coleção de edições profissionais com comunicação já preparada para publicar. Cada edição é criada para um nicho específico e ajuda-o a manter presença digital sem começar do zero todos os dias."],
-  ["Preciso de fazer alguma coisa antes de publicar?", "Não. Abre a edição, escolhe o conteúdo do dia, copia, adapta se quiser e publica. A decisão principal já está tomada."],
-  ["O conteúdo é genérico ou específico para o meu nicho?", "Cada Edition é pensada para uma profissão concreta. A Wedding fala com wedding planners. A Imobiliário fala com consultores imobiliários. O método mantém-se; o contexto muda."],
-  ["Posso adaptar o texto ao meu tom?", "Sim. A Agenda Ativa™ entrega a estrutura, a ideia e o texto base. A identidade final continua a ser sua."],
-  ["Isto é uma subscrição?", "Não. O modelo oficial é pagamento único, sem mensalidades, sem subscrições e com acesso imediato à Edition comprada."],
-  ["Como funciona o pagamento?", "Compra a Edition pretendida, recebe acesso imediato e começa a utilizar. Sem renovação automática."],
+  ["O que é exatamente a Agenda Ativa™?", "É uma coleção de edições especializadas com conteúdo estratégico pronto a copiar, adaptar e publicar. Cada edição foi pensada para uma profissão específica."],
+  ["É uma ferramenta de IA?", "Não. A Agenda Ativa™ não vende IA, prompts ou ferramentas. Entrega comunicação já preparada para profissionais que querem poupar tempo."],
+  ["Preciso de fazer alguma coisa antes de publicar?", "Só precisa de escolher a edição, copiar o conteúdo do dia, adaptar pequenos detalhes ao seu tom e publicar."],
+  ["O conteúdo é igual para todos os nichos?", "Não. Cada Edition tem contexto, exemplos, linguagem e dores específicas da profissão."],
+  ["É uma subscrição?", "Não. Cada Edition é comprada separadamente, com pagamento único, sem mensalidades e sem subscrições."],
+  ["Posso adaptar os textos à minha marca?", "Sim. A estratégia já está pronta, mas pode ajustar o tom, acrescentar exemplos reais e usar as suas próprias imagens."],
 ];
 
 export default function HomePage() {
   return (
-    <main className="home-v3" id="inicio">
+    <main className="aa-home-v4">
       <LoginSessionHandler />
 
-      <nav className="hv3-nav" aria-label="Navegação principal">
-        <a className="hv3-brand" href="#inicio" aria-label="Agenda Ativa — Início">
+      <nav className="aa4-nav" aria-label="Navegação principal">
+        <a className="aa4-brand" href="#inicio" aria-label="Agenda Ativa, início">
           <img src="/aa-monogram-official.svg" alt="" />
           <span>AGENDA ATIVA<sup>™</sup></span>
         </a>
-        <div className="hv3-navlinks">
+        <div className="aa4-nav-links">
           <a href="#edicoes">Edições</a>
           <a href="#como-funciona">Como funciona</a>
           <a href="#faq">FAQ</a>
         </div>
-        <a className="hv3-navcta" href="#edicoes">Explorar edições →</a>
+        <a className="aa4-nav-cta" href="#edicoes">Explorar edições →</a>
       </nav>
 
-      <section className="hv3-hero">
-        <div className="hv3-hero-copy">
-          <p className="hv3-kicker">Hoje já está tratado.</p>
-          <h1>Conteúdo estratégico pronto a copiar, adaptar e publicar.</h1>
-          <p className="hv3-lead">Para profissionais que preferem trabalhar com clientes em vez de passar horas a pensar no que publicar.</p>
-          <a className="hv3-button" href="#edicoes">Explorar edições →</a>
+      <section className="aa4-hero" id="inicio">
+        <div className="aa4-hero-copy">
+          <p className="aa4-kicker">Hoje já está tratado.</p>
+          <h1>A comunicação da sua marca pronta antes do dia começar.</h1>
+          <p>Conteúdo estratégico pronto a copiar, adaptar e publicar. Para profissionais que preferem trabalhar com clientes em vez de perder horas a pensar no que publicar.</p>
+          <a className="aa4-button" href="#edicoes">Explorar edições →</a>
         </div>
-        <div className="hv3-hero-image" aria-hidden="true">
-          <img src="/homepage-assets/home-hero.jpg" alt="" />
+        <div className="aa4-hero-visual" aria-hidden="true">
+          <div className="aa4-hero-card aa4-hero-card-main">
+            <img src="/homepage-assets/imobiliario.png" alt="" />
+          </div>
+          <div className="aa4-hero-card aa4-hero-card-small aa4-small-one">
+            <img src="/homepage-assets/wedding-planner.png" alt="" />
+          </div>
+          <div className="aa4-hero-card aa4-hero-card-small aa4-small-two">
+            <img src="/homepage-assets/fotografos.png" alt="" />
+          </div>
         </div>
       </section>
 
-      <section className="hv3-manifesto" aria-label="Manifesto Agenda Ativa">
-        <p className="hv3-kicker">A Agenda Ativa™</p>
-        <h2>Não vendemos IA. Não vendemos prompts. Não vendemos calendários editoriais.<br /><em>Vendemos comunicação já preparada.</em></h2>
-        <p>Para profissionais que preferem ter tempo para o que realmente importa.</p>
+      <section className="aa4-manifesto" aria-labelledby="manifesto-title">
+        <p className="aa4-kicker">A Agenda Ativa™</p>
+        <h2 id="manifesto-title">Não vendemos IA. Não vendemos prompts. Não vendemos calendários editoriais.</h2>
+        <p>Vendemos comunicação já preparada.</p>
       </section>
 
-      <section className="hv3-editions" id="edicoes">
-        <div className="hv3-section-head">
-          <p className="hv3-kicker">As edições</p>
-          <h2>O seu nicho.<br /><em>A sua edição.</em></h2>
+      <section className="aa4-editions" id="edicoes" aria-labelledby="editions-title">
+        <div className="aa4-section-head">
+          <p className="aa4-kicker">As edições</p>
+          <h2 id="editions-title">O seu nicho. A sua edição.</h2>
+          <p>Escolha a Edition criada para a sua profissão. A marca é a mesma. O contexto muda.</p>
         </div>
-        <div className="hv3-edition-grid">
+
+        <div className="aa4-edition-grid">
           {editions.map((edition) => (
-            <article className={`hv3-edition-card ${edition.accent}`} key={edition.title}>
-              <img src={edition.image} alt="" />
-              <div className="hv3-edition-overlay">
-                <small>{edition.status}</small>
+            <article className="aa4-edition-card" key={edition.name} style={{ "--edition-accent": edition.accent } as React.CSSProperties}>
+              <div className="aa4-edition-image">
+                <img src={edition.image} alt={edition.label} />
+                <span>{edition.status}</span>
+              </div>
+              <div className="aa4-edition-copy">
                 <p>{edition.label}</p>
-                <h3>{edition.title}</h3>
-                <span>{edition.text}</span>
-                <a href={edition.href}>{edition.status === "Disponível" ? "Explorar" : "Brevemente"} →</a>
+                <h3>{edition.name}</h3>
+                <small>{edition.text}</small>
+                {edition.available && edition.href ? (
+                  <a href={edition.href}>Explorar →</a>
+                ) : (
+                  <span className="aa4-soon">Em preparação</span>
+                )}
               </div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="hv3-how" id="como-funciona">
-        <p className="hv3-kicker">Como funciona</p>
-        <h2>Simples como 1, 2, 3.</h2>
-        <div className="hv3-steps">
-          <article>
-            <span>01</span>
-            <h3>Escolha</h3>
-            <p>Seleciona a edição que representa o seu trabalho.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Copie</h3>
-            <p>Abre o conteúdo do dia e copia em segundos.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Publique</h3>
-            <p>Publica no Instagram. Fim. Todos os dias.</p>
-          </article>
+      <section className="aa4-how" id="como-funciona" aria-labelledby="how-title">
+        <div className="aa4-section-head">
+          <p className="aa4-kicker">Como funciona</p>
+          <h2 id="how-title">Simples como 1, 2, 3.</h2>
+        </div>
+        <div className="aa4-steps">
+          <article><span>01</span><h3>Escolha</h3><p>Selecione a edição que representa o seu trabalho.</p></article>
+          <article><span>02</span><h3>Copie</h3><p>Abra o conteúdo do dia e copie em segundos.</p></article>
+          <article><span>03</span><h3>Publique</h3><p>Adapte ao seu tom e mantenha a presença ativa.</p></article>
         </div>
       </section>
 
-      <section className="hv3-value">
+      <section className="aa4-split">
         <div>
-          <div className="hv3-value-icon">✓</div>
-          <p className="hv3-kicker">O que vendemos</p>
+          <p className="aa4-kicker">O que vendemos</p>
           <ul>
             <li>Tempo recuperado</li>
             <li>Consistência sem esforço</li>
-            <li>Comunicação estratégica</li>
+            <li>Clareza</li>
             <li>Decisões já tomadas</li>
           </ul>
         </div>
         <div>
-          <div className="hv3-value-icon">×</div>
-          <p className="hv3-kicker">O que não vendemos</p>
+          <p className="aa4-kicker">O que não vendemos</p>
           <ul>
             <li>IA</li>
             <li>Prompts</li>
-            <li>Ferramentas</li>
-            <li>Calendários complexos</li>
+            <li>Ferramentas complexas</li>
+            <li>Subscrições</li>
           </ul>
         </div>
       </section>
 
-      <section className="hv3-faq" id="faq">
-        <p className="hv3-kicker">Perguntas frequentes</p>
-        <h2>Tudo o que precisa de saber.</h2>
-        <div className="hv3-faq-grid">
+      <section className="aa4-faq" id="faq" aria-labelledby="faq-title">
+        <div className="aa4-section-head">
+          <p className="aa4-kicker">Perguntas frequentes</p>
+          <h2 id="faq-title">Tudo o que precisa de saber.</h2>
+        </div>
+        <div className="aa4-faq-grid">
           {faqs.map(([question, answer]) => (
             <details key={question}>
               <summary>{question}<span>+</span></summary>
@@ -172,12 +180,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="hv3-final">
-        <div className="hv3-final-image" aria-hidden="true"><img src="/homepage-assets/final-dark.jpg" alt="" /></div>
+      <section className="aa4-final">
         <div>
-          <h2>A sua comunicação.<br /><em>Tratada.</em> Todos os dias.</h2>
+          <p className="aa4-kicker">Agenda Ativa™</p>
+          <h2>A sua comunicação. <em>Tratada.</em> Todos os dias.</h2>
           <p>Menos tempo no Instagram. Mais tempo para o que é seu.</p>
-          <a className="hv3-button gold" href="#edicoes">Explorar edições →</a>
+          <a className="aa4-button aa4-button-gold" href="#edicoes">Explorar edições →</a>
         </div>
       </section>
     </main>
