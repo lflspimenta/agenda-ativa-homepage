@@ -2,6 +2,16 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/") {
+    return NextResponse.rewrite(
+      new URL("/agenda-ativa-homepage-final.html", request.url)
+    );
+  }
+
+  const isProtectedAgenda =
+    request.nextUrl.pathname === "/agenda" ||
+    request.nextUrl.pathname === "/agenda-wedding-final.html";
+
   const response = NextResponse.next({
     request: {
       headers: request.headers
@@ -35,13 +45,41 @@ export async function middleware(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith("/agenda")) {
+  if (isProtectedAgenda && !user?.email) {
     return NextResponse.redirect(new URL("/entrar", request.url));
+  }
+
+  if (isProtectedAgenda && user?.email) {
+    const { data: buyer, error } = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", user.email.toLowerCase())
+      .maybeSingle();
+
+    if (error || !buyer) {
+      return NextResponse.redirect(
+        new URL("/entrar?estado=sem_acesso", request.url)
+      );
+    }
+
+    if (request.nextUrl.pathname === "/agenda-wedding-final.html") {
+      return NextResponse.redirect(new URL("/agenda", request.url));
+    }
+
+    const rewrite = NextResponse.rewrite(
+      new URL("/agenda-wedding-final.html", request.url)
+    );
+
+    response.cookies.getAll().forEach((cookie) => {
+      rewrite.cookies.set(cookie);
+    });
+
+    return rewrite;
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/agenda/:path*"]
+  matcher: ["/", "/agenda/:path*", "/agenda-wedding-final.html"]
 };
