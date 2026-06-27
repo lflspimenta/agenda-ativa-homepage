@@ -9,26 +9,33 @@ export async function middleware(request: NextRequest) {
     options?: Parameters<typeof authResponse.cookies.set>[2];
   };
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: CookieToSet[]) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          authResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            authResponse.cookies.set(name, value, options)
-          );
-        }
-      }
-    }
-  );
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  await supabase.auth.getUser();
+  if (supabaseUrl && supabaseAnonKey) {
+    try {
+      const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet: CookieToSet[]) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            authResponse = NextResponse.next({ request });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              authResponse.cookies.set(name, value, options)
+            );
+          }
+        }
+      });
+
+      await supabase.auth.getUser();
+    } catch (error) {
+      console.error("Unable to refresh Supabase session in middleware", error);
+    }
+  }
 
   let response = authResponse;
   if (request.nextUrl.pathname === "/imobiliario") {
@@ -41,7 +48,9 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  authResponse.cookies.getAll().forEach((cookie) => response.cookies.set(cookie));
+  authResponse.cookies.getAll().forEach(({ name, value }) => {
+    response.cookies.set(name, value);
+  });
   return response;
 }
 
