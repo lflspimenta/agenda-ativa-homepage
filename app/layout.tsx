@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { PwaRegister } from "./pwa-register";
+import { Analytics } from "@vercel/analytics/next";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-PT" className={`${cormorant.variable} ${inter.variable}`}>
-      <body><PwaRegister />{children}</body>
+      <body><PwaRegister />{children}<Analytics /></body>
     </html>
   );
 }
