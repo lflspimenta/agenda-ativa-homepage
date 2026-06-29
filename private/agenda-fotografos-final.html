@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F8F7F4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Agenda Ativa">
+  <title>Agenda Ativa™ — Fotógrafos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F8F7F4;
+      --surface: #fffefb;
+      --ink: #2B2024;
+      --muted: #6F7A78;
+      --rose: #6F243B;
+      --rose-light: #9A4A64;
+      --rose-dim: rgba(111,36,59,.11);
+      --gold: #D8D4CC;
+      --gold-dim: rgba(216,212,204,.38);
+      --line: rgba(111,36,59,.14);
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "Inter", system-ui, sans-serif;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body {
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: contain;
+    }
+
+    /* ── SPLASH — FIX 5: 800ms instead of 1400ms ── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .splash.hide {
+      opacity: 0;
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+    .splash-brand {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: var(--ink);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp .5s ease .1s forwards;
+    }
+    .splash-brand sup { font-size: 13px; color: var(--rose); vertical-align: super; }
+    .splash-line {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      animation: growLine .6s ease .2s forwards;
+    }
+    .splash-edition {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp .5s ease .35s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes growLine { to { width: 100px; } }
+
+    /* ── ENTRANCE ANIMATIONS ── */
+    .animate {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .animate.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .04s; }
+    .d2 { transition-delay: .12s; }
+    .d3 { transition-delay: .20s; }
+    .d4 { transition-delay: .28s; }
+    .d5 { transition-delay: .36s; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,247,243,.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: .05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .nav-brand sup { font-size: 10px; color: var(--rose); vertical-align: super; }
+    .nav-pill {
+      background: var(--rose-dim);
+      color: var(--rose);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 20px calc(36px + var(--safe-bottom));
+    }
+
+    /* ── GREETING ── */
+    .greeting { margin-bottom: 28px; }
+    .greeting-name {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--rose-light);
+      margin-bottom: 8px;
+      letter-spacing: .04em;
+    }
+    .greeting-h1 {
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 300;
+      line-height: .92;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .greeting-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── PROGRESS — FIX 4: today dot is celebratory ── */
+    .progress { margin-bottom: 24px; }
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-count {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--rose);
+    }
+    .progress-track {
+      height: 3px;
+      background: var(--rose-dim);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose), var(--rose-light));
+      border-radius: 2px;
+    }
+    .progress-dots { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose-dim); flex-shrink: 0; transition: background .3s; }
+    .dot.done { background: var(--rose-light); }
+    /* FIX 4: today dot is larger and has a pulse — not just one grey dot among 29 */
+    .dot.today {
+      width: 10px;
+      height: 10px;
+      background: var(--rose);
+      box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose);
+      animation: pulse 2s ease 1s 2;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose); }
+      50% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px rgba(111,36,59,.35); }
+    }
+
+    /* ── META ROW ── */
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .tag-format { background: var(--rose-dim); color: var(--rose); }
+    .tag-pilar { background: var(--gold-dim); color: #70545E; }
+    .tag-time {
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      background: transparent;
+    }
+    .tag-time svg { width: 11px; height: 11px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(111,36,59,.11);
+      border-top: 3px solid var(--rose);
+      border-radius: 6px;
+      box-shadow: 0 24px 56px rgba(43,32,36,.10), 0 4px 16px rgba(43,32,36,.06);
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: box-shadow .3s;
+    }
+    .card-body { padding: 28px 24px 24px; }
+
+    .card-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-eyebrow::before { content: ""; width: 14px; height: 1px; background: var(--rose); }
+
+    .card-topic {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card-hook {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 14px;
+      border-left: 2px solid var(--rose-dim);
+    }
+
+    /* ── PROMPT BLOCK (visible by default, no dark bg) ── */
+    .prompt-block {
+      background: var(--rose-dim);
+      border-top: 1px solid var(--line);
+      padding: 22px 24px;
+    }
+    .prompt-label {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .prompt-label::before { content: ""; width: 6px; height: 6px; background: var(--rose); border-radius: 50%; }
+    .prompt-scroll {
+      max-height: 140px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(111,36,59,.22) transparent;
+    }
+    .prompt-scroll::-webkit-scrollbar { width: 3px; }
+    .prompt-scroll::-webkit-scrollbar-thumb { background: rgba(111,36,59,.22); border-radius: 2px; }
+    .prompt-text {
+      font-size: 13px;
+      color: #2B2024;
+      line-height: 1.85;
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 16px;
+    }
+    .ph { color: var(--rose); font-weight: 600; }
+
+    /* ── ACTIONS ── */
+    .card-actions {
+      padding: 14px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* FIX 3: single primary + single secondary */
+    .btn-copy {
+      width: 100%;
+      min-height: 52px;
+      background: #2B2024;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .25s ease, transform .12s, letter-spacing .2s;
+    }
+    .btn-copy:active { transform: translateY(2px); box-shadow: 0 1px 4px rgba(111,36,59,.22); }
+    .btn-copy.copied { background: #51664F; letter-spacing: .06em; }
+    .btn-copy svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* FIX 3: one secondary button that expands everything extra */
+    .btn-more {
+      width: 100%;
+      min-height: 44px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s;
+      font-family: var(--sans);
+    }
+    .btn-more:active { border-color: var(--rose); color: var(--rose); }
+    .chevron { display: inline-block; transition: transform .25s; font-style: normal; font-size: 12px; }
+    .btn-more.open .chevron { transform: rotate(180deg); }
+
+    /* ── EXTRA PANEL (FIX 1: collapses strategic info + legenda) ── */
+    .extra-wrap {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .35s ease;
+      opacity: 0;
+    }
+    .extra-wrap.open { max-height: 800px; opacity: 1; }
+    .extra-inner {
+      margin: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* strategic grid inside extra */
+    .strat-grid {
+      background: linear-gradient(135deg, rgba(216,212,204,.24), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.55);
+      border-radius: 6px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .strat-item {}
+    .strat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #70545E;
+      margin-bottom: 4px;
+    }
+    .strat-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+    .strat-full { grid-column: 1 / -1; }
+
+    /* legenda inside extra */
+    .legenda-box {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 22px 20px;
+      background: var(--paper);
+    }
+    .legenda-eyebrow {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .legenda-text {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+    .legenda-text p + p { margin-top: 14px; }
+    .legenda-cta {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .legenda-cta strong { color: var(--rose); font-weight: 600; }
+
+    /* resultado inside extra — FIX 3: merged here */
+    .resultado-box {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      background: rgba(111,36,59,.05);
+    }
+    .resultado-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 5px;
+    }
+    .resultado-text { font-size: 13px; color: var(--ink); line-height: 1.65; }
+
+    /* ── NEXT CARD ── */
+    .next-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      margin-bottom: 36px;
+    }
+    .next-icon {
+      width: 38px; height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .next-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .next-topic { font-family: var(--serif); font-size: 18px; font-weight: 400; color: var(--ink); line-height: 1.3; }
+    .next-sub { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; gap: 6px; }
+    .next-pilar { color: #70545E; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer { text-align: center; padding-top: 24px; border-top: 1px solid var(--line); }
+    .footer-text { font-family: var(--serif); font-size: 13px; font-weight: 300; letter-spacing: .1em; color: var(--muted); }
+    .footer-tagline { font-size: 11px; color: rgba(138,122,112,.55); margin-top: 6px; font-style: italic; font-family: var(--serif); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--ink);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 13px 22px;
+      border-radius: 6px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width: 7px; height: 7px; background: #51664F; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── TABLET 768px: 2 colunas ── */
+    @media(min-width: 768px) {
+      main {
+        max-width: 100%;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: auto 1fr;
+        min-height: calc(100dvh - 57px);
+      }
+      /* Nav edition label visible on tablet+ */
+      .nav-edition { display: block; }
+
+      /* Left column: greeting + progress */
+      .col-left {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        padding: 40px 32px;
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+      }
+
+      /* Right column: everything else */
+      .col-right {
+        grid-column: 2;
+        padding: 36px 36px 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Greeting bigger on tablet */
+      .greeting { margin-bottom: 32px; }
+      .greeting-h1 { font-size: 56px; }
+
+      /* Progress in left col */
+      .progress { margin-bottom: 28px; }
+
+      /* Meta row inline */
+      .meta-row { margin-bottom: 16px; }
+
+      /* Card full width in right col, no stacking */
+      .card { margin-bottom: 0; }
+      .card-body { padding: 28px 28px 20px; }
+      .card-topic { font-size: 30px; }
+      .card-actions { padding: 14px 28px 24px; flex-direction: row; gap: 10px; }
+      .btn-copy { flex: 1; }
+      .btn-more { flex-shrink: 0; padding: 0 20px; width: auto; min-width: 180px; }
+      .extra-inner { margin: 0 28px 28px; }
+      .prompt-block { padding: 20px 28px; }
+
+      /* Next card in right col */
+      .next-card { margin-bottom: 0; }
+
+      /* Footer in right col */
+      .footer { margin-top: auto; padding-top: 32px; }
+
+      /* Hide .animate layout shift on tablet — already visible */
+    }
+
+    /* ── DESKTOP 1100px: 3 colunas ── */
+    @media(min-width: 1100px) {
+      main {
+        grid-template-columns: 300px 1fr 260px;
+      }
+
+      /* Strategy sidebar — 3rd col */
+      .col-right {
+        grid-column: 2;
+        padding: 40px 40px 60px;
+      }
+
+      .col-strategy {
+        grid-column: 3;
+        grid-row: 1 / -1;
+        padding: 40px 28px;
+        border-left: 1px solid var(--line);
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* On desktop hide btn-more (strategy always visible in sidebar) */
+      .btn-more { display: none; }
+      .extra-wrap { max-height: none !important; opacity: 1 !important; }
+      .extra-inner { margin: 0; }
+
+      /* Left col bigger */
+      .col-left { padding: 48px 36px; }
+      .greeting-h1 { font-size: 64px; }
+
+      /* Card topic bigger */
+      .card-topic { font-size: 34px; }
+      .prompt-scroll { max-height: 180px; }
+    }
+
+    /* Strategy sidebar label */
+    .strategy-sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strategy-sidebar-label { display: block; } }
+
+    /* Strat items for sidebar (reuse strat-grid items standalone) */
+    .strat-sidebar-item {
+      background: linear-gradient(135deg, var(--gold-dim), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.58);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strat-sidebar-item { display: block; } }
+
+    /* Next day in sidebar */
+    .next-sidebar {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      margin-top: auto;
+      display: none;
+    }
+    @media(min-width: 1100px) {
+      .next-sidebar { display: block; }
+      /* Hide next-card from right col on desktop — it's in sidebar */
+      .next-card { display: none; }
+    }
+
+    @media(min-width: 1100px) { #sidebarResultado { display: block !important; } }
+    @media(prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH — FIX 5: 800ms total -->
+<div class="splash" id="splash">
+  <div class="splash-brand">Agenda Ativa<sup>™</sup></div>
+  <div class="splash-line"></div>
+  <div class="splash-edition">Fotógrafos Edition</div>
+</div>
+
+<nav class="nav">
+  <div>
+    <div class="nav-brand">Agenda Ativa<sup>™</sup></div>
+    <div class="nav-edition" style="display:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;">Fotógrafos Edition</div>
+  </div>
+  <div class="nav-pill" id="navPill">Dia 1 de 30</div>
+</nav>
+
+<main>
+  <!-- COL LEFT: greeting + progress + meta (tablet/desktop) -->
+  <div class="col-left">
+
+  <!-- GREETING -->
+  <header class="greeting animate d1">
+    <div class="greeting-name">Olá, Sofia</div>
+    <h1 class="greeting-h1">O seu<br>olhar<br>continua ativo.</h1>
+    <p class="greeting-sub">O conteúdo de hoje já está pronto a publicar.</p>
+  </header>
+
+  <!-- PROGRESS — FIX 4: celebratory today dot -->
+  <div class="progress animate d2">
+    <div class="progress-header">
+      <span class="progress-label">O teu progresso</span>
+      <span class="progress-count" id="progressCount">Dia 1 de 30</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="pFill"></div>
+    </div>
+    <div class="progress-dots" id="pDots"></div>
+  </div>
+
+  <!-- META ROW -->
+  <div class="meta-row animate d3">
+    <span class="tag tag-format">Reel</span>
+    <span class="tag tag-pilar">Autoridade</span>
+    <span class="tag tag-time">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      2 minutos
+    </span>
+  </div>
+
+  </div><!-- /col-left -->
+
+  <!-- COL RIGHT: card + next + footer (tablet/desktop) -->
+  <div class="col-right">
+
+  <!-- CARD — FIX 1: stripped to topic + hook + prompt + actions -->
+  <article class="card animate d4">
+    <div class="card-body">
+
+      <div class="card-eyebrow">Conteúdo estratégico</div>
+
+      <h2 class="card-topic" id="cardTopic">Uma boa fotografia começa muito antes do clique.</h2>
+
+      <p class="card-hook" id="cardHook">Pronto a reforçar a sua autoridade.</p>
+
+    </div>
+
+    <!-- CONTENT BLOCK — legenda já escrita, pronta a copiar -->
+    <div class="prompt-block">
+      <div class="prompt-label">Legenda pronta a publicar</div>
+      <div class="prompt-scroll">
+        <div class="prompt-text" id="cardText"></div>
+      </div>
+      <div style="padding:10px 24px 0;border-top:1px solid var(--line);margin-top:2px;">
+        <div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:4px;">CTA sugerido</div>
+        <div style="font-size:12px;color:#6F243B;font-style:italic;padding-bottom:10px;" id="cardCta"></div>
+      </div>
+    </div>
+
+    <!-- ACTIONS — FIX 3: primary + single secondary -->
+    <div class="card-actions">
+      <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar conteúdo
+      </button>
+      <button class="btn-more" id="btnMore" onclick="toggleExtra()">
+        Ver contexto estratégico
+        <em class="chevron">˅</em>
+      </button>
+    </div>
+
+    <!-- EXTRA PANEL — FIX 1 + FIX 3: everything collapsed here -->
+    <div class="extra-wrap" id="extraWrap">
+      <div class="extra-inner">
+
+        <!-- strategic context only — legenda already shown above -->
+        <div class="strat-grid">
+          <div class="strat-item">
+            <div class="strat-label">Pilar</div>
+            <div class="strat-value">Autoridade</div>
+          </div>
+          <div class="strat-item">
+            <div class="strat-label">Gatilho</div>
+            <div class="strat-value">Clareza</div>
+          </div>
+          <div class="strat-item strat-full">
+            <div class="strat-label">Objetivo</div>
+            <div class="strat-value">Reforçar autoridade e confiança antes do contacto</div>
+          </div>
+        </div>
+
+        <!-- resultado — FIX 3: moved inside, no longer duplicated -->
+        <div class="resultado-box">
+          <div class="resultado-label">Resultado esperado</div>
+          <div class="resultado-text">Os seus seguidores vão reconhecer um fotógrafo preparado, atento e digno de confiança.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </article>
+
+  <!-- NEXT DAY — FIX 5: appears earlier, no delay -->
+  <div class="next-card animate d5" style="cursor:pointer;" onclick="renderDay(currentDay+1)">
+    <div class="next-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" id="nextTopic">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-text">Agenda Ativa™ — Fotógrafos Edition</div>
+    <div class="footer-tagline">30 conteúdos prontos para ser escolhido antes do próximo evento.</div>
+  </footer>
+
+  </div><!-- /col-right -->
+
+  <!-- COL STRATEGY: visible only on desktop 1100px+ -->
+  <aside class="col-strategy">
+    <div class="strategy-sidebar-label">Contexto estratégico</div>
+
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Pilar</div>
+      <div class="strat-value">Autoridade</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Gatilho</div>
+      <div class="strat-value">Segurança</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Objetivo</div>
+      <div class="strat-value" style="font-size:12.5px;font-weight:400;line-height:1.5;">Reforçar autoridade e confiança antes do contacto</div>
+    </div>
+    <div class="resultado-box" style="display:none;" id="sidebarResultado">
+      <div class="resultado-label">Resultado esperado</div>
+      <div class="resultado-text">Os seus seguidores vão reconhecer um fotógrafo preparado, atento e digno de confiança.</div>
+    </div>
+
+    <div class="next-sidebar">
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" style="font-size:16px;margin-bottom:4px;">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  Conteúdo copiado — cole no Instagram
+</div>
+
+<script>
+const DAYS = [{"num":1,"format":"Educação","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"Uma","text":"boa fotografia começa muito antes do clique.\n\nAntes de pegar na câmara, há perguntas a fazer, luz para observar e uma história para compreender. É nessa preparação que se decide o ambiente, o ritmo e aquilo que vale a pena guardar.\n\nFotografar não é apenas estar presente com equipamento. É antecipar momentos sem os interromper e criar condições para que as pessoas se reconheçam nas imagens.","cta":"Que história gostaria de guardar em fotografias?"},{"num":2,"format":"Bastidor","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"“Não","text":"sou fotogénico” é uma frase que ouvimos muitas vezes.\n\nNão é preciso saber posar para ficar bem numa fotografia. É trabalho do fotógrafo orientar sem tornar o momento artificial, encontrar a luz certa e ajudar cada pessoa a sentir-se confortável.\n\nAs melhores imagens raramente nascem de uma pose perfeita. Nascem quando a atenção deixa de estar na câmara e volta para a pessoa, para a relação ou para o momento.","cta":"Guarde esta publicação para a próxima vez que pensar que não é fotogénico."},{"num":3,"format":"Autoridade","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"O","text":"que está incluído numa cobertura fotográfica?\n\nUma cobertura não começa à hora marcada nem termina no último clique. Inclui preparação, comunicação, deslocação, seleção, edição, cópias de segurança e entrega.\n\nPor trás de uma galeria coerente existem muitas decisões invisíveis: escolher o enquadramento, equilibrar cores e separar uma imagem boa daquela que realmente conta a história.","cta":"Antes de pedir um orçamento, pergunte como funciona todo o processo."},{"num":4,"format":"Confiança","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"A","text":"hora da cerimónia também muda as fotografias.\n\nA mesma cerimónia e o mesmo espaço podem originar imagens muito diferentes consoante a hora, a direção da luz e o ambiente.\n\nSempre que é possível, conversar sobre horários ajuda a aproveitar melhor a luz para a chegada, a cerimónia e os retratos. Uma boa articulação entre casal, organização e fotógrafo protege o ritmo do evento sem o transformar numa produção fotográfica.","cta":"Está a planear um casamento ao ar livre? Guarde esta publicação antes de fechar o horário."},{"num":5,"format":"Checklist","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"Fotografias","text":"de grupo sem ocupar metade da festa.\n\nAs fotografias com família e amigos são importantes, mas não precisam de se transformar numa lista interminável.\n\nDefinir antecipadamente os grupos essenciais e escolher alguém que conheça os convidados torna o processo mais rápido. Assim, ninguém importante fica de fora e o casal regressa à celebração sem perder o melhor do ambiente.","cta":"Envie esta publicação a quem está a organizar a lista de fotografias do casamento."},{"num":6,"format":"História","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"Um","text":"espaço bonito também precisa de um bom plano fotográfico.\n\nUm espaço pode ser extraordinário e, ainda assim, apresentar luz difícil, distâncias longas ou zonas pouco adequadas para retratos.\n\nConhecer o local ou chegar com antecedência permite encontrar alternativas, antecipar deslocações e escolher os melhores pontos sem interromper o evento. A beleza do espaço ganha força quando existe preparação.","cta":"Já escolheu o espaço do seu evento? Pergunte ao fotógrafo como planeia trabalhar nele."},{"num":7,"format":"Educação","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"Porque","text":"é que o estilo do fotógrafo importa?\n\nCada fotógrafo observa, enquadra e edita de forma própria. Há trabalhos documentais, editoriais, clássicos, luminosos ou cinematográficos — e nenhum estilo serve todas as pessoas.\n\nAntes de contratar, veja uma história completa e não apenas as imagens de maior impacto. Assim percebe se gosta da consistência do trabalho e de como o profissional conta um dia inteiro.","cta":"Ao escolher um fotógrafo, procure um olhar no qual se reconheça."},{"num":8,"format":"Bastidor","pilar":"Autoridade","gatilho":"Clareza","objetivo":"Explicar o valor e o processo profissional antes do contacto.","title":"As","text":"crianças não precisam de ficar quietas durante um evento.\n\nPrecisam de tempo, espaço e propostas simples que despertem curiosidade. Forçar um sorriso costuma criar tensão; brincar, conversar e acompanhar o ritmo produz expressões mais genuínas.\n\nNum casamento, batizado ou festa, as crianças correm, brincam e mudam rapidamente de atenção. Muitas vezes, é precisamente aí que aparecem as fotografias que a família mais guarda.","cta":"Partilhe com uma família que está a preparar um batizado ou uma festa com crianças."},{"num":9,"format":"Autoridade","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"Quando","text":"a festa termina, as fotografias continuam.\n\nHoje, uma imagem pode parecer apenas bonita. Daqui a alguns anos, mostrará gestos, pessoas, lugares e fases que já mudaram.\n\nFotografar um evento é criar memória para o presente e para o futuro. Não conseguimos repetir discursos, reencontros ou abraços, mas podemos preservar detalhes que a memória, sozinha, acabaria por simplificar.","cta":"Qual é a fotografia antiga que mais significa para si?"},{"num":10,"format":"Confiança","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"E","text":"se chover no dia do casamento ou do evento?\n\nPrimeiro, avaliamos a intensidade da chuva, o espaço e as alternativas disponíveis. Podemos ajustar alguns momentos, utilizar zonas cobertas ou integrar o tempo nas imagens sem comprometer a celebração.\n\nNem todos os céus cinzentos são um problema: as nuvens criam luz suave e ambientes muito próprios. Um plano alternativo evita decisões apressadas.","cta":"Se o evento tem uma parte exterior, confirme sempre o plano para mau tempo."},{"num":11,"format":"Checklist","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"Editar","text":"não é transformar uma pessoa noutra.\n\nA edição organiza cor, luz, contraste e consistência. Serve para aproximar a fotografia da intenção visual do trabalho, não para apagar tudo o que torna alguém real.\n\nUm acabamento cuidado respeita pele, expressão e identidade. A conversa prévia sobre expectativas é essencial, sobretudo quando existem pedidos específicos de retoque.","cta":"Prefere uma edição natural ou um resultado mais editorial?"},{"num":12,"format":"História","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"Porque","text":"não são entregues todas as fotografias tiradas?\n\nDurante um evento existem testes, repetições, olhos fechados e imagens muito semelhantes. A seleção faz parte da autoria e garante que a galeria conta a história sem ruído.\n\nEntregar mais não significa necessariamente entregar melhor. O objetivo é escolher um conjunto forte, variado e coerente, onde cada imagem tenha uma razão para estar.","cta":"Valoriza mais quantidade ou uma seleção cuidada?"},{"num":13,"format":"Educação","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"Um","text":"pouco dos bastidores.\n\nEnquanto parece que estamos apenas a fotografar, estamos também a ler a luz, vigiar o fundo, antecipar movimentos e ajustar pequenas coisas sem quebrar o momento.\n\nHá concentração, técnica e muita atenção ao que acontece fora do centro da imagem. Os bastidores mostram que a naturalidade também pode ser cuidadosamente protegida.","cta":"Gostaria de ver mais bastidores das sessões?"},{"num":14,"format":"Bastidor","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"A","text":"primeira conversa faz parte da fotografia.\n\nÉ nela que percebemos quem vai estar presente, o que é importante, quais são os receios e como as imagens serão utilizadas.\n\nQuanto mais clara for a comunicação, mais leve se torna o dia do evento. Não é necessário chegar com tudo decidido; basta trazer o programa, prioridades, referências e disponibilidade para construir em conjunto.","cta":"Está a preparar um casamento ou evento? Conte-me o essencial por mensagem."},{"num":15,"format":"Autoridade","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"O","text":"equipamento ajuda. O olhar decide.\n\nUma câmara profissional oferece qualidade e segurança, mas não escolhe o instante, não cria confiança e não reconhece o gesto que dura apenas um segundo.\n\nO resultado nasce da combinação entre técnica, experiência, sensibilidade e capacidade de adaptação. O equipamento é uma ferramenta; a fotografia acontece nas decisões de quem o utiliza.","cta":"Veja o portefólio antes de comparar listas de equipamento."},{"num":16,"format":"Confiança","pilar":"Confiança","gatilho":"Segurança","objetivo":"Reduzir dúvidas e tornar a experiência fotográfica mais previsível.","title":"Os","text":"retratos do casal não precisam de roubar tempo à festa.\n\nCom preparação, luz bem escolhida e uma orientação simples, é possível criar retratos fortes num período curto e confortável.\n\nO objetivo não é transformar o casamento numa sessão interminável. É dar ao casal alguns minutos para respirar, criar imagens com intenção e regressar às pessoas que escolheram para viver o dia.","cta":"Quanto tempo gostaria de reservar para os retratos no dia do casamento?"},{"num":17,"format":"Checklist","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"Fotografar","text":"a decoração é guardar escolhas que duraram meses.\n\nFlores, estacionário, mesa, iluminação e pequenos objetos contam uma parte da história do evento. Muitos desses elementos foram escolhidos durante meses e desaparecem no próprio dia.\n\nChegar antes dos convidados ou reservar alguns minutos para os detalhes permite fotografá-los intactos. Não são apenas elementos bonitos: são decisões, pessoas e trabalho que também merecem memória.","cta":"Qual é o detalhe do seu evento que mais gostaria de guardar?"},{"num":18,"format":"História","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"A","text":"beleza dos momentos intermédios.\n\nNem sempre a fotografia mais forte é a que estava planeada. Pode ser o instante antes do abraço, o riso depois da pose ou a mão que procura outra mão.\n\nEstar atento aos intervalos permite contar uma história mais humana. São imagens que não anunciam o momento; revelam como ele foi vivido.","cta":"Gosta mais de fotografias posadas ou de momentos espontâneos?"},{"num":19,"format":"Educação","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"Uma","text":"galeria deve contar uma história completa.\n\nPrecisa de imagens amplas que situem, retratos que aproximem e detalhes que tragam textura. Se todas as fotografias tiverem a mesma distância e intensidade, perde-se o ritmo.\n\nUma narrativa visual alterna contexto e emoção. É essa sequência que permite voltar ao dia não apenas para o ver, mas para o sentir.","cta":"Quando vir um portefólio, procure histórias completas."},{"num":20,"format":"Bastidor","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"Um","text":"álbum é a forma física de voltar ao evento.\n\nNo telemóvel, passamos por milhares de imagens. Uma fotografia impressa ocupa um lugar, entra na rotina e pode atravessar gerações.\n\nUm álbum transforma centenas de ficheiros numa narrativa que pode ser vista, tocada e partilhada. Escolher imagens, sequência e materiais faz parte da forma como essa memória atravessa os anos.","cta":"Qual fotografia merece sair do ecrã esta semana?"},{"num":21,"format":"Autoridade","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"Preparativos:","text":"o início da história também merece espaço.\n\nOs preparativos guardam expectativa, nervos, ajuda entre pessoas próximas e detalhes que mais tarde passam despercebidos.\n\nNão é preciso transformar o quarto num estúdio. Uma zona com luz, algum espaço livre e os elementos importantes reunidos ajuda o fotógrafo a trabalhar sem retirar verdade ao momento.","cta":"Guarde este guia para preparar a manhã do casamento."},{"num":22,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"“Não","text":"gostamos de posar” é uma frase que muitos casais dizem.\n\nÉ normal sentir alguma estranheza quando a câmara se aproxima. Uma orientação simples, uma conversa e algum movimento ajudam o casal a voltar a concentrar-se um no outro.\n\nNão esperamos poses perfeitas. Construímos conforto e ajustamos a abordagem a cada pessoa, sem transformar os retratos numa prova de desempenho.","cta":"Se o receio de posar pesa na escolha do fotógrafo, fale comigo antes de decidir."},{"num":23,"format":"Checklist","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o trabalho e aproximar o potencial cliente.","title":"Datas","text":"importantes merecem planeamento.\n\nÉpocas festivas, fins de semana e meses de maior procura podem ficar preenchidos com antecedência. Reservar cedo dá mais liberdade para escolher horário, local e fornecedores.\n\nTambém permite preparar roupa, referências e logística sem pressa. Planeamento não retira espontaneidade; cria espaço para que ela aconteça.","cta":"Se tem uma data especial, confirme a disponibilidade com antecedência."},{"num":24,"format":"História","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"O","text":"orçamento mais baixo e o mais adequado não são sempre o mesmo.\n\nCompare experiência, estilo, acompanhamento, tempo de cobertura, forma de entrega, segurança dos ficheiros e condições contratadas.\n\nUma proposta clara ajuda a perceber o que está incluído e evita surpresas. Escolher um fotógrafo é escolher quem vai acompanhar um momento irrepetível e como ele ficará registado.","cta":"Peça uma proposta completa e escolha com informação."},{"num":25,"format":"Educação","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"Três","text":"perguntas antes de contratar a fotografia do evento.\n\nQue momentos não podem faltar? Durante quantas horas precisa de cobertura? Que estilo de fotografia combina consigo?\n\nEstas respostas ajudam a definir presença, equipa, horários e tipo de entrega. Não precisa de ter tudo fechado: a conversa inicial serve precisamente para transformar prioridades numa proposta adequada.","cta":"Responda às três perguntas e dê o primeiro passo."},{"num":26,"format":"Bastidor","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"Fotografar","text":"um evento é também antecipar o que acontece a seguir.\n\nO beijo, a entrada, o brinde ou o corte do bolo duram poucos segundos. Para os captar, o fotógrafo precisa de conhecer o programa, observar o ambiente e posicionar-se antes do momento.\n\nPartilhar alterações de horário e surpresas com o profissional certo não retira espontaneidade. Permite que ela seja documentada sem pedir uma repetição.","cta":"Antes do evento, entregue ao fotógrafo o programa e os contactos essenciais."},{"num":27,"format":"Autoridade","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"O","text":"que acontece depois de reservar?\n\nRecebe as informações necessárias e alinhamos programa, locais, horários, pessoas importantes e detalhes práticos. Conforme o evento, pode existir questionário, reunião ou guia de preparação.\n\nNo dia, já não começamos do zero. Existe um plano suficientemente claro para dar segurança e suficientemente flexível para acolher o inesperado.","cta":"Quer conhecer o processo para o seu casamento ou evento? Peça as informações."},{"num":28,"format":"Confiança","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"Um","text":"evento não é feito apenas dos momentos do programa.\n\nEntre a cerimónia, o jantar e a dança acontecem conversas, reencontros, gestos e pequenos imprevistos que ninguém colocou na timeline.\n\nUma cobertura documental procura também esses intervalos. É aí que o evento deixa de ser apenas bonito e passa a mostrar como foi realmente vivido.","cta":"Prefere uma cobertura mais documental ou com maior presença de momentos orientados?"},{"num":29,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"Como","text":"saber de quantas horas de cobertura precisa?\n\nDepende da história que quer guardar. Os preparativos, a cerimónia, os retratos, o jantar e a festa ocupam momentos diferentes do dia.\n\nEm vez de escolher apenas pelo número mais baixo, pense no início e no fim que gostaria de ver na galeria. Um fotógrafo pode ajudar a construir uma cobertura coerente com o programa e as prioridades.","cta":"Envie o programa do evento para receber uma recomendação de cobertura."},{"num":30,"format":"História","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em pedidos de informação e reservas.","title":"As","text":"fotografias que adia são momentos que continuam a mudar.\n\nEsperar pelo corpo ideal, pela estação perfeita ou por uma agenda sem imprevistos pode transformar uma intenção num adiamento permanente.\n\nNão é necessário ter tudo perfeito para criar imagens com significado. É necessário escolher o que quer preservar e encontrar a abordagem certa para si.","cta":"Se quer guardar esta fase, envie uma mensagem e começamos a planear."}];
+
+let currentDay = 1;
+
+// Splash
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("splash").classList.add("hide");
+    setTimeout(() => {
+      document.querySelectorAll(".animate").forEach(el => el.classList.add("in"));
+      renderDay(1);
+    }, 250);
+  }, 800);
+});
+
+// Init progress dots
+const dotsEl = document.getElementById("pDots");
+for (let i = 1; i <= 30; i++) {
+  const d = document.createElement("div");
+  d.className = "dot" + (i === 1 ? " today" : "");
+  dotsEl.appendChild(d);
+}
+
+function renderDay(n) {
+  const d = DAYS.find(x => x.num === n);
+  if (!d) return;
+  currentDay = n;
+
+  // Nav + progress count
+  document.getElementById("navPill").textContent = "Dia " + n + " de 30";
+  document.getElementById("progressCount").textContent = "Dia " + n + " de 30";
+
+  // Card title + metadata
+  document.getElementById("cardTopic").textContent = d.title;
+  const formatTag = document.querySelector(".tag-format");
+  const pilarTag = document.querySelector(".tag-pilar");
+  if (formatTag) formatTag.textContent = d.format || "Conteúdo";
+  if (pilarTag) pilarTag.textContent = d.pilar || "Estratégia";
+  document.querySelectorAll(".strat-value").forEach((el, idx) => {
+    if (idx === 0) el.textContent = d.pilar || "Estratégia";
+    if (idx === 1) el.textContent = d.gatilho || "Confiança";
+    if (idx === 2) el.textContent = d.objetivo || "Reforçar autoridade e confiança antes do contacto.";
+  });
+
+  // Card text — render paragraphs
+  const textEl = document.getElementById("cardText");
+  const paragraphs = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n").split("\n\n");
+  textEl.innerHTML = paragraphs.map(p => `<p style="margin-bottom:12px;">${p.replace(/\n/g,"<br>")}</p>`).join("");
+
+  // CTA
+  document.getElementById("cardCta").textContent = d.cta;
+
+  // Progress bar
+  document.getElementById("pFill").style.width = (n / 30 * 100) + "%";
+
+  // Progress dots
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.className = "dot" + (i + 1 < n ? " done" : i + 1 === n ? " today" : "");
+  });
+
+  // Next day
+  const next = DAYS.find(x => x.num === n + 1);
+  const nextCard = document.querySelector(".next-card");
+  if (next && nextCard) {
+    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
+    document.getElementById("nextTopic").textContent = next.title;
+    nextCard.style.display = "";
+    nextCard.style.cursor = "pointer";
+    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
+  } else if (nextCard) {
+    nextCard.style.display = "none";
+  }
+}
+
+function copyPrompt() {
+  const d = DAYS.find(x => x.num === currentDay);
+  if (!d) return;
+  const clean = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n");
+  const full = clean + "\n\n" + d.cta;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById("btnCopy");
+    btn.classList.add("copied");
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="20,6 9,17 4,12"/></svg> Copiado!`;
+    document.getElementById("toast").classList.add("show");
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar conteúdo`;
+      document.getElementById("toast").classList.remove("show");
+    }, 3000);
+  });
+}
+
+let extraOpen = false;
+function toggleExtra() {
+  extraOpen = !extraOpen;
+  document.getElementById("extraWrap").classList.toggle("open", extraOpen);
+  const btn = document.getElementById("btnMore");
+  btn.classList.toggle("open", extraOpen);
+  btn.innerHTML = (extraOpen ? "Fechar" : "Ver contexto estratégico") + ` <em class="chevron" style="transform:${extraOpen?"rotate(180deg)":"none"}">˅</em>`;
+}
+</script>
+</body>
+</html>

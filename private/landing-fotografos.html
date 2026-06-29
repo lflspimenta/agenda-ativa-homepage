@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agenda Ativa™ — Fotógrafos Edition</title>
+  <meta name="description" content="30 dias de conteúdos prontos para fotógrafos de casamentos e eventos.">
+  <style>
+    :root{--wine:#6f243b;--wine-dark:#541a2c;--blush:#f3e8eb;--ivory:#f7f2ea;--ink:#24201f;--muted:#665f5b;--line:#ddd3c9;--white:#fff}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ivory);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+    img{display:block;max-width:100%}a{color:inherit}.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+    .topbar{height:74px;display:flex;align-items:center;border-bottom:1px solid rgba(36,32,31,.1);background:rgba(247,242,234,.94)}
+    .nav{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:Georgia,serif;letter-spacing:.08em;font-size:15px}
+    .brand img{width:35px;height:35px;object-fit:contain}.back{text-decoration:none;font-size:13px;font-weight:700;border-bottom:1px solid var(--ink)}
+    .hero{min-height:690px;display:grid;grid-template-columns:46% 54%;align-items:stretch;background:#eee4d8}
+    .hero-copy{display:flex;align-items:center;padding:80px max(28px,calc((100vw - 1180px)/2));padding-right:55px;background:var(--ivory)}
+    .eyebrow{display:block;color:var(--wine);font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:22px}
+    h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;line-height:1.08;margin:0}
+    h1{font-size:clamp(46px,5.3vw,78px);letter-spacing:-.035em}.hero p{max-width:560px;color:var(--muted);font-size:19px;margin:26px 0 30px}
+    .hero-photo{position:relative;overflow:hidden}.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+    .button{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 26px;background:var(--wine);color:var(--white);text-decoration:none;font-weight:800;border-radius:2px;transition:.2s}
+    .button:hover{background:var(--wine-dark);transform:translateY(-1px)}.micro{display:block;margin-top:14px;color:var(--muted);font-size:12px}
+    section{padding:100px 0}.intro{text-align:center}.intro h2{font-size:clamp(36px,4vw,58px);max-width:850px;margin:auto}.intro p{max-width:690px;margin:24px auto 0;color:var(--muted);font-size:18px}
+    .pain{background:var(--ink);color:var(--white);padding:0}.split{display:grid;grid-template-columns:1fr 1fr;min-height:680px}.split-image img{width:100%;height:100%;object-fit:cover}
+    .split-copy{display:flex;align-items:center;padding:70px clamp(32px,7vw,105px)}.split-copy h2{font-size:clamp(38px,4.6vw,64px)}.split-copy p{color:#d9d1cc;font-size:18px;margin:24px 0}
+    .pain-list{list-style:none;padding:0;margin:30px 0 0}.pain-list li{padding:13px 0;border-top:1px solid rgba(255,255,255,.16)}.pain-list li:before{content:"—";color:#d39aac;margin-right:12px}
+    .solution{background:var(--blush)}.solution-head{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:60px}.solution h2{font-size:clamp(38px,4.4vw,62px)}.solution-head p{color:var(--muted);font-size:18px;margin:0}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:var(--white);padding:35px;border:1px solid rgba(111,36,59,.12)}.card b{display:block;color:var(--wine);font-size:12px;letter-spacing:.15em;margin-bottom:45px}.card h3{font-size:28px}.card p{color:var(--muted);margin:15px 0 0}
+    .showcase{padding:0;background:var(--white)}.showcase .split{min-height:630px}.showcase .split-copy{background:var(--white)}.showcase h2{font-size:clamp(38px,4.4vw,62px)}.showcase p{color:var(--muted);font-size:18px}
+    .days h2{text-align:center;font-size:clamp(38px,4.4vw,62px)}.days>div>p{text-align:center;color:var(--muted);font-size:18px;margin:20px auto 45px;max-width:690px}
+    .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.day{padding:24px;border:1px solid var(--line);background:rgba(255,255,255,.45)}.day small{color:var(--wine);font-weight:800}.day h3{font-family:Arial,sans-serif;font-size:17px;font-weight:800;line-height:1.3;margin-top:10px}
+    .for-you{background:var(--wine);color:var(--white)}.for-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px}.for-you h2{font-size:clamp(40px,4.5vw,64px)}.checks{display:grid;gap:14px}.check{padding:17px 0;border-bottom:1px solid rgba(255,255,255,.24);font-size:18px}.check:before{content:"✓";margin-right:14px;font-weight:900}
+    .offer{text-align:center}.offer h2{font-size:clamp(42px,5vw,68px)}.offer>div>p{max-width:620px;margin:22px auto;color:var(--muted);font-size:18px}
+    .price-box{width:min(540px,100%);margin:45px auto 0;background:var(--white);border:1px solid var(--line);padding:45px;box-shadow:0 20px 60px rgba(60,35,25,.08)}
+    .price-box .label{color:var(--wine);font-size:12px;font-weight:800;letter-spacing:.16em}.price{font-family:Georgia,serif;font-size:70px;line-height:1;margin:18px 0 8px}.price-box ul{text-align:left;list-style:none;padding:20px 0;margin:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.price-box li{padding:7px 0}.price-box li:before{content:"✓";color:var(--wine);margin-right:10px;font-weight:900}.price-box .button{width:100%}
+    .faq{background:#efe7de}.faq h2{font-size:clamp(38px,4vw,58px);margin-bottom:45px}.faq details{border-top:1px solid #cfc3b8;padding:21px 0}.faq summary{cursor:pointer;font-weight:800;font-size:17px}.faq details p{color:var(--muted);max-width:800px}
+    footer{padding:38px 0;background:var(--ink);color:#d8ceca;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px}
+    @media(max-width:800px){
+      .wrap{width:min(100% - 28px,680px)}.topbar{height:64px}.brand{font-size:12px}.brand img{width:30px;height:30px}
+      .hero{display:flex;flex-direction:column;min-height:0}.hero-copy{order:2;padding:45px 22px 52px}.hero-photo{height:55vh;min-height:420px}.hero-photo img{object-position:66% center}
+      h1{font-size:45px}.hero p{font-size:17px;margin:20px 0 25px}.button{width:100%}
+      section{padding:72px 0}.split{grid-template-columns:1fr;min-height:0}.split-image{height:430px}.split-copy{padding:55px 24px}.pain .split-image img{object-position:center}
+      .solution-head,.for-grid{grid-template-columns:1fr;gap:25px}.cards,.day-grid{grid-template-columns:1fr}.card b{margin-bottom:28px}.showcase .split-image{order:1}.showcase .split-copy{order:2}
+      .price-box{padding:32px 22px}.price{font-size:62px}.foot{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#"><img src="aa-monogram.svg" alt=""><span>AGENDA ATIVA™</span></a>
+      <a class="back" href="#">Voltar à homepage</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div>
+          <span class="eyebrow">Fotógrafos Edition · Casamentos & Eventos</span>
+          <h1>O seu olhar merece ser visto antes do próximo evento.</h1>
+          <p>30 dias de conteúdos prontos para mostrar o valor do seu trabalho, criar confiança e transformar seguidores em pedidos de orçamento.</p>
+          <a class="button" href="#oferta">Quero comunicar com consistência</a>
+          <span class="micro">Pagamento único · Acesso digital imediato</span>
+        </div>
+      </div>
+      <div class="hero-photo"><img src="hero-fotografos-casamento-v1.png" alt="Fotógrafa a trabalhar durante uma cerimónia de casamento"></div>
+    </section>
+
+    <section class="intro">
+      <div class="wrap">
+        <span class="eyebrow">Fotografar já ocupa tudo</span>
+        <h2>Não devia precisar de escolher entre entregar trabalho e manter o Instagram vivo.</h2>
+        <p>A Agenda Ativa transforma a comunicação numa tarefa simples: abrir o conteúdo do dia, copiar e publicar.</p>
+      </div>
+    </section>
+
+    <section class="pain">
+      <div class="split">
+        <div class="split-image"><img src="fotografa-cansaco-material.png" alt="Fotógrafa cansada depois de um evento, rodeada pelo equipamento"></div>
+        <div class="split-copy">
+          <div>
+            <span class="eyebrow" style="color:#d9a8b7">A realidade que poucos veem</span>
+            <h2>O evento termina. O seu trabalho não.</h2>
+            <p>Depois de horas a fotografar, ainda existem cópias de segurança, seleção, edição, entregas e mensagens para responder. A estratégia para o Instagram fica sempre para depois.</p>
+            <ul class="pain-list">
+              <li>Falta de tempo para planear</li>
+              <li>Dúvida sobre o que publicar</li>
+              <li>Sem energia para escrever legendas</li>
+              <li>Meses fortes no portefólio, semanas vazias nas redes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="solution">
+      <div class="wrap">
+        <div class="solution-head">
+          <div><span class="eyebrow">Uma estrutura pronta</span><h2>Conteúdo pensado para quem vive entre eventos e edições.</h2></div>
+          <p>São textos finais, organizados numa sequência estratégica, que ajudam o potencial cliente a compreender o seu processo, reconhecer o seu valor e sentir confiança para pedir informações.</p>
+        </div>
+        <div class="cards">
+          <article class="card"><b>01 · AUTORIDADE</b><h3>Explique o seu valor</h3><p>Mostre preparação, técnica, seleção, segurança e tudo o que existe para além do clique.</p></article>
+          <article class="card"><b>02 · PROXIMIDADE</b><h3>Mostre o lado humano</h3><p>Fale dos bastidores, da relação com os clientes e da forma como acompanha cada evento.</p></article>
+          <article class="card"><b>03 · CONVERSÃO</b><h3>Convide a avançar</h3><p>Crie pedidos de orçamento com chamadas à ação naturais, sem transformar cada publicação numa venda.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="split">
+        <div class="split-copy">
+          <div>
+            <span class="eyebrow">O cliente vê o resultado</span>
+            <h2>A Agenda ajuda-o a revelar o processo.</h2>
+            <p>Quando um casal compreende como prepara, antecipa e protege cada momento, deixa de comparar apenas preços. Começa a reconhecer experiência, responsabilidade e confiança.</p>
+            <p>É essa perceção que os conteúdos constroem ao longo dos 30 dias.</p>
+          </div>
+        </div>
+        <div class="split-image"><img src="fotografa-bastidores.png" alt="Fotógrafa a criar retratos de um casal"></div>
+      </div>
+    </section>
+
+    <section class="days">
+      <div class="wrap">
+        <span class="eyebrow" style="text-align:center">Alguns dos 30 conteúdos</span>
+        <h2>Todos os dias, um ângulo que aproxima o cliente.</h2>
+        <p>Uma sequência editorial equilibrada entre educação, bastidores, emoção e conversão.</p>
+        <div class="day-grid">
+          <article class="day"><small>DIA 01</small><h3>Uma boa fotografia começa muito antes do clique.</h3></article>
+          <article class="day"><small>DIA 05</small><h3>Fotografias de grupo sem ocupar metade da festa.</h3></article>
+          <article class="day"><small>DIA 10</small><h3>E se chover no dia do casamento ou do evento?</h3></article>
+          <article class="day"><small>DIA 16</small><h3>Os retratos do casal não precisam de roubar tempo à festa.</h3></article>
+          <article class="day"><small>DIA 23</small><h3>Datas importantes merecem planeamento.</h3></article>
+          <article class="day"><small>DIA 30</small><h3>As fotografias que adia são momentos que continuam a mudar.</h3></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="split">
+        <div class="split-image"><img src="fotografa-evento-exterior.png" alt="Fotógrafa a documentar um casamento ao ar livre"></div>
+        <div class="split-copy">
+          <div>
+            <span class="eyebrow">Enquanto fotografa</span>
+            <h2>A sua comunicação continua a trabalhar por si.</h2>
+            <p>Os conteúdos certos mantêm a marca presente entre eventos, explicam a experiência que oferece e ajudam o próximo cliente a chegar mais preparado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="for-you">
+      <div class="wrap for-grid">
+        <div><span class="eyebrow" style="color:#e5bdc9">Esta edição é para si se</span><h2>Tem trabalho para mostrar, mas falta-lhe tempo para o comunicar.</h2></div>
+        <div class="checks">
+          <div class="check">Fotografa casamentos, batizados, festas ou eventos</div>
+          <div class="check">Publica sem uma linha editorial consistente</div>
+          <div class="check">Perde demasiado tempo a tentar escrever legendas</div>
+          <div class="check">Quer atrair clientes que valorizem o seu processo</div>
+          <div class="check">Precisa de uma solução simples para utilizar no telemóvel</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="offer" id="oferta">
+      <div class="wrap">
+        <span class="eyebrow">Fotógrafos Edition</span>
+        <h2>30 dias para tornar o seu trabalho mais visível.</h2>
+        <p>Aceda no telemóvel, encontre o conteúdo do dia, copie e publique. Sem planeamento, sem páginas em branco e sem legendas para escrever.</p>
+        <div class="price-box">
+          <span class="label">PAGAMENTO ÚNICO</span>
+          <div class="price">97 €</div>
+          <small>Sem mensalidade</small>
+          <ul>
+            <li>30 conteúdos finais prontos a publicar</li>
+            <li>30 chamadas à ação</li>
+            <li>Sequência editorial organizada</li>
+            <li>Acesso digital no telemóvel</li>
+            <li>Progresso diário durante 30 dias</li>
+          </ul>
+          <a class="button" href="#">Quero a Fotógrafos Edition</a>
+          <span class="micro">O botão de pagamento será ligado depois da aprovação.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="wrap">
+        <span class="eyebrow">Perguntas frequentes</span>
+        <h2>Antes de começar.</h2>
+        <details><summary>Os textos já estão prontos a publicar?</summary><p>Sim. Cada dia inclui título, texto e chamada à ação. Pode copiar e publicar diretamente. Personalizar algum detalhe é opcional, nunca uma tarefa obrigatória.</p></details>
+        <details><summary>Serve para qualquer fotógrafo?</summary><p>Esta edição foi construída especialmente para fotógrafos de casamentos, batizados, festas e outros eventos.</p></details>
+        <details><summary>Preciso de utilizar um computador?</summary><p>Não. A experiência foi pensada principalmente para telemóvel, permitindo consultar e copiar o conteúdo do dia.</p></details>
+        <details><summary>É uma subscrição?</summary><p>Não. O valor de 97 € corresponde a um pagamento único.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap foot"><span>AGENDA ATIVA™ · Fotógrafos Edition</span><span>Pré-visualização para aprovação</span></div></footer>
+</body>
+</html>

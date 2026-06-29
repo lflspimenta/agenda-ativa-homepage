@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { createSupabaseAdminClient } from "@/lib/supabase-server";
@@ -14,8 +14,8 @@ async function getProductFromSession(
   stripe: Stripe,
   session: Stripe.Checkout.Session
 ) {
-  if (session.metadata?.product === "imobiliario") {
-    return "imobiliario";
+  if (["imobiliario", "fotografos"].includes(session.metadata?.product ?? "")) {
+    return session.metadata?.product as "imobiliario" | "fotografos";
   }
 
   const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
@@ -29,8 +29,8 @@ async function getProductFromSession(
     | undefined;
 
   return typeof product !== "string" &&
-    product?.metadata?.product === "imobiliario"
-    ? "imobiliario"
+    ["imobiliario", "fotografos"].includes(product?.metadata?.product ?? "")
+    ? (product?.metadata?.product as "imobiliario" | "fotografos")
     : "wedding";
 }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     const { data: existing } = await admin
       .from("users")
       .select(
-        "email, products, wedding_purchase_date, imobiliario_purchase_date"
+        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date"
       )
       .eq("email", email)
       .maybeSingle();
@@ -80,6 +80,7 @@ export async function POST(request: Request) {
         products?: string[];
         wedding_purchase_date?: string;
         imobiliario_purchase_date?: string;
+        fotografos_purchase_date?: string;
       } = {};
 
       if (!products.includes(product)) {
@@ -88,6 +89,8 @@ export async function POST(request: Request) {
 
       if (product === "imobiliario" && !existing.imobiliario_purchase_date) {
         updates.imobiliario_purchase_date = purchaseDate;
+      } else if (product === "fotografos" && !existing.fotografos_purchase_date) {
+        updates.fotografos_purchase_date = purchaseDate;
       } else if (product === "wedding" && !existing.wedding_purchase_date) {
         updates.wedding_purchase_date = purchaseDate;
       }
@@ -103,7 +106,9 @@ export async function POST(request: Request) {
         products: [product],
         wedding_purchase_date: product === "wedding" ? purchaseDate : null,
         imobiliario_purchase_date:
-          product === "imobiliario" ? purchaseDate : null
+          product === "imobiliario" ? purchaseDate : null,
+        fotografos_purchase_date:
+          product === "fotografos" ? purchaseDate : null
       });
     }
 
@@ -116,7 +121,11 @@ export async function POST(request: Request) {
       email,
       options: {
         emailRedirectTo: `${requiredEnv("NEXT_PUBLIC_APP_URL")}/auth/callback?next=${
-          product === "imobiliario" ? "/imobiliario/agenda" : "/agenda"
+          product === "imobiliario"
+            ? "/imobiliario/agenda"
+            : product === "fotografos"
+              ? "/fotografos/agenda"
+              : "/agenda"
         }`
       }
     });
@@ -124,3 +133,4 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ received: true });
 }
+
