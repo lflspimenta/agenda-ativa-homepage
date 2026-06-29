@@ -16,6 +16,7 @@ const labels = {
   premium: "Continuar para o conte\u00fado premium \u2192",
   imobiliario: "Imobili\u00e1rio",
   fotografos: "Fot\u00f3grafos",
+  esteticaFacial: "Est\u00e9tica Facial",
   quick: "ACESSO R\u00c1PIDO",
   installTitle: "Tenha a Agenda Ativa no ecr\u00e3 inicial.",
   installText: "Entre diretamente nas suas edi\u00e7\u00f5es sem voltar a procurar o email."
@@ -82,6 +83,14 @@ export default async function MinhaAgendaPage() {
           <a className="customer-product fotografos-product" href="/fotografos/agenda">
             <small>{labels.edition}</small>
             <h2>{labels.fotografos}</h2>
+            <p>{labels.premium}</p>
+          </a>
+        )}
+
+        {products.includes("estetica_facial") && (
+          <a className="customer-product estetica-facial-product" href="/estetica-facial/agenda">
+            <small>{labels.edition}</small>
+            <h2>{labels.esteticaFacial}</h2>
             <p>{labels.premium}</p>
           </a>
         )}
