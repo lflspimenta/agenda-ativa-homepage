@@ -1,4 +1,4 @@
-﻿:root{
+:root{
   --paper:#fbf7f2;
   --sheet:#fffdf8;
   --ink:#211d1a;
@@ -647,6 +647,7 @@ h1{
 .imobiliario-product{background:linear-gradient(145deg,#294751,#547381)}
 .fotografos-product{background:linear-gradient(145deg,#541a2c,#6f243b)}
 .estetica-facial-product{background:linear-gradient(145deg,#3f5f4a,#6f8f7a)}
+.cabeleireiros-product{background:linear-gradient(145deg,#563724,#9a6a45)}
 .install-card{max-width:700px;margin:0 auto;padding:34px;text-align:center;background:white;border:1px solid rgba(31,27,25,.1);border-radius:18px}
 .install-card h2{font-family:var(--font-cormorant),serif;font-size:34px;margin:10px 0}
 .install-card>p{color:#70665e;margin-bottom:20px}

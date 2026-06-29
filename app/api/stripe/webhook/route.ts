@@ -14,8 +14,8 @@ async function getProductFromSession(
   stripe: Stripe,
   session: Stripe.Checkout.Session
 ) {
-  if (["imobiliario", "fotografos", "estetica_facial"].includes(session.metadata?.product ?? "")) {
-    return session.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial";
+  if (["imobiliario", "fotografos", "estetica_facial", "cabeleireiros"].includes(session.metadata?.product ?? "")) {
+    return session.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial" | "cabeleireiros";
   }
 
   const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
@@ -29,8 +29,8 @@ async function getProductFromSession(
     | undefined;
 
   return typeof product !== "string" &&
-    ["imobiliario", "fotografos", "estetica_facial"].includes(product?.metadata?.product ?? "")
-    ? (product?.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial")
+    ["imobiliario", "fotografos", "estetica_facial", "cabeleireiros"].includes(product?.metadata?.product ?? "")
+    ? (product?.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial" | "cabeleireiros")
     : "wedding";
 }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     const { data: existing } = await admin
       .from("users")
       .select(
-        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date"
+        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date, cabeleireiros_purchase_date"
       )
       .eq("email", email)
       .maybeSingle();
@@ -82,6 +82,7 @@ export async function POST(request: Request) {
         imobiliario_purchase_date?: string;
         fotografos_purchase_date?: string;
         estetica_facial_purchase_date?: string;
+        cabeleireiros_purchase_date?: string;
       } = {};
 
       if (!products.includes(product)) {
@@ -97,6 +98,11 @@ export async function POST(request: Request) {
         !existing.estetica_facial_purchase_date
       ) {
         updates.estetica_facial_purchase_date = purchaseDate;
+      } else if (
+        product === "cabeleireiros" &&
+        !existing.cabeleireiros_purchase_date
+      ) {
+        updates.cabeleireiros_purchase_date = purchaseDate;
       } else if (product === "wedding" && !existing.wedding_purchase_date) {
         updates.wedding_purchase_date = purchaseDate;
       }
@@ -116,7 +122,9 @@ export async function POST(request: Request) {
         fotografos_purchase_date:
           product === "fotografos" ? purchaseDate : null,
         estetica_facial_purchase_date:
-          product === "estetica_facial" ? purchaseDate : null
+          product === "estetica_facial" ? purchaseDate : null,
+        cabeleireiros_purchase_date:
+          product === "cabeleireiros" ? purchaseDate : null
       });
     }
 
@@ -135,7 +143,9 @@ export async function POST(request: Request) {
               ? "/fotografos/agenda"
               : product === "estetica_facial"
                 ? "/estetica-facial/agenda"
-                : "/agenda"
+                : product === "cabeleireiros"
+                  ? "/cabeleireiros/agenda"
+                  : "/agenda"
         }`
       }
     });

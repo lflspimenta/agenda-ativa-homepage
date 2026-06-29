@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F8F7F4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Agenda Ativa">
+  <title>Agenda Ativa™ — Cabeleireiros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F8F7F4;
+      --surface: #fffefb;
+      --ink: #2B2024;
+      --muted: #6F7A78;
+      --rose: #7A5238;
+      --rose-light: #C69A73;
+      --rose-dim: rgba(122,82,56,.14);
+      --gold: #D8D4CC;
+      --gold-dim: rgba(216,212,204,.38);
+      --line: rgba(111,36,59,.14);
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "Inter", system-ui, sans-serif;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body {
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: contain;
+    }
+
+    /* ── SPLASH — FIX 5: 800ms instead of 1400ms ── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .splash.hide {
+      opacity: 0;
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+    .splash-brand {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: var(--ink);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp .5s ease .1s forwards;
+    }
+    .splash-brand sup { font-size: 13px; color: var(--rose); vertical-align: super; }
+    .splash-line {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      animation: growLine .6s ease .2s forwards;
+    }
+    .splash-edition {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp .5s ease .35s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes growLine { to { width: 100px; } }
+
+    /* ── ENTRANCE ANIMATIONS ── */
+    .animate {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .animate.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .04s; }
+    .d2 { transition-delay: .12s; }
+    .d3 { transition-delay: .20s; }
+    .d4 { transition-delay: .28s; }
+    .d5 { transition-delay: .36s; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,247,243,.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: .05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .nav-brand sup { font-size: 10px; color: var(--rose); vertical-align: super; }
+    .nav-pill {
+      background: var(--rose-dim);
+      color: var(--rose);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 20px calc(36px + var(--safe-bottom));
+    }
+
+    /* ── GREETING ── */
+    .greeting { margin-bottom: 28px; }
+    .greeting-name {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--rose-light);
+      margin-bottom: 8px;
+      letter-spacing: .04em;
+    }
+    .greeting-h1 {
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 300;
+      line-height: .92;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .greeting-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── PROGRESS — FIX 4: today dot is celebratory ── */
+    .progress { margin-bottom: 24px; }
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-count {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--rose);
+    }
+    .progress-track {
+      height: 3px;
+      background: var(--rose-dim);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose), var(--rose-light));
+      border-radius: 2px;
+    }
+    .progress-dots { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose-dim); flex-shrink: 0; transition: background .3s; }
+    .dot.done { background: var(--rose-light); }
+    /* FIX 4: today dot is larger and has a pulse — not just one grey dot among 29 */
+    .dot.today {
+      width: 10px;
+      height: 10px;
+      background: var(--rose);
+      box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose);
+      animation: pulse 2s ease 1s 2;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose); }
+      50% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px rgba(111,36,59,.35); }
+    }
+
+    /* ── META ROW ── */
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .tag-format { background: var(--rose-dim); color: var(--rose); }
+    .tag-pilar { background: var(--gold-dim); color: #70545E; }
+    .tag-time {
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      background: transparent;
+    }
+    .tag-time svg { width: 11px; height: 11px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(111,36,59,.11);
+      border-top: 3px solid var(--rose);
+      border-radius: 6px;
+      box-shadow: 0 24px 56px rgba(43,32,36,.10), 0 4px 16px rgba(43,32,36,.06);
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: box-shadow .3s;
+    }
+    .card-body { padding: 28px 24px 24px; }
+
+    .card-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-eyebrow::before { content: ""; width: 14px; height: 1px; background: var(--rose); }
+
+    .card-topic {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card-hook {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 14px;
+      border-left: 2px solid var(--rose-dim);
+    }
+
+    /* ── PROMPT BLOCK (visible by default, no dark bg) ── */
+    .prompt-block {
+      background: var(--rose-dim);
+      border-top: 1px solid var(--line);
+      padding: 22px 24px;
+    }
+    .prompt-label {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .prompt-label::before { content: ""; width: 6px; height: 6px; background: var(--rose); border-radius: 50%; }
+    .prompt-scroll {
+      max-height: 140px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(111,36,59,.22) transparent;
+    }
+    .prompt-scroll::-webkit-scrollbar { width: 3px; }
+    .prompt-scroll::-webkit-scrollbar-thumb { background: rgba(111,36,59,.22); border-radius: 2px; }
+    .prompt-text {
+      font-size: 13px;
+      color: #2B2024;
+      line-height: 1.85;
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 16px;
+    }
+    .ph { color: var(--rose); font-weight: 600; }
+
+    /* ── ACTIONS ── */
+    .card-actions {
+      padding: 14px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* FIX 3: single primary + single secondary */
+    .btn-copy {
+      width: 100%;
+      min-height: 52px;
+      background: #2B2024;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .25s ease, transform .12s, letter-spacing .2s;
+    }
+    .btn-copy:active { transform: translateY(2px); box-shadow: 0 1px 4px rgba(111,36,59,.22); }
+    .btn-copy.copied { background: #51664F; letter-spacing: .06em; }
+    .btn-copy svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* FIX 3: one secondary button that expands everything extra */
+    .btn-more {
+      width: 100%;
+      min-height: 44px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s;
+      font-family: var(--sans);
+    }
+    .btn-more:active { border-color: var(--rose); color: var(--rose); }
+    .chevron { display: inline-block; transition: transform .25s; font-style: normal; font-size: 12px; }
+    .btn-more.open .chevron { transform: rotate(180deg); }
+
+    /* ── EXTRA PANEL (FIX 1: collapses strategic info + legenda) ── */
+    .extra-wrap {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .35s ease;
+      opacity: 0;
+    }
+    .extra-wrap.open { max-height: 800px; opacity: 1; }
+    .extra-inner {
+      margin: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* strategic grid inside extra */
+    .strat-grid {
+      background: linear-gradient(135deg, rgba(216,212,204,.24), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.55);
+      border-radius: 6px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .strat-item {}
+    .strat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #70545E;
+      margin-bottom: 4px;
+    }
+    .strat-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+    .strat-full { grid-column: 1 / -1; }
+
+    /* legenda inside extra */
+    .legenda-box {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 22px 20px;
+      background: var(--paper);
+    }
+    .legenda-eyebrow {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .legenda-text {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+    .legenda-text p + p { margin-top: 14px; }
+    .legenda-cta {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .legenda-cta strong { color: var(--rose); font-weight: 600; }
+
+    /* resultado inside extra — FIX 3: merged here */
+    .resultado-box {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      background: rgba(111,36,59,.05);
+    }
+    .resultado-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 5px;
+    }
+    .resultado-text { font-size: 13px; color: var(--ink); line-height: 1.65; }
+
+    /* ── NEXT CARD ── */
+    .next-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      margin-bottom: 36px;
+    }
+    .next-icon {
+      width: 38px; height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .next-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .next-topic { font-family: var(--serif); font-size: 18px; font-weight: 400; color: var(--ink); line-height: 1.3; }
+    .next-sub { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; gap: 6px; }
+    .next-pilar { color: #70545E; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer { text-align: center; padding-top: 24px; border-top: 1px solid var(--line); }
+    .footer-text { font-family: var(--serif); font-size: 13px; font-weight: 300; letter-spacing: .1em; color: var(--muted); }
+    .footer-tagline { font-size: 11px; color: rgba(138,122,112,.55); margin-top: 6px; font-style: italic; font-family: var(--serif); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--ink);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 13px 22px;
+      border-radius: 6px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width: 7px; height: 7px; background: #51664F; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── TABLET 768px: 2 colunas ── */
+    @media(min-width: 768px) {
+      main {
+        max-width: 100%;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: auto 1fr;
+        min-height: calc(100dvh - 57px);
+      }
+      /* Nav edition label visible on tablet+ */
+      .nav-edition { display: block; }
+
+      /* Left column: greeting + progress */
+      .col-left {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        padding: 40px 32px;
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+      }
+
+      /* Right column: everything else */
+      .col-right {
+        grid-column: 2;
+        padding: 36px 36px 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Greeting bigger on tablet */
+      .greeting { margin-bottom: 32px; }
+      .greeting-h1 { font-size: 56px; }
+
+      /* Progress in left col */
+      .progress { margin-bottom: 28px; }
+
+      /* Meta row inline */
+      .meta-row { margin-bottom: 16px; }
+
+      /* Card full width in right col, no stacking */
+      .card { margin-bottom: 0; }
+      .card-body { padding: 28px 28px 20px; }
+      .card-topic { font-size: 30px; }
+      .card-actions { padding: 14px 28px 24px; flex-direction: row; gap: 10px; }
+      .btn-copy { flex: 1; }
+      .btn-more { flex-shrink: 0; padding: 0 20px; width: auto; min-width: 180px; }
+      .extra-inner { margin: 0 28px 28px; }
+      .prompt-block { padding: 20px 28px; }
+
+      /* Next card in right col */
+      .next-card { margin-bottom: 0; }
+
+      /* Footer in right col */
+      .footer { margin-top: auto; padding-top: 32px; }
+
+      /* Hide .animate layout shift on tablet — already visible */
+    }
+
+    /* ── DESKTOP 1100px: 3 colunas ── */
+    @media(min-width: 1100px) {
+      main {
+        grid-template-columns: 300px 1fr 260px;
+      }
+
+      /* Strategy sidebar — 3rd col */
+      .col-right {
+        grid-column: 2;
+        padding: 40px 40px 60px;
+      }
+
+      .col-strategy {
+        grid-column: 3;
+        grid-row: 1 / -1;
+        padding: 40px 28px;
+        border-left: 1px solid var(--line);
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* On desktop hide btn-more (strategy always visible in sidebar) */
+      .btn-more { display: none; }
+      .extra-wrap { max-height: none !important; opacity: 1 !important; }
+      .extra-inner { margin: 0; }
+
+      /* Left col bigger */
+      .col-left { padding: 48px 36px; }
+      .greeting-h1 { font-size: 64px; }
+
+      /* Card topic bigger */
+      .card-topic { font-size: 34px; }
+      .prompt-scroll { max-height: 180px; }
+    }
+
+    /* Strategy sidebar label */
+    .strategy-sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strategy-sidebar-label { display: block; } }
+
+    /* Strat items for sidebar (reuse strat-grid items standalone) */
+    .strat-sidebar-item {
+      background: linear-gradient(135deg, var(--gold-dim), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.58);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strat-sidebar-item { display: block; } }
+
+    /* Next day in sidebar */
+    .next-sidebar {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      margin-top: auto;
+      display: none;
+    }
+    @media(min-width: 1100px) {
+      .next-sidebar { display: block; }
+      /* Hide next-card from right col on desktop — it's in sidebar */
+      .next-card { display: none; }
+    }
+
+    @media(min-width: 1100px) { #sidebarResultado { display: block !important; } }
+    @media(prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH — FIX 5: 800ms total -->
+<div class="splash" id="splash">
+  <div class="splash-brand">Agenda Ativa<sup>™</sup></div>
+  <div class="splash-line"></div>
+  <div class="splash-edition">Cabeleireiros Edition</div>
+</div>
+
+<nav class="nav">
+  <div>
+    <div class="nav-brand">Agenda Ativa<sup>™</sup></div>
+    <div class="nav-edition" style="display:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;">Cabeleireiros Edition</div>
+  </div>
+  <div class="nav-pill" id="navPill">Dia 1 de 30</div>
+</nav>
+
+<main>
+  <!-- COL LEFT: greeting + progress + meta (tablet/desktop) -->
+  <div class="col-left">
+
+  <!-- GREETING -->
+  <header class="greeting animate d1">
+    <div class="greeting-name">Olá</div>
+    <h1 class="greeting-h1">O seu<br>salão<br>continua ativo.</h1>
+    <p class="greeting-sub">O conteúdo de hoje já está pronto a publicar.</p>
+  </header>
+
+  <!-- PROGRESS — FIX 4: celebratory today dot -->
+  <div class="progress animate d2">
+    <div class="progress-header">
+      <span class="progress-label">O teu progresso</span>
+      <span class="progress-count" id="progressCount">Dia 1 de 30</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="pFill"></div>
+    </div>
+    <div class="progress-dots" id="pDots"></div>
+  </div>
+
+  <!-- META ROW -->
+  <div class="meta-row animate d3">
+    <span class="tag tag-format">Reel</span>
+    <span class="tag tag-pilar">Autoridade</span>
+    <span class="tag tag-time">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      2 minutos
+    </span>
+  </div>
+
+  </div><!-- /col-left -->
+
+  <!-- COL RIGHT: card + next + footer (tablet/desktop) -->
+  <div class="col-right">
+
+  <!-- CARD — FIX 1: stripped to topic + hook + prompt + actions -->
+  <article class="card animate d4">
+    <div class="card-body">
+
+      <div class="card-eyebrow">Conteúdo estratégico</div>
+
+      <h2 class="card-topic" id="cardTopic">Um cabelo bonito começa no diagnóstico.</h2>
+
+      <p class="card-hook" id="cardHook">Pronto a reforçar a sua autoridade.</p>
+
+    </div>
+
+    <!-- CONTENT BLOCK — legenda já escrita, pronta a copiar -->
+    <div class="prompt-block">
+      <div class="prompt-label">Legenda pronta a publicar</div>
+      <div class="prompt-scroll">
+        <div class="prompt-text" id="cardText"></div>
+      </div>
+      <div style="padding:10px 24px 0;border-top:1px solid var(--line);margin-top:2px;">
+        <div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:4px;">CTA sugerido</div>
+        <div style="font-size:12px;color:#6F243B;font-style:italic;padding-bottom:10px;" id="cardCta"></div>
+      </div>
+    </div>
+
+    <!-- ACTIONS — FIX 3: primary + single secondary -->
+    <div class="card-actions">
+      <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar conteúdo
+      </button>
+      <button class="btn-more" id="btnMore" onclick="toggleExtra()">
+        Ver contexto estratégico
+        <em class="chevron">˅</em>
+      </button>
+    </div>
+
+    <!-- EXTRA PANEL — FIX 1 + FIX 3: everything collapsed here -->
+    <div class="extra-wrap" id="extraWrap">
+      <div class="extra-inner">
+
+        <!-- strategic context only — legenda already shown above -->
+        <div class="strat-grid">
+          <div class="strat-item">
+            <div class="strat-label">Pilar</div>
+            <div class="strat-value">Autoridade</div>
+          </div>
+          <div class="strat-item">
+            <div class="strat-label">Gatilho</div>
+            <div class="strat-value">Clareza</div>
+          </div>
+          <div class="strat-item strat-full">
+            <div class="strat-label">Objetivo</div>
+            <div class="strat-value">Reforçar autoridade e confiança antes do contacto</div>
+          </div>
+        </div>
+
+        <!-- resultado — FIX 3: moved inside, no longer duplicated -->
+        <div class="resultado-box">
+          <div class="resultado-label">Resultado esperado</div>
+          <div class="resultado-text">As suas seguidoras vão reconhecer uma profissional cuidadosa, responsável e digna de confiança.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </article>
+
+  <!-- NEXT DAY — FIX 5: appears earlier, no delay -->
+  <div class="next-card animate d5" style="cursor:pointer;" onclick="renderDay(currentDay+1)">
+    <div class="next-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" id="nextTopic">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-text">Agenda Ativa™ — Cabeleireiros Edition</div>
+    <div class="footer-tagline">30 conteúdos prontos para manter o salão visível.</div>
+  </footer>
+
+  </div><!-- /col-right -->
+
+  <!-- COL STRATEGY: visible only on desktop 1100px+ -->
+  <aside class="col-strategy">
+    <div class="strategy-sidebar-label">Contexto estratégico</div>
+
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Pilar</div>
+      <div class="strat-value">Autoridade</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Gatilho</div>
+      <div class="strat-value">Segurança</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Objetivo</div>
+      <div class="strat-value" style="font-size:12.5px;font-weight:400;line-height:1.5;">Reforçar autoridade e confiança antes do contacto</div>
+    </div>
+    <div class="resultado-box" style="display:none;" id="sidebarResultado">
+      <div class="resultado-label">Resultado esperado</div>
+      <div class="resultado-text">As suas seguidoras vão reconhecer uma profissional cuidadosa, responsável e digna de confiança.</div>
+    </div>
+
+    <div class="next-sidebar">
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" style="font-size:16px;margin-bottom:4px;">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  Conteúdo copiado — cole no Instagram
+</div>
+
+<script>
+const DAYS = [{"num":1,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"Um cabelo bonito começa no diagnóstico.","text":"Antes da cor, corte ou tratamento, é preciso perceber histórico, rotina, textura, danos e objetivo. O diagnóstico evita decisões apressadas.","cta":"Antes de mudar, marque uma avaliação capilar."},{"num":2,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"A inspiração da internet precisa de adaptação.","text":"Uma foto ajuda, mas cada cabelo tem base, densidade, cor anterior e resistência diferentes. O resultado deve ser possível para o seu cabelo.","cta":"Traga referências, mas esteja aberta à adaptação."},{"num":3,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"Loiro bonito exige plano.","text":"Clarear cabelo envolve fundo de clareamento, resistência, manutenção e cuidados. Nem sempre se chega ao objetivo numa sessão.","cta":"Quer loiro? Comece por avaliar a saúde do fio."},{"num":4,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"Corte não é só tirar pontas.","text":"Um bom corte considera formato do rosto, queda natural, textura e rotina. O objetivo é que funcione também fora do salão.","cta":"O seu corte combina com o seu dia a dia?"},{"num":5,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"Tratamento não faz milagre sem manutenção.","text":"Hidratação, reconstrução ou nutrição ajudam, mas os hábitos em casa influenciam muito. O cuidado continua depois da cadeira.","cta":"Peça uma rotina realista para manter o resultado."},{"num":6,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"Cor precisa de manutenção.","text":"Tonalização, raiz, brilho e proteção da cor têm tempo certo. Manter evita correções maiores no futuro.","cta":"Já sabe quando deve voltar para manutenção?"},{"num":7,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"O preço de uma transformação inclui responsabilidade.","text":"Tempo, técnica, produtos e segurança fazem parte do valor. Mudanças grandes exigem mais do que aplicação de cor.","cta":"Compare processo, não apenas preço."},{"num":8,"format":"Educação","pilar":"Diagnóstico","gatilho":"Confiança","objetivo":"Educar a cliente sobre diagnóstico, limites do cabelo e decisões antes da marcação.","title":"Nem todo cabelo aguenta tudo.","text":"Histórico de química, elasticidade e porosidade indicam limites. Às vezes, dizer “ainda não” é proteger o cabelo.","cta":"Um cabelo saudável também é resultado."},{"num":9,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Finalização muda a perceção do corte.","text":"Secar, modelar e usar produtos certos ajuda a revelar o desenho. Mas o corte precisa funcionar também na rotina real.","cta":"Quer aprender a finalizar em casa?"},{"num":10,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Cronograma capilar não é igual para todos.","text":"Cada cabelo precisa de frequência e produtos diferentes. Copiar rotinas pode não resolver a necessidade do seu fio.","cta":"Monte uma rotina adaptada ao seu cabelo."},{"num":11,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Frizz nem sempre é falta de cuidado.","text":"Pode estar relacionado com textura, clima, dano, porosidade ou produto inadequado. Entender a causa orienta melhor a solução.","cta":"Quer perceber o que o seu frizz está a mostrar?"},{"num":12,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Cabelo cacheado precisa de corte pensado.","text":"Encolhimento, volume, forma e finalização influenciam o resultado. Cortar caracóis exige leitura da textura.","cta":"O seu corte respeita a forma natural do cabelo?"},{"num":13,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Retoque de raiz tem tempo certo.","text":"Esperar demais pode tornar a aplicação mais complexa. Antecipar manutenção ajuda a manter uniformidade.","cta":"Marque o retoque antes de perder o ponto ideal."},{"num":14,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Brilho é sinal de alinhamento e cuidado.","text":"Cor, hidratação, cutícula e finalização influenciam luminosidade. O brilho não vem apenas de um produto.","cta":"Quer recuperar brilho com um plano realista?"},{"num":15,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"A escova certa também protege.","text":"Temperatura, produto térmico e técnica fazem diferença. Calor sem proteção pode comprometer o fio ao longo do tempo.","cta":"Usa proteção térmica sempre que finaliza?"},{"num":16,"format":"Autoridade","pilar":"Técnica","gatilho":"Segurança","objetivo":"Mostrar critério técnico e reforçar o valor do serviço profissional.","title":"Mudanças radicais pedem conversa.","text":"Cor, corte e química devem ser avaliados com calma. Uma transformação segura começa por expectativas claras.","cta":"Antes de mudar tudo, vamos conversar."},{"num":17,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"A saúde do couro cabeludo importa.","text":"Oleosidade, descamação, sensibilidade ou queda devem ser observadas. Algumas situações podem exigir avaliação especializada.","cta":"Se algo mudou no couro cabeludo, não ignore."},{"num":18,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"Tonalizante não é detalhe.","text":"Ele ajusta reflexo, brilho e harmonia da cor. Muitas vezes, é o que separa uma cor bonita de uma cor bem acabada.","cta":"O seu cabelo precisa de cor ou de tonalização?"},{"num":19,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"Produtos profissionais precisam de orientação.","text":"O melhor produto é aquele adequado ao seu cabelo e rotina. Comprar por tendência pode não resolver.","cta":"Peça indicação antes de montar a rotina."},{"num":20,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"Cabelo curto também exige manutenção.","text":"Quanto mais preciso o corte, mais visível é o crescimento. Manter formato evita perder o estilo.","cta":"O seu corte ainda mantém o desenho?"},{"num":21,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"Mechas bonitas respeitam contraste.","text":"Luz, profundidade e distribuição criam naturalidade. Mechas não são apenas clarear fios aleatórios.","cta":"Quer iluminar sem perder naturalidade?"},{"num":22,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"Nem toda queda é normal.","text":"Queda pode ter várias causas. O cabeleireiro pode observar sinais e orientar procura por avaliação adequada quando necessário.","cta":"Se a queda aumentou, procure orientação."},{"num":23,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"O casamento entre corte e cor muda tudo.","text":"Corte valoriza cor. Cor valoriza movimento. Pensar os dois em conjunto cria resultado mais completo.","cta":"Quer um plano integrado para o seu cabelo?"},{"num":24,"format":"Proximidade","pilar":"Manutenção","gatilho":"Identificação","objetivo":"Aproximar a cliente e mostrar que o resultado continua depois do salão.","title":"A manutenção em casa prolonga o salão.","text":"Shampoo, máscara, protetor térmico e frequência adequados ajudam a manter o resultado por mais tempo.","cta":"Saia do salão com uma rotina clara."},{"num":25,"format":"Conversão","pilar":"Marcação","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação, horário ou próxima manutenção.","title":"Checklist antes de mudar a cor.","text":"Qual é o histórico? O cabelo aguenta? Que manutenção exige? Quanto tempo levará? Que cuidados virão depois?","cta":"Guarde esta checklist antes da transformação."},{"num":26,"format":"Conversão","pilar":"Marcação","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação, horário ou próxima manutenção.","title":"Um bom profissional explica limites.","text":"Nem sempre é possível chegar à referência no mesmo dia. Transparência evita frustração e protege o cabelo.","cta":"Confie em quem explica o processo."},{"num":27,"format":"Conversão","pilar":"Marcação","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação, horário ou próxima manutenção.","title":"Penteados precisam de preparação.","text":"Eventos pedem teste, referências, horário e preparação do cabelo. Planeamento evita stress no dia.","cta":"Tem evento? Marque o teste com antecedência."},{"num":28,"format":"Conversão","pilar":"Marcação","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação, horário ou próxima manutenção.","title":"O cabelo muda com fases da vida.","text":"Hormonas, stress, idade, medicação e rotina podem alterar textura e densidade. O plano deve acompanhar essas mudanças.","cta":"O seu cabelo mudou? Vamos reavaliar."},{"num":29,"format":"Conversão","pilar":"Marcação","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação, horário ou próxima manutenção.","title":"A confiança nasce na cadeira.","text":"Ouvir, explicar e executar com critério faz a cliente sentir-se segura. O serviço começa na conversa.","cta":"O que mais valoriza numa ida ao cabeleireiro?"},{"num":30,"format":"Conversão","pilar":"Marcação","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação, horário ou próxima manutenção.","title":"Cabelo bonito é cabelo possível de manter.","text":"O melhor resultado é aquele que combina beleza, saúde e rotina real. Um plano bom continua a fazer sentido depois do salão.","cta":"Quer um cabelo bonito e possível de manter? Marque uma avaliação."}];
+let currentDay = 1;
+
+// Splash
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("splash").classList.add("hide");
+    setTimeout(() => {
+      document.querySelectorAll(".animate").forEach(el => el.classList.add("in"));
+      renderDay(1);
+    }, 250);
+  }, 800);
+});
+
+// Init progress dots
+const dotsEl = document.getElementById("pDots");
+for (let i = 1; i <= 30; i++) {
+  const d = document.createElement("div");
+  d.className = "dot" + (i === 1 ? " today" : "");
+  dotsEl.appendChild(d);
+}
+
+function renderDay(n) {
+  const d = DAYS.find(x => x.num === n);
+  if (!d) return;
+  currentDay = n;
+
+  // Nav + progress count
+  document.getElementById("navPill").textContent = "Dia " + n + " de 30";
+  document.getElementById("progressCount").textContent = "Dia " + n + " de 30";
+
+  // Card title + metadata
+  document.getElementById("cardTopic").textContent = d.title;
+  const formatTag = document.querySelector(".tag-format");
+  const pilarTag = document.querySelector(".tag-pilar");
+  if (formatTag) formatTag.textContent = d.format || "Conteúdo";
+  if (pilarTag) pilarTag.textContent = d.pilar || "Estratégia";
+  document.querySelectorAll(".strat-value").forEach((el, idx) => {
+    if (idx === 0) el.textContent = d.pilar || "Estratégia";
+    if (idx === 1) el.textContent = d.gatilho || "Confiança";
+    if (idx === 2) el.textContent = d.objetivo || "Reforçar autoridade e confiança antes do contacto.";
+  });
+
+  // Card text — render paragraphs
+  const textEl = document.getElementById("cardText");
+  const paragraphs = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n").split("\n\n");
+  textEl.innerHTML = paragraphs.map(p => `<p style="margin-bottom:12px;">${p.replace(/\n/g,"<br>")}</p>`).join("");
+
+  // CTA
+  document.getElementById("cardCta").textContent = d.cta;
+
+  // Progress bar
+  document.getElementById("pFill").style.width = (n / 30 * 100) + "%";
+
+  // Progress dots
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.className = "dot" + (i + 1 < n ? " done" : i + 1 === n ? " today" : "");
+  });
+
+  // Next day
+  const next = DAYS.find(x => x.num === n + 1);
+  const nextCard = document.querySelector(".next-card");
+  if (next && nextCard) {
+    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
+    document.getElementById("nextTopic").textContent = next.title;
+    nextCard.style.display = "";
+    nextCard.style.cursor = "pointer";
+    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
+  } else if (nextCard) {
+    nextCard.style.display = "none";
+  }
+}
+
+function copyPrompt() {
+  const d = DAYS.find(x => x.num === currentDay);
+  if (!d) return;
+  const clean = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n");
+  const full = clean + "\n\n" + d.cta;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById("btnCopy");
+    btn.classList.add("copied");
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="20,6 9,17 4,12"/></svg> Copiado!`;
+    document.getElementById("toast").classList.add("show");
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar conteúdo`;
+      document.getElementById("toast").classList.remove("show");
+    }, 3000);
+  });
+}
+
+let extraOpen = false;
+function toggleExtra() {
+  extraOpen = !extraOpen;
+  document.getElementById("extraWrap").classList.toggle("open", extraOpen);
+  const btn = document.getElementById("btnMore");
+  btn.classList.toggle("open", extraOpen);
+  btn.innerHTML = (extraOpen ? "Fechar" : "Ver contexto estratégico") + ` <em class="chevron" style="transform:${extraOpen?"rotate(180deg)":"none"}">˅</em>`;
+}
+</script>
+</body>
+</html>
