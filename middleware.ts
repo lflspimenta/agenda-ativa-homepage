@@ -1,4 +1,4 @@
-﻿import { createServerClient } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
@@ -61,7 +61,8 @@ export const config = {
     "/minha-agenda/:path*",
     "/agenda/:path*",
     "/imobiliario/agenda/:path*",
-    "/fotografos/agenda/:path*"
+    "/fotografos/agenda/:path*",
+    "/estetica-facial/agenda/:path*"
   ]
 };
 

@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { createSupabaseAdminClient } from "@/lib/supabase-server";
@@ -14,8 +14,8 @@ async function getProductFromSession(
   stripe: Stripe,
   session: Stripe.Checkout.Session
 ) {
-  if (["imobiliario", "fotografos"].includes(session.metadata?.product ?? "")) {
-    return session.metadata?.product as "imobiliario" | "fotografos";
+  if (["imobiliario", "fotografos", "estetica_facial"].includes(session.metadata?.product ?? "")) {
+    return session.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial";
   }
 
   const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
@@ -29,8 +29,8 @@ async function getProductFromSession(
     | undefined;
 
   return typeof product !== "string" &&
-    ["imobiliario", "fotografos"].includes(product?.metadata?.product ?? "")
-    ? (product?.metadata?.product as "imobiliario" | "fotografos")
+    ["imobiliario", "fotografos", "estetica_facial"].includes(product?.metadata?.product ?? "")
+    ? (product?.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial")
     : "wedding";
 }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     const { data: existing } = await admin
       .from("users")
       .select(
-        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date"
+        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date"
       )
       .eq("email", email)
       .maybeSingle();
@@ -81,6 +81,7 @@ export async function POST(request: Request) {
         wedding_purchase_date?: string;
         imobiliario_purchase_date?: string;
         fotografos_purchase_date?: string;
+        estetica_facial_purchase_date?: string;
       } = {};
 
       if (!products.includes(product)) {
@@ -91,6 +92,11 @@ export async function POST(request: Request) {
         updates.imobiliario_purchase_date = purchaseDate;
       } else if (product === "fotografos" && !existing.fotografos_purchase_date) {
         updates.fotografos_purchase_date = purchaseDate;
+      } else if (
+        product === "estetica_facial" &&
+        !existing.estetica_facial_purchase_date
+      ) {
+        updates.estetica_facial_purchase_date = purchaseDate;
       } else if (product === "wedding" && !existing.wedding_purchase_date) {
         updates.wedding_purchase_date = purchaseDate;
       }
@@ -108,7 +114,9 @@ export async function POST(request: Request) {
         imobiliario_purchase_date:
           product === "imobiliario" ? purchaseDate : null,
         fotografos_purchase_date:
-          product === "fotografos" ? purchaseDate : null
+          product === "fotografos" ? purchaseDate : null,
+        estetica_facial_purchase_date:
+          product === "estetica_facial" ? purchaseDate : null
       });
     }
 
@@ -125,7 +133,9 @@ export async function POST(request: Request) {
             ? "/imobiliario/agenda"
             : product === "fotografos"
               ? "/fotografos/agenda"
-              : "/agenda"
+              : product === "estetica_facial"
+                ? "/estetica-facial/agenda"
+                : "/agenda"
         }`
       }
     });

@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F8F7F4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Agenda Ativa">
+  <title>Agenda Ativa™ — Estética Facial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F8F7F4;
+      --surface: #fffefb;
+      --ink: #2B2024;
+      --muted: #6F7A78;
+      --rose: #5F7F68;
+      --rose-light: #86A88F;
+      --rose-dim: rgba(95,127,104,.13);
+      --gold: #D8D4CC;
+      --gold-dim: rgba(216,212,204,.38);
+      --line: rgba(111,36,59,.14);
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "Inter", system-ui, sans-serif;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body {
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: contain;
+    }
+
+    /* ── SPLASH — FIX 5: 800ms instead of 1400ms ── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .splash.hide {
+      opacity: 0;
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+    .splash-brand {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: var(--ink);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp .5s ease .1s forwards;
+    }
+    .splash-brand sup { font-size: 13px; color: var(--rose); vertical-align: super; }
+    .splash-line {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      animation: growLine .6s ease .2s forwards;
+    }
+    .splash-edition {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp .5s ease .35s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes growLine { to { width: 100px; } }
+
+    /* ── ENTRANCE ANIMATIONS ── */
+    .animate {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .animate.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .04s; }
+    .d2 { transition-delay: .12s; }
+    .d3 { transition-delay: .20s; }
+    .d4 { transition-delay: .28s; }
+    .d5 { transition-delay: .36s; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,247,243,.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: .05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .nav-brand sup { font-size: 10px; color: var(--rose); vertical-align: super; }
+    .nav-pill {
+      background: var(--rose-dim);
+      color: var(--rose);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 20px calc(36px + var(--safe-bottom));
+    }
+
+    /* ── GREETING ── */
+    .greeting { margin-bottom: 28px; }
+    .greeting-name {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--rose-light);
+      margin-bottom: 8px;
+      letter-spacing: .04em;
+    }
+    .greeting-h1 {
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 300;
+      line-height: .92;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .greeting-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── PROGRESS — FIX 4: today dot is celebratory ── */
+    .progress { margin-bottom: 24px; }
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-count {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--rose);
+    }
+    .progress-track {
+      height: 3px;
+      background: var(--rose-dim);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose), var(--rose-light));
+      border-radius: 2px;
+    }
+    .progress-dots { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose-dim); flex-shrink: 0; transition: background .3s; }
+    .dot.done { background: var(--rose-light); }
+    /* FIX 4: today dot is larger and has a pulse — not just one grey dot among 29 */
+    .dot.today {
+      width: 10px;
+      height: 10px;
+      background: var(--rose);
+      box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose);
+      animation: pulse 2s ease 1s 2;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose); }
+      50% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px rgba(111,36,59,.35); }
+    }
+
+    /* ── META ROW ── */
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .tag-format { background: var(--rose-dim); color: var(--rose); }
+    .tag-pilar { background: var(--gold-dim); color: #70545E; }
+    .tag-time {
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      background: transparent;
+    }
+    .tag-time svg { width: 11px; height: 11px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(111,36,59,.11);
+      border-top: 3px solid var(--rose);
+      border-radius: 6px;
+      box-shadow: 0 24px 56px rgba(43,32,36,.10), 0 4px 16px rgba(43,32,36,.06);
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: box-shadow .3s;
+    }
+    .card-body { padding: 28px 24px 24px; }
+
+    .card-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-eyebrow::before { content: ""; width: 14px; height: 1px; background: var(--rose); }
+
+    .card-topic {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card-hook {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 14px;
+      border-left: 2px solid var(--rose-dim);
+    }
+
+    /* ── PROMPT BLOCK (visible by default, no dark bg) ── */
+    .prompt-block {
+      background: var(--rose-dim);
+      border-top: 1px solid var(--line);
+      padding: 22px 24px;
+    }
+    .prompt-label {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .prompt-label::before { content: ""; width: 6px; height: 6px; background: var(--rose); border-radius: 50%; }
+    .prompt-scroll {
+      max-height: 140px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(111,36,59,.22) transparent;
+    }
+    .prompt-scroll::-webkit-scrollbar { width: 3px; }
+    .prompt-scroll::-webkit-scrollbar-thumb { background: rgba(111,36,59,.22); border-radius: 2px; }
+    .prompt-text {
+      font-size: 13px;
+      color: #2B2024;
+      line-height: 1.85;
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 16px;
+    }
+    .ph { color: var(--rose); font-weight: 600; }
+
+    /* ── ACTIONS ── */
+    .card-actions {
+      padding: 14px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* FIX 3: single primary + single secondary */
+    .btn-copy {
+      width: 100%;
+      min-height: 52px;
+      background: #2B2024;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .25s ease, transform .12s, letter-spacing .2s;
+    }
+    .btn-copy:active { transform: translateY(2px); box-shadow: 0 1px 4px rgba(111,36,59,.22); }
+    .btn-copy.copied { background: #51664F; letter-spacing: .06em; }
+    .btn-copy svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* FIX 3: one secondary button that expands everything extra */
+    .btn-more {
+      width: 100%;
+      min-height: 44px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s;
+      font-family: var(--sans);
+    }
+    .btn-more:active { border-color: var(--rose); color: var(--rose); }
+    .chevron { display: inline-block; transition: transform .25s; font-style: normal; font-size: 12px; }
+    .btn-more.open .chevron { transform: rotate(180deg); }
+
+    /* ── EXTRA PANEL (FIX 1: collapses strategic info + legenda) ── */
+    .extra-wrap {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .35s ease;
+      opacity: 0;
+    }
+    .extra-wrap.open { max-height: 800px; opacity: 1; }
+    .extra-inner {
+      margin: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* strategic grid inside extra */
+    .strat-grid {
+      background: linear-gradient(135deg, rgba(216,212,204,.24), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.55);
+      border-radius: 6px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .strat-item {}
+    .strat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #70545E;
+      margin-bottom: 4px;
+    }
+    .strat-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+    .strat-full { grid-column: 1 / -1; }
+
+    /* legenda inside extra */
+    .legenda-box {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 22px 20px;
+      background: var(--paper);
+    }
+    .legenda-eyebrow {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .legenda-text {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+    .legenda-text p + p { margin-top: 14px; }
+    .legenda-cta {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .legenda-cta strong { color: var(--rose); font-weight: 600; }
+
+    /* resultado inside extra — FIX 3: merged here */
+    .resultado-box {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      background: rgba(111,36,59,.05);
+    }
+    .resultado-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 5px;
+    }
+    .resultado-text { font-size: 13px; color: var(--ink); line-height: 1.65; }
+
+    /* ── NEXT CARD ── */
+    .next-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      margin-bottom: 36px;
+    }
+    .next-icon {
+      width: 38px; height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .next-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .next-topic { font-family: var(--serif); font-size: 18px; font-weight: 400; color: var(--ink); line-height: 1.3; }
+    .next-sub { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; gap: 6px; }
+    .next-pilar { color: #70545E; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer { text-align: center; padding-top: 24px; border-top: 1px solid var(--line); }
+    .footer-text { font-family: var(--serif); font-size: 13px; font-weight: 300; letter-spacing: .1em; color: var(--muted); }
+    .footer-tagline { font-size: 11px; color: rgba(138,122,112,.55); margin-top: 6px; font-style: italic; font-family: var(--serif); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--ink);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 13px 22px;
+      border-radius: 6px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width: 7px; height: 7px; background: #51664F; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── TABLET 768px: 2 colunas ── */
+    @media(min-width: 768px) {
+      main {
+        max-width: 100%;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: auto 1fr;
+        min-height: calc(100dvh - 57px);
+      }
+      /* Nav edition label visible on tablet+ */
+      .nav-edition { display: block; }
+
+      /* Left column: greeting + progress */
+      .col-left {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        padding: 40px 32px;
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+      }
+
+      /* Right column: everything else */
+      .col-right {
+        grid-column: 2;
+        padding: 36px 36px 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Greeting bigger on tablet */
+      .greeting { margin-bottom: 32px; }
+      .greeting-h1 { font-size: 56px; }
+
+      /* Progress in left col */
+      .progress { margin-bottom: 28px; }
+
+      /* Meta row inline */
+      .meta-row { margin-bottom: 16px; }
+
+      /* Card full width in right col, no stacking */
+      .card { margin-bottom: 0; }
+      .card-body { padding: 28px 28px 20px; }
+      .card-topic { font-size: 30px; }
+      .card-actions { padding: 14px 28px 24px; flex-direction: row; gap: 10px; }
+      .btn-copy { flex: 1; }
+      .btn-more { flex-shrink: 0; padding: 0 20px; width: auto; min-width: 180px; }
+      .extra-inner { margin: 0 28px 28px; }
+      .prompt-block { padding: 20px 28px; }
+
+      /* Next card in right col */
+      .next-card { margin-bottom: 0; }
+
+      /* Footer in right col */
+      .footer { margin-top: auto; padding-top: 32px; }
+
+      /* Hide .animate layout shift on tablet — already visible */
+    }
+
+    /* ── DESKTOP 1100px: 3 colunas ── */
+    @media(min-width: 1100px) {
+      main {
+        grid-template-columns: 300px 1fr 260px;
+      }
+
+      /* Strategy sidebar — 3rd col */
+      .col-right {
+        grid-column: 2;
+        padding: 40px 40px 60px;
+      }
+
+      .col-strategy {
+        grid-column: 3;
+        grid-row: 1 / -1;
+        padding: 40px 28px;
+        border-left: 1px solid var(--line);
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* On desktop hide btn-more (strategy always visible in sidebar) */
+      .btn-more { display: none; }
+      .extra-wrap { max-height: none !important; opacity: 1 !important; }
+      .extra-inner { margin: 0; }
+
+      /* Left col bigger */
+      .col-left { padding: 48px 36px; }
+      .greeting-h1 { font-size: 64px; }
+
+      /* Card topic bigger */
+      .card-topic { font-size: 34px; }
+      .prompt-scroll { max-height: 180px; }
+    }
+
+    /* Strategy sidebar label */
+    .strategy-sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strategy-sidebar-label { display: block; } }
+
+    /* Strat items for sidebar (reuse strat-grid items standalone) */
+    .strat-sidebar-item {
+      background: linear-gradient(135deg, var(--gold-dim), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.58);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strat-sidebar-item { display: block; } }
+
+    /* Next day in sidebar */
+    .next-sidebar {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      margin-top: auto;
+      display: none;
+    }
+    @media(min-width: 1100px) {
+      .next-sidebar { display: block; }
+      /* Hide next-card from right col on desktop — it's in sidebar */
+      .next-card { display: none; }
+    }
+
+    @media(min-width: 1100px) { #sidebarResultado { display: block !important; } }
+    @media(prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH — FIX 5: 800ms total -->
+<div class="splash" id="splash">
+  <div class="splash-brand">Agenda Ativa<sup>™</sup></div>
+  <div class="splash-line"></div>
+  <div class="splash-edition">Estética Facial Edition</div>
+</div>
+
+<nav class="nav">
+  <div>
+    <div class="nav-brand">Agenda Ativa<sup>™</sup></div>
+    <div class="nav-edition" style="display:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;">Estética Facial Edition</div>
+  </div>
+  <div class="nav-pill" id="navPill">Dia 1 de 30</div>
+</nav>
+
+<main>
+  <!-- COL LEFT: greeting + progress + meta (tablet/desktop) -->
+  <div class="col-left">
+
+  <!-- GREETING -->
+  <header class="greeting animate d1">
+    <div class="greeting-name">Olá, Sofia</div>
+    <h1 class="greeting-h1">O seu<br>olhar<br>continua ativo.</h1>
+    <p class="greeting-sub">O conteúdo de hoje já está pronto a publicar.</p>
+  </header>
+
+  <!-- PROGRESS — FIX 4: celebratory today dot -->
+  <div class="progress animate d2">
+    <div class="progress-header">
+      <span class="progress-label">O teu progresso</span>
+      <span class="progress-count" id="progressCount">Dia 1 de 30</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="pFill"></div>
+    </div>
+    <div class="progress-dots" id="pDots"></div>
+  </div>
+
+  <!-- META ROW -->
+  <div class="meta-row animate d3">
+    <span class="tag tag-format">Reel</span>
+    <span class="tag tag-pilar">Autoridade</span>
+    <span class="tag tag-time">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      2 minutos
+    </span>
+  </div>
+
+  </div><!-- /col-left -->
+
+  <!-- COL RIGHT: card + next + footer (tablet/desktop) -->
+  <div class="col-right">
+
+  <!-- CARD — FIX 1: stripped to topic + hook + prompt + actions -->
+  <article class="card animate d4">
+    <div class="card-body">
+
+      <div class="card-eyebrow">Conteúdo estratégico</div>
+
+      <h2 class="card-topic" id="cardTopic">Uma boa fotografia começa muito antes do clique.</h2>
+
+      <p class="card-hook" id="cardHook">Pronto a reforçar a sua autoridade.</p>
+
+    </div>
+
+    <!-- CONTENT BLOCK — legenda já escrita, pronta a copiar -->
+    <div class="prompt-block">
+      <div class="prompt-label">Legenda pronta a publicar</div>
+      <div class="prompt-scroll">
+        <div class="prompt-text" id="cardText"></div>
+      </div>
+      <div style="padding:10px 24px 0;border-top:1px solid var(--line);margin-top:2px;">
+        <div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:4px;">CTA sugerido</div>
+        <div style="font-size:12px;color:#6F243B;font-style:italic;padding-bottom:10px;" id="cardCta"></div>
+      </div>
+    </div>
+
+    <!-- ACTIONS — FIX 3: primary + single secondary -->
+    <div class="card-actions">
+      <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar conteúdo
+      </button>
+      <button class="btn-more" id="btnMore" onclick="toggleExtra()">
+        Ver contexto estratégico
+        <em class="chevron">˅</em>
+      </button>
+    </div>
+
+    <!-- EXTRA PANEL — FIX 1 + FIX 3: everything collapsed here -->
+    <div class="extra-wrap" id="extraWrap">
+      <div class="extra-inner">
+
+        <!-- strategic context only — legenda already shown above -->
+        <div class="strat-grid">
+          <div class="strat-item">
+            <div class="strat-label">Pilar</div>
+            <div class="strat-value">Autoridade</div>
+          </div>
+          <div class="strat-item">
+            <div class="strat-label">Gatilho</div>
+            <div class="strat-value">Clareza</div>
+          </div>
+          <div class="strat-item strat-full">
+            <div class="strat-label">Objetivo</div>
+            <div class="strat-value">Reforçar autoridade e confiança antes do contacto</div>
+          </div>
+        </div>
+
+        <!-- resultado — FIX 3: moved inside, no longer duplicated -->
+        <div class="resultado-box">
+          <div class="resultado-label">Resultado esperado</div>
+          <div class="resultado-text">As suas seguidoras vão reconhecer uma profissional cuidadosa, responsável e digna de confiança.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </article>
+
+  <!-- NEXT DAY — FIX 5: appears earlier, no delay -->
+  <div class="next-card animate d5" style="cursor:pointer;" onclick="renderDay(currentDay+1)">
+    <div class="next-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" id="nextTopic">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-text">Agenda Ativa™ — Estética Facial Edition</div>
+    <div class="footer-tagline">30 conteúdos prontos para ser escolhido antes do próximo evento.</div>
+  </footer>
+
+  </div><!-- /col-right -->
+
+  <!-- COL STRATEGY: visible only on desktop 1100px+ -->
+  <aside class="col-strategy">
+    <div class="strategy-sidebar-label">Contexto estratégico</div>
+
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Pilar</div>
+      <div class="strat-value">Autoridade</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Gatilho</div>
+      <div class="strat-value">Segurança</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Objetivo</div>
+      <div class="strat-value" style="font-size:12.5px;font-weight:400;line-height:1.5;">Reforçar autoridade e confiança antes do contacto</div>
+    </div>
+    <div class="resultado-box" style="display:none;" id="sidebarResultado">
+      <div class="resultado-label">Resultado esperado</div>
+      <div class="resultado-text">As suas seguidoras vão reconhecer uma profissional cuidadosa, responsável e digna de confiança.</div>
+    </div>
+
+    <div class="next-sidebar">
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" style="font-size:16px;margin-bottom:4px;">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  Conteúdo copiado — cole no Instagram
+</div>
+
+<script>
+const DAYS = [{"num":1,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"A sua pele não precisa de “tudo”. Precisa do que faz sentido para ela.","text":"Quando a pele parece baça, irregular ou desconfortável, é tentador acrescentar mais um produto à rotina.\n\nMas uma rotina maior não é necessariamente uma rotina melhor.\n\nO primeiro passo é perceber o que a pele está a mostrar: oleosidade não é igual a hidratação, sensibilidade não é apenas vermelhidão e uma textura irregular pode ter várias causas.\n\nÉ por isso que uma avaliação cuidada vem antes de qualquer recomendação. Permite observar, ouvir hábitos, compreender objetivos e definir prioridades.\n\nTratar bem não começa com uma prateleira cheia. Começa com uma decisão informada.","cta":"Guarde este conteúdo antes de comprar o próximo produto."},{"num":2,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"O resultado de um tratamento começa antes da sessão.","text":"Um bom resultado não depende apenas do equipamento ou do produto utilizado.\n\nDepende da avaliação, da preparação da pele, das expectativas definidas e dos cuidados posteriores.\n\nAntes de iniciar, importa perceber o histórico da cliente, os produtos que utiliza, a exposição solar, possíveis sensibilidades e outros fatores que podem alterar a resposta da pele.\n\nDepois da sessão, seguir as orientações também faz parte do tratamento. Ignorar proteção solar, introduzir ativos cedo demais ou manipular a pele pode comprometer o processo.\n\nA sessão é importante. O acompanhamento é o que lhe dá continuidade.","cta":"Antes do próximo tratamento, pergunte quais são os cuidados antes e depois."},{"num":3,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"Pele oleosa também pode estar desidratada.","text":"Oleosidade e hidratação descrevem coisas diferentes.\n\nA oleosidade está relacionada com a produção de sebo. A hidratação refere-se à água presente na pele e à capacidade de a manter.\n\nPor isso, uma pele pode produzir brilho e, ao mesmo tempo, sentir repuxamento, desconforto ou apresentar descamação.\n\nQuando se tenta “secar” excessivamente essa pele, o equilíbrio pode ficar ainda mais difícil. Limpezas agressivas e rotinas cheias de produtos adstringentes nem sempre resolvem o problema.\n\nO objetivo não é retirar tudo. É limpar, hidratar e proteger de forma adequada às necessidades reais da pele.","cta":"Partilhe com alguém que acredita que pele oleosa não precisa de hidratação."},{"num":4,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"A melhor rotina é aquela que consegue manter.","text":"Uma rotina com muitos passos pode parecer completa. Mas, se for difícil de cumprir, rapidamente deixa de existir.\n\nNa maioria dos casos, consistência vale mais do que complexidade.\n\nLimpar de forma adequada, hidratar quando necessário e proteger do sol são bases mais úteis do que alternar produtos sem um objetivo claro.\n\nDepois, os ativos podem ser introduzidos de forma gradual, de acordo com a tolerância da pele e com aquilo que se pretende melhorar.\n\nUma boa rotina cabe na vida real. Não cria culpa, não muda todas as semanas e não depende da tendência do momento.","cta":"Quantos passos da sua rotina usa realmente todos os dias?"},{"num":5,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"O protetor solar não serve apenas para os dias de praia.","text":"A radiação ultravioleta faz parte da exposição diária, mesmo quando não estamos de férias.\n\nUma proteção de largo espetro, adequada à pele e utilizada corretamente, ajuda a prevenir queimaduras, manchas e sinais de envelhecimento prematuro associados ao sol.\n\nO protetor não substitui sombra, roupa ou outros cuidados. E a quantidade, a reaplicação e o contexto de exposição também contam.\n\nO melhor produto não é necessariamente o mais caro. É aquele que oferece proteção adequada e que consegue usar com regularidade.\n\nCuidar da pele no futuro começa com hábitos pouco dramáticos no presente.","cta":"Guarde este lembrete para a sua rotina da manhã."},{"num":6,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"Limpeza profissional e limpeza diária não competem entre si.","text":"A limpeza feita em casa mantém a rotina diária. A limpeza profissional parte de uma avaliação e responde a necessidades específicas naquele momento.\n\nNão são versões mais forte e mais fraca da mesma coisa.\n\nEm contexto profissional, a escolha de técnicas e produtos deve considerar o estado da pele, a sensibilidade, a presença de lesões e os objetivos da cliente.\n\nEm casa, o foco é preservar o equilíbrio e evitar acumulação sem agredir.\n\nQuando cada uma ocupa o seu lugar, a pele beneficia de continuidade em vez de ciclos de excesso e recuperação.","cta":"Se tem dúvidas sobre a frequência adequada, marque uma avaliação individual."},{"num":7,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"“Senti arder, por isso está a funcionar” é um mito perigoso.","text":"Desconforto não é uma medida de eficácia.\n\nAlguns produtos ou procedimentos podem provocar sensações transitórias previstas. Mas ardor intenso, dor crescente ou uma reação inesperada não devem ser tratados como prova de que o tratamento é “forte”.\n\nMais intensidade não significa automaticamente mais resultado.\n\nUma abordagem profissional respeita limites, observa a resposta da pele e ajusta o plano quando necessário.\n\nA cliente deve saber o que é expectável, quais os sinais de alerta e quando contactar o profissional.\n\nSegurança não diminui o resultado. Faz parte dele.","cta":"Nunca tenha receio de dizer o que está a sentir durante uma sessão."},{"num":8,"format":"Educação","pilar":"Clareza","gatilho":"Confiança","objetivo":"Educar a cliente e orientar decisões conscientes antes do tratamento.","title":"Antes de um peeling, a pergunta não é “qual é o mais forte?”.","text":"A pergunta certa é: qual é o mais adequado para esta pele, neste momento e para este objetivo?\n\nOs peelings não são todos iguais. Variam na composição, profundidade, indicação e recuperação esperada.\n\nO histórico da pele, a medicação, a exposição solar, a tendência para alterações de pigmentação e os cuidados em casa influenciam a decisão.\n\nProdutos de uso profissional não devem ser replicados em casa sem supervisão qualificada. Uma utilização inadequada pode causar lesão.\n\nUm plano responsável não procura a descamação mais visível. Procura uma intervenção justificada e controlada.","cta":"Antes de avançar, peça que lhe expliquem indicação, recuperação e riscos."},{"num":9,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"Resultados reais raramente acontecem ao ritmo das redes sociais.","text":"Um vídeo mostra segundos. A pele responde ao longo do tempo.\n\nAlgumas melhorias podem ser percebidas rapidamente. Outras dependem de ciclos biológicos, repetição de cuidados e acompanhamento.\n\nÉ importante distinguir uma sensação imediata de conforto ou luminosidade de uma alteração sustentada.\n\nTambém é normal que duas pessoas não respondam da mesma forma ao mesmo plano.\n\nUma expectativa realista protege a cliente de frustração e ajuda o profissional a recomendar sem prometer o que não pode controlar.\n\nO melhor acompanhamento não vende urgência. Explica processo.","cta":"Desconfie de garantias absolutas e pergunte qual é a evolução expectável."},{"num":10,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"O “antes e depois” não conta a história toda.","text":"Uma imagem pode ser útil, mas precisa de contexto.\n\nLuz, ângulo, expressão, distância, maquilhagem e edição alteram muito aquilo que vemos.\n\nAlém disso, uma fotografia não mostra avaliação, número de sessões, cuidados em casa, tempo decorrido ou resposta individual.\n\nUm resultado responsável deve ser apresentado com condições comparáveis e consentimento da cliente, sem criar a ideia de que todas as pessoas terão a mesma evolução.\n\nTransparência não torna o resultado menos impressionante. Torna-o mais credível.","cta":"Ao ver uma transformação, procure contexto antes de procurar comparação."},{"num":11,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"Como saber se um profissional de estética inspira confiança.","text":"Observe mais do que as fotografias.\n\nUm profissional responsável faz perguntas antes de recomendar, explica limites, identifica situações em que não deve avançar e não transforma todas as dúvidas numa venda.\n\nTambém esclarece higiene, cuidados posteriores, possíveis reações e o que fazer se algo não evoluir como esperado.\n\nA experiência da cliente começa antes da sessão: na forma como é recebida, ouvida e informada.\n\nResultados importam. Mas a segurança e a qualidade do processo dizem muito sobre quem os entrega.","cta":"Guarde esta lista para a próxima avaliação."},{"num":12,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"Microagulhamento: a avaliação não é opcional.","text":"O microagulhamento utiliza dispositivos que criam microperfurações controladas. Dependendo da profundidade, finalidade e equipamento, pode enquadrar-se como procedimento com riscos relevantes.\n\nNão é indicado para todas as pessoas nem para todas as fases da pele.\n\nHistórico de cicatrização, infeções ativas, determinadas doenças, medicação e outros fatores devem ser avaliados por um profissional devidamente qualificado.\n\nHigiene rigorosa e material adequado são essenciais. Cartuchos de agulhas não devem ser reutilizados.\n\nA decisão deve resultar de indicação, formação e consentimento informado — nunca apenas de uma tendência.","cta":"Pergunte sempre sobre qualificação, material utilizado, riscos e cuidados posteriores."},{"num":13,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"A barreira cutânea merece mais atenção do que recebe.","text":"A camada mais externa da pele ajuda a limitar a perda de água e a proteger contra agentes externos.\n\nQuando é sujeita a limpeza excessiva, esfoliação frequente ou demasiados ativos ao mesmo tempo, podem surgir repuxamento, ardor, descamação ou maior reatividade.\n\nNessa fase, acrescentar mais produtos “fortes” pode não ser a resposta.\n\nSimplificar a rotina, reduzir estímulos e escolher cuidados mais suaves pode ser uma decisão inteligente. Se o desconforto persistir, é importante procurar avaliação adequada.\n\nUma pele cuidada não precisa de estar constantemente a ser corrigida.","cta":"A sua pele mudou depois de introduzir vários ativos? Reveja a rotina."},{"num":14,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"Nem toda a vermelhidão deve ser tratada num gabinete de estética.","text":"Vermelhidão pode surgir por muitas razões: sensibilidade transitória, irritação, exposição solar ou uma condição que exige avaliação clínica.\n\nQuando é persistente, acompanhada de dor, comichão intensa, lesões ou agravamento, não deve ser disfarçada com um tratamento escolhido por tentativa.\n\nReconhecer o limite de atuação também é profissionalismo.\n\nO papel de um espaço responsável pode ser suspender, orientar e encaminhar para um dermatologista ou outro profissional de saúde quando necessário.\n\nSaber quando não tratar protege a cliente e a reputação de quem cuida.","cta":"Se a vermelhidão é persistente ou inexplicada, procure avaliação clínica."},{"num":15,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"Uma sessão não compensa hábitos que trabalham na direção contrária.","text":"Os tratamentos podem apoiar objetivos estéticos, mas não existem isolados.\n\nExposição solar sem proteção, manipulação frequente da pele, rotinas agressivas ou incumprimento dos cuidados recomendados podem limitar a evolução.\n\nIsto não significa procurar perfeição. Significa criar coerência entre aquilo que se faz no gabinete e aquilo que se repete em casa.\n\nO plano mais sofisticado perde força quando a manutenção diária é impossível.\n\nPor isso, a recomendação deve ser realista, simples e adaptada à rotina da cliente.","cta":"Escolha um cuidado em casa que consegue cumprir de forma consistente."},{"num":16,"format":"Autoridade","pilar":"Segurança","gatilho":"Critério","objetivo":"Gerir expectativas, explicar limites e reforçar responsabilidade profissional.","title":"O tratamento mais popular pode não ser o tratamento certo.","text":"Tendências criam curiosidade. Não criam indicação.\n\nO facto de um procedimento aparecer repetidamente nas redes sociais não significa que responda ao objetivo, estado da pele ou histórico de todas as pessoas.\n\nUma boa avaliação pode confirmar a opção, ajustar o momento ou recomendar uma alternativa mais simples.\n\nTambém pode concluir que não existe indicação para tratar.\n\nEsta é uma das diferenças entre escolher um serviço e construir um plano: o plano começa na pessoa, não no nome do tratamento.","cta":"Leve o seu objetivo à avaliação — não apenas o nome do procedimento."},{"num":17,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"Radiofrequência e HIFU não são sinónimos.","text":"Apesar de ambos utilizarem energia, trabalham de formas diferentes, com equipamentos, profundidades, indicações e perfis de risco distintos.\n\nNão é responsável escolher apenas com base numa comparação rápida de preços ou numa promessa de firmeza.\n\nA zona a tratar, as características individuais, o dispositivo utilizado e a qualificação do operador são fatores importantes.\n\nProcedimentos baseados em energia podem provocar efeitos adversos quando são inadequados ou mal executados.\n\nUma recomendação séria explica o que o equipamento pode fazer, o que não pode garantir e porque foi escolhido.","cta":"Peça uma explicação personalizada antes de decidir entre tecnologias."},{"num":18,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"Quando um sérum “não funciona”, o problema pode não ser o sérum.","text":"Pode não ser adequado ao objetivo. Pode estar a ser usado com demasiados produtos. Pode não ter tido tempo suficiente. Ou a expectativa pode não corresponder ao que um cosmético consegue fazer.\n\nTambém existem questões que não devem ser resolvidas apenas com aconselhamento cosmético.\n\nAntes de trocar novamente, reveja a rotina inteira: limpeza, proteção solar, frequência, quantidade, tolerância e consistência.\n\nUm produto não trabalha sozinho. E nenhum produto deve ser apresentado como solução universal.","cta":"Em vez de acumular séruns, peça ajuda para organizar prioridades."},{"num":19,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"Higiene profissional é aquilo que a cliente quase não vê — mas deve poder confirmar.","text":"Superfícies preparadas, mãos higienizadas, materiais descartáveis quando aplicável e procedimentos claros entre clientes não são detalhes.\n\nSão parte essencial do serviço.\n\nA cliente tem o direito de perguntar como são limpos os equipamentos, quais os materiais de utilização única e que medidas são seguidas para reduzir riscos.\n\nUm bom profissional não se sente ofendido por estas perguntas. Responde com transparência.\n\nO ambiente pode ser bonito, perfumado e confortável. Mas a confiança também se constrói nos bastidores.","cta":"Na próxima sessão, repare no processo — não apenas no resultado."},{"num":20,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"Uma avaliação estética deve ser uma conversa, não um diagnóstico improvisado.","text":"Avaliar é observar, ouvir objetivos, conhecer hábitos e identificar fatores relevantes para o serviço.\n\nNão é atribuir doenças, substituir consulta médica ou prometer resolver uma condição clínica.\n\nQuando existem sinais fora do âmbito estético, o caminho responsável é encaminhar.\n\nEsta fronteira protege a cliente e valoriza a profissão, porque demonstra critério e respeito por diferentes competências.\n\nUma boa conversa termina com clareza: o que pode ser feito, o que deve esperar e o que precisa de ser visto por outro profissional.","cta":"Autoridade também é saber dizer “isto precisa de outra avaliação”."},{"num":21,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"Drenagem linfática não é uma promessa de emagrecimento.","text":"A drenagem manual é frequentemente procurada pela sensação de leveza e pelo apoio em situações específicas.\n\nMas não deve ser comunicada como método para eliminar gordura ou garantir perda de peso.\n\nExistem ainda condições em que deve ser evitada ou realizada apenas com indicação e acompanhamento adequados.\n\nAntes da sessão, o profissional deve recolher informação relevante e explicar o objetivo realista do procedimento.\n\nUma comunicação honesta não reduz o valor do serviço. Evita expectativas erradas e cria relações mais duradouras.","cta":"Escolha tratamentos pelo benefício adequado, não pela promessa mais rápida."},{"num":22,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"Depilação a laser e cera: a melhor escolha depende da pessoa.","text":"A cera remove o pelo temporariamente. O laser procura uma redução progressiva, dependente do equipamento, características do pelo e da pele, fases de crescimento e resposta individual.\n\nNenhuma opção é automaticamente melhor para todos.\n\nNa depilação a laser, avaliação, proteção ocular, parâmetros adequados e cuidados com exposição solar são importantes para reduzir riscos.\n\nTambém é necessário explicar que podem ser necessárias várias sessões e manutenção.\n\nUma comparação honesta apresenta vantagens, limitações e custos ao longo do tempo.","cta":"Marque uma avaliação antes de iniciar um plano de depilação a laser."},{"num":23,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"A primeira sessão deve criar clareza, não pressão.","text":"Uma cliente pode chegar com dúvidas, inseguranças ou uma lista de tratamentos vistos online.\n\nO papel do profissional não é acelerar a decisão.\n\nÉ compreender o objetivo, explicar possibilidades, esclarecer limites e dar espaço para escolher.\n\nQuando existe pressão para comprar um pacote antes de perceber indicação, frequência ou condições, a confiança fica fragilizada.\n\nUma boa proposta é suficientemente clara para continuar a fazer sentido depois de a cliente sair do gabinete.\n\nDecisões estéticas também merecem tempo.","cta":"Numa avaliação, faça todas as perguntas de que precisa antes de decidir."},{"num":24,"format":"Confiança","pilar":"Proximidade","gatilho":"Identificação","objetivo":"Humanizar o cuidado estético e criar confiança antes da marcação.","title":"A estética não é “só vaidade” — mas também não precisa de prometer mudar uma vida.","text":"Cuidar da aparência pode fazer parte de bem-estar, identidade, rotina ou prazer pessoal.\n\nNão é necessário diminuir essa escolha. Também não é responsável garantir que um tratamento resolverá inseguranças profundas.\n\nO trabalho estético pode oferecer cuidado, conforto e melhoria da aparência dentro de limites reais.\n\nA cliente continua a ser mais do que o problema que deseja tratar.\n\nUma comunicação respeitosa não cria defeitos para vender soluções. Ajuda cada pessoa a decidir sem vergonha nem pressão.","cta":"Cuidar de si deve partir de escolha, não de medo."},{"num":25,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação ou marcação com uma chamada à ação responsável.","title":"Cinco perguntas antes de qualquer tratamento estético.","text":"Qual é o objetivo real deste procedimento?\n\nÉ adequado para mim e existem situações em que não deve ser realizado?\n\nQuem o executa e que formação possui?\n\nQue reações, riscos e recuperação são expectáveis?\n\nQue cuidados preciso de cumprir antes e depois?\n\nEstas perguntas não tornam a cliente difícil. Tornam a decisão mais informada.\n\nUm profissional preparado consegue explicar o plano em linguagem clara, reconhecer incerteza e disponibilizar orientações.\n\nSe a única resposta for “não se preocupe”, ainda falta informação.","cta":"Guarde esta checklist para a próxima avaliação."},{"num":26,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação ou marcação com uma chamada à ação responsável.","title":"Porque é que um plano pode precisar de várias sessões.","text":"Alguns objetivos exigem progressão, intervalos adequados e reavaliação.\n\nIsto não significa que todas as clientes precisem do mesmo número de sessões nem que um pacote deva ser vendido sem avaliação.\n\nO plano deve considerar resposta individual, tolerância, objetivo e evolução observada.\n\nTambém deve existir liberdade para ajustar, interromper ou encaminhar quando necessário.\n\nMais sessões não são automaticamente melhores. O valor está na sequência justificada e no acompanhamento.\n\nUm plano profissional não é uma promessa fechada. É uma decisão revista ao longo do processo.","cta":"Pergunte como e quando os resultados serão reavaliados."},{"num":27,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação ou marcação com uma chamada à ação responsável.","title":"O pós-tratamento não é uma nota de rodapé.","text":"Depois de uma sessão, a pele pode precisar de cuidados específicos e de tempo.\n\nAs recomendações variam conforme o procedimento. Podem incluir evitar exposição solar, calor, fricção, determinados ativos ou manipulação da área.\n\nSeguir instruções genéricas encontradas online pode não ser adequado ao tratamento realizado.\n\nA cliente deve sair com informação clara: o que é normal, o que evitar, quando retomar a rotina e que sinais justificam contacto.\n\nUm pós-tratamento bem explicado reduz ansiedade e ajuda a proteger o processo.","cta":"Guarde as orientações recebidas e contacte o profissional se algo não estiver a evoluir como explicado."},{"num":28,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação ou marcação com uma chamada à ação responsável.","title":"O valor de um profissional não está apenas nas mãos.","text":"Está nas perguntas que faz antes de tocar na pele.\n\nEstá na escolha de não avançar quando não existe indicação.\n\nEstá na higiene, na formação, na preparação, no acompanhamento e na capacidade de explicar sem exagerar.\n\nUm tutorial pode mostrar uma técnica. Não conhece o histórico da cliente, não observa a resposta em tempo real e não assume responsabilidade pelo processo.\n\nO serviço profissional inclui julgamento, adaptação e cuidado — dimensões que raramente cabem num vídeo curto.","cta":"Ao comparar preços, compare também processo, segurança e acompanhamento."},{"num":29,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação ou marcação com uma chamada à ação responsável.","title":"O que aprendi ao cuidar da pele de pessoas diferentes.","text":"Aprendi que a mesma queixa pode esconder necessidades muito diferentes.\n\nQue a rotina perfeita no papel pode falhar na vida real.\n\nQue ouvir com atenção evita recomendações precipitadas.\n\nQue dizer “ainda não” ou “este tratamento não é indicado” também é cuidar.\n\nE que confiança não nasce de prometer resultados extraordinários. Nasce de explicar, acompanhar e agir com coerência.\n\nCada pele traz uma história, hábitos e expectativas. O trabalho começa quando deixamos de tratar apenas o que vemos.","cta":"Qual é a coisa mais importante que procura num profissional de estética?"},{"num":30,"format":"Checklist","pilar":"Conversão","gatilho":"Decisão","objetivo":"Transformar interesse em avaliação ou marcação com uma chamada à ação responsável.","title":"A melhor transformação é aquela que não precisa de uma promessa impossível.","text":"Ao longo de um plano, a evolução pode aparecer na textura, no conforto, na regularidade dos cuidados ou na forma como a cliente compreende a própria pele.\n\nNem todas as mudanças são imediatas. Nem todas são iguais. E nenhuma deve ser garantida sem conhecer a pessoa e o processo.\n\nUma relação profissional sólida combina conhecimento, expectativas realistas e acompanhamento.\n\nO objetivo não é perseguir uma pele sem poros, sem linhas e sem história.\n\nÉ cuidar com intenção, segurança e respeito.","cta":"Se procura um plano adaptado à sua pele e aos seus objetivos, marque uma avaliação."}];
+let currentDay = 1;
+
+// Splash
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("splash").classList.add("hide");
+    setTimeout(() => {
+      document.querySelectorAll(".animate").forEach(el => el.classList.add("in"));
+      renderDay(1);
+    }, 250);
+  }, 800);
+});
+
+// Init progress dots
+const dotsEl = document.getElementById("pDots");
+for (let i = 1; i <= 30; i++) {
+  const d = document.createElement("div");
+  d.className = "dot" + (i === 1 ? " today" : "");
+  dotsEl.appendChild(d);
+}
+
+function renderDay(n) {
+  const d = DAYS.find(x => x.num === n);
+  if (!d) return;
+  currentDay = n;
+
+  // Nav + progress count
+  document.getElementById("navPill").textContent = "Dia " + n + " de 30";
+  document.getElementById("progressCount").textContent = "Dia " + n + " de 30";
+
+  // Card title + metadata
+  document.getElementById("cardTopic").textContent = d.title;
+  const formatTag = document.querySelector(".tag-format");
+  const pilarTag = document.querySelector(".tag-pilar");
+  if (formatTag) formatTag.textContent = d.format || "Conteúdo";
+  if (pilarTag) pilarTag.textContent = d.pilar || "Estratégia";
+  document.querySelectorAll(".strat-value").forEach((el, idx) => {
+    if (idx === 0) el.textContent = d.pilar || "Estratégia";
+    if (idx === 1) el.textContent = d.gatilho || "Confiança";
+    if (idx === 2) el.textContent = d.objetivo || "Reforçar autoridade e confiança antes do contacto.";
+  });
+
+  // Card text — render paragraphs
+  const textEl = document.getElementById("cardText");
+  const paragraphs = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n").split("\n\n");
+  textEl.innerHTML = paragraphs.map(p => `<p style="margin-bottom:12px;">${p.replace(/\n/g,"<br>")}</p>`).join("");
+
+  // CTA
+  document.getElementById("cardCta").textContent = d.cta;
+
+  // Progress bar
+  document.getElementById("pFill").style.width = (n / 30 * 100) + "%";
+
+  // Progress dots
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.className = "dot" + (i + 1 < n ? " done" : i + 1 === n ? " today" : "");
+  });
+
+  // Next day
+  const next = DAYS.find(x => x.num === n + 1);
+  const nextCard = document.querySelector(".next-card");
+  if (next && nextCard) {
+    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
+    document.getElementById("nextTopic").textContent = next.title;
+    nextCard.style.display = "";
+    nextCard.style.cursor = "pointer";
+    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
+  } else if (nextCard) {
+    nextCard.style.display = "none";
+  }
+}
+
+function copyPrompt() {
+  const d = DAYS.find(x => x.num === currentDay);
+  if (!d) return;
+  const clean = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n");
+  const full = clean + "\n\n" + d.cta;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById("btnCopy");
+    btn.classList.add("copied");
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="20,6 9,17 4,12"/></svg> Copiado!`;
+    document.getElementById("toast").classList.add("show");
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar conteúdo`;
+      document.getElementById("toast").classList.remove("show");
+    }, 3000);
+  });
+}
+
+let extraOpen = false;
+function toggleExtra() {
+  extraOpen = !extraOpen;
+  document.getElementById("extraWrap").classList.toggle("open", extraOpen);
+  const btn = document.getElementById("btnMore");
+  btn.classList.toggle("open", extraOpen);
+  btn.innerHTML = (extraOpen ? "Fechar" : "Ver contexto estratégico") + ` <em class="chevron" style="transform:${extraOpen?"rotate(180deg)":"none"}">˅</em>`;
+}
+</script>
+</body>
+</html>
