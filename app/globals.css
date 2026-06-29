@@ -645,6 +645,7 @@ h1{
 .customer-product p{font-size:13px}
 .wedding-product{background:linear-gradient(145deg,#9d5142,#c87964)}
 .imobiliario-product{background:linear-gradient(145deg,#294751,#547381)}
+.fotografos-product{background:linear-gradient(145deg,#541a2c,#6f243b)}
 .install-card{max-width:700px;margin:0 auto;padding:34px;text-align:center;background:white;border:1px solid rgba(31,27,25,.1);border-radius:18px}
 .install-card h2{font-family:var(--font-cormorant),serif;font-size:34px;margin:10px 0}
 .install-card>p{color:#70665e;margin-bottom:20px}
