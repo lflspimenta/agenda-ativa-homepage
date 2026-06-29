@@ -1,40 +1,96 @@
-﻿import { redirect } from "next/navigation";
-import { createSupabaseAdminClient, createSupabaseServerClient } from "@/lib/supabase-server";
+import { redirect } from "next/navigation";
+import {
+  createSupabaseAdminClient,
+  createSupabaseServerClient
+} from "@/lib/supabase-server";
 import { InstallApp } from "./install-app";
 
 export const dynamic = "force-dynamic";
 
+const labels = {
+  brand: "AGENDA ATIVA\u2122",
+  ready: "A sua agenda est\u00e1 pronta.",
+  hello: "Ol\u00e1",
+  choose: "Escolha uma edi\u00e7\u00e3o e encontre o conte\u00fado de hoje.",
+  edition: "EDI\u00c7\u00c3O",
+  premium: "Continuar para o conte\u00fado premium \u2192",
+  imobiliario: "Imobili\u00e1rio",
+  fotografos: "Fot\u00f3grafos",
+  quick: "ACESSO R\u00c1PIDO",
+  installTitle: "Tenha a Agenda Ativa no ecr\u00e3 inicial.",
+  installText: "Entre diretamente nas suas edi\u00e7\u00f5es sem voltar a procurar o email."
+};
+
 export default async function MinhaAgendaPage() {
   const supabase = createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
   if (!user?.email) redirect("/entrar?area=1");
 
   const admin = createSupabaseAdminClient();
-  const { data: access } = await admin.from("users")
-    .select("first_name, products").eq("email", user.email.toLowerCase()).maybeSingle();
-  const products: string[] = Array.isArray(access?.products) ? access.products : [];
-  if (!access || products.length === 0) redirect("/entrar?area=1&estado=sem_acesso");
+  const { data: access } = await admin
+    .from("users")
+    .select("first_name, products")
+    .eq("email", user.email.toLowerCase())
+    .maybeSingle();
+
+  const products: string[] = Array.isArray(access?.products)
+    ? access.products
+    : [];
+
+  if (!access || products.length === 0) {
+    redirect("/entrar?area=1&estado=sem_acesso");
+  }
 
   return (
     <main className="customer-area">
       <header className="customer-header">
-        <a href="/" className="customer-brand">AGENDA ATIVAâ„¢</a>
+        <a href="/" className="customer-brand">{labels.brand}</a>
         <a href="/" className="customer-home">Homepage</a>
       </header>
+
       <section className="customer-welcome">
         <span>A MINHA AGENDA</span>
-        <h1>{access.first_name ? `OlÃ¡, ${access.first_name}.` : "A sua agenda estÃ¡ pronta."}</h1>
-        <p>Escolha uma ediÃ§Ã£o e encontre o conteÃºdo de hoje.</p>
+        <h1>
+          {access.first_name
+            ? `${labels.hello}, ${access.first_name}.`
+            : labels.ready}
+        </h1>
+        <p>{labels.choose}</p>
       </section>
+
       <section className="customer-products">
-        {products.includes("wedding") && <a className="customer-product wedding-product" href="/agenda"><small>EDIÃ‡ÃƒO</small><h2>Wedding Planner</h2><p>Continuar para o conteÃºdo premium â†’</p></a>}
-        {products.includes("imobiliario") && <a className="customer-product imobiliario-product" href="/imobiliario/agenda"><small>EDIÃ‡ÃƒO</small><h2>ImobiliÃ¡rio</h2><p>Continuar para o conteÃºdo premium â†’</p></a>}
-        {products.includes("fotografos") && <a className="customer-product fotografos-product" href="/fotografos/agenda"><small>EDIÇÃO</small><h2>Fotógrafos</h2><p>Continuar para o conteúdo premium →</p></a>}
+        {products.includes("wedding") && (
+          <a className="customer-product wedding-product" href="/agenda">
+            <small>{labels.edition}</small>
+            <h2>Wedding Planner</h2>
+            <p>{labels.premium}</p>
+          </a>
+        )}
+
+        {products.includes("imobiliario") && (
+          <a className="customer-product imobiliario-product" href="/imobiliario/agenda">
+            <small>{labels.edition}</small>
+            <h2>{labels.imobiliario}</h2>
+            <p>{labels.premium}</p>
+          </a>
+        )}
+
+        {products.includes("fotografos") && (
+          <a className="customer-product fotografos-product" href="/fotografos/agenda">
+            <small>{labels.edition}</small>
+            <h2>{labels.fotografos}</h2>
+            <p>{labels.premium}</p>
+          </a>
+        )}
       </section>
+
       <section className="install-card">
-        <span>ACESSO RÃPIDO</span>
-        <h2>Tenha a Agenda Ativa no ecrÃ£ inicial.</h2>
-        <p>Entre diretamente nas suas ediÃ§Ãµes sem voltar a procurar o email.</p>
+        <span>{labels.quick}</span>
+        <h2>{labels.installTitle}</h2>
+        <p>{labels.installText}</p>
         <InstallApp />
       </section>
     </main>
