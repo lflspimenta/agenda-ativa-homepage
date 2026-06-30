@@ -4,7 +4,10 @@ const editions = [
   { name: "Wedding Edition", status: "DisponÃ­vel", href: "/wedding", available: true },
   { name: "ImobiliÃ¡rio Edition", status: "DisponÃ­vel", href: "/imobiliario", available: true },
   { name: "FotÃ³grafos Edition", status: "DisponÃ­vel", href: "/fotografos", available: true },
-  { name: "EstÃ©tica Edition", status: "Brevemente", available: false },
+  { name: "EstÃ©tica Facial Edition", status: "DisponÃ­vel", href: "/estetica-facial", available: true },
+  { name: "Medicina EstÃ©tica Edition", status: "DisponÃ­vel", href: "/medicina-estetica", available: true },
+  { name: "Cabeleireiros Edition", status: "DisponÃ­vel", href: "/cabeleireiros", available: true },
+  { name: "Nails / Unhas Edition", status: "DisponÃ­vel", href: "/unhas", available: true },
   { name: "Advogados Edition", status: "Brevemente", available: false }
 ];
 
@@ -20,6 +23,7 @@ const benefits = [
 const professionals = [
   "Wedding Planners",
   "Profissionais de EstÃ©tica",
+  "ClÃ­nicas de Medicina EstÃ©tica",
   "Consultores ImobiliÃ¡rios",
   "Advogados",
   "FotÃ³grafos"

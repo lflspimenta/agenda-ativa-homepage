@@ -10,6 +10,7 @@ const productDestinations = {
   imobiliario: "/imobiliario/agenda",
   fotografos: "/fotografos/agenda",
   estetica_facial: "/estetica-facial/agenda",
+  medicina_estetica: "/medicina-estetica/agenda",
   cabeleireiros: "/cabeleireiros/agenda",
   unhas: "/unhas/agenda"
 } as const;
