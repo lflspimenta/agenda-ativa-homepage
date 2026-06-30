@@ -63,7 +63,8 @@ export const config = {
     "/imobiliario/agenda/:path*",
     "/fotografos/agenda/:path*",
     "/estetica-facial/agenda/:path*",
-    "/cabeleireiros/agenda/:path*"
+    "/cabeleireiros/agenda/:path*",
+    "/unhas/agenda/:path*"
   ]
 };
 

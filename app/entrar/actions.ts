@@ -5,18 +5,31 @@ import { createSupabaseAdminClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import { requiredEnv } from "@/lib/env";
 
+const productDestinations = {
+  wedding: "/agenda",
+  imobiliario: "/imobiliario/agenda",
+  fotografos: "/fotografos/agenda",
+  estetica_facial: "/estetica-facial/agenda",
+  cabeleireiros: "/cabeleireiros/agenda",
+  unhas: "/unhas/agenda"
+} as const;
+
+type ProductSlug = keyof typeof productDestinations;
+
+function getProduct(value: FormDataEntryValue | null): ProductSlug {
+  const product = String(value || "");
+  return product in productDestinations ? (product as ProductSlug) : "wedding";
+}
+
 export async function sendMagicLink(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
-  const product =
-    String(formData.get("produto") || "") === "imobiliario"
-      ? "imobiliario"
-      : "wedding";
+  const product = getProduct(formData.get("produto"));
   const customerArea = String(formData.get("area") || "") === "1";
   const loginUrl = customerArea
     ? "/entrar?area=1"
-    : product === "imobiliario"
-      ? "/entrar?produto=imobiliario"
-      : "/entrar";
+    : product === "wedding"
+      ? "/entrar"
+      : `/entrar?produto=${product}`;
 
   if (!email) {
     redirect(`${loginUrl}${loginUrl.includes("?") ? "&" : "?"}estado=email`);
@@ -47,9 +60,7 @@ export async function sendMagicLink(formData: FormData) {
 
   const destination = customerArea
     ? "/minha-agenda"
-    : product === "imobiliario"
-      ? "/imobiliario/agenda"
-      : "/agenda";
+    : productDestinations[product];
   const redirectTo = `${requiredEnv(
     "NEXT_PUBLIC_APP_URL"
   )}/auth/callback?next=${destination}`;

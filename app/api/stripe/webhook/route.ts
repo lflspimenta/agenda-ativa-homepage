@@ -6,6 +6,22 @@ import { requiredEnv } from "@/lib/env";
 
 export const runtime = "nodejs";
 
+type AgendaProduct =
+  | "wedding"
+  | "imobiliario"
+  | "fotografos"
+  | "estetica_facial"
+  | "cabeleireiros"
+  | "unhas";
+
+const paidProducts: AgendaProduct[] = [
+  "imobiliario",
+  "fotografos",
+  "estetica_facial",
+  "cabeleireiros",
+  "unhas"
+];
+
 function getFirstName(name?: string | null) {
   return name?.trim().split(/\s+/)[0] || null;
 }
@@ -14,8 +30,8 @@ async function getProductFromSession(
   stripe: Stripe,
   session: Stripe.Checkout.Session
 ) {
-  if (["imobiliario", "fotografos", "estetica_facial", "cabeleireiros"].includes(session.metadata?.product ?? "")) {
-    return session.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial" | "cabeleireiros";
+  if (paidProducts.includes(session.metadata?.product as AgendaProduct)) {
+    return session.metadata?.product as AgendaProduct;
   }
 
   const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
@@ -29,8 +45,8 @@ async function getProductFromSession(
     | undefined;
 
   return typeof product !== "string" &&
-    ["imobiliario", "fotografos", "estetica_facial", "cabeleireiros"].includes(product?.metadata?.product ?? "")
-    ? (product?.metadata?.product as "imobiliario" | "fotografos" | "estetica_facial" | "cabeleireiros")
+    paidProducts.includes(product?.metadata?.product as AgendaProduct)
+    ? (product?.metadata?.product as AgendaProduct)
     : "wedding";
 }
 
@@ -46,7 +62,11 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, requiredEnv("STRIPE_WEBHOOK_SECRET"));
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      requiredEnv("STRIPE_WEBHOOK_SECRET")
+    );
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
@@ -67,7 +87,7 @@ export async function POST(request: Request) {
     const { data: existing } = await admin
       .from("users")
       .select(
-        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date, cabeleireiros_purchase_date"
+        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date, cabeleireiros_purchase_date, unhas_purchase_date"
       )
       .eq("email", email)
       .maybeSingle();
@@ -83,6 +103,7 @@ export async function POST(request: Request) {
         fotografos_purchase_date?: string;
         estetica_facial_purchase_date?: string;
         cabeleireiros_purchase_date?: string;
+        unhas_purchase_date?: string;
       } = {};
 
       if (!products.includes(product)) {
@@ -103,6 +124,8 @@ export async function POST(request: Request) {
         !existing.cabeleireiros_purchase_date
       ) {
         updates.cabeleireiros_purchase_date = purchaseDate;
+      } else if (product === "unhas" && !existing.unhas_purchase_date) {
+        updates.unhas_purchase_date = purchaseDate;
       } else if (product === "wedding" && !existing.wedding_purchase_date) {
         updates.wedding_purchase_date = purchaseDate;
       }
@@ -124,7 +147,8 @@ export async function POST(request: Request) {
         estetica_facial_purchase_date:
           product === "estetica_facial" ? purchaseDate : null,
         cabeleireiros_purchase_date:
-          product === "cabeleireiros" ? purchaseDate : null
+          product === "cabeleireiros" ? purchaseDate : null,
+        unhas_purchase_date: product === "unhas" ? purchaseDate : null
       });
     }
 
@@ -145,7 +169,9 @@ export async function POST(request: Request) {
                 ? "/estetica-facial/agenda"
                 : product === "cabeleireiros"
                   ? "/cabeleireiros/agenda"
-                  : "/agenda"
+                  : product === "unhas"
+                    ? "/unhas/agenda"
+                    : "/agenda"
         }`
       }
     });

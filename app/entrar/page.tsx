@@ -9,14 +9,28 @@ type LoginPageProps = {
   };
 };
 
+const productLabels = {
+  wedding: "Wedding Planner Edition",
+  imobiliario: "Edição Imobiliário",
+  fotografos: "Edição Fotógrafos",
+  estetica_facial: "Edição Estética Facial",
+  cabeleireiros: "Edição Cabeleireiros",
+  unhas: "Edição Nails / Unhas"
+} as const;
+
+type ProductSlug = keyof typeof productLabels;
+
+function getProduct(value?: string): ProductSlug {
+  return value && value in productLabels ? (value as ProductSlug) : "wedding";
+}
+
 export default function LoginPage({ searchParams }: LoginPageProps) {
   const status = searchParams?.estado;
   const customerArea = searchParams?.area === "1";
-  const product =
-    searchParams?.produto === "imobiliario" ? "imobiliario" : "wedding";
+  const product = getProduct(searchParams?.produto);
   const edition = customerArea
     ? "Área do cliente"
-    : product === "imobiliario" ? "Edição Imobiliário" : "Wedding Planner Edition";
+    : productLabels[product];
 
   return (
     <main className="page">
