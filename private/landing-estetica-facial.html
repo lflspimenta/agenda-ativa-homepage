@@ -1,203 +1,78 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Agenda Ativa™ — Estética Facial Edition</title>
-  <meta name="description" content="30 dias de conteúdos prontos para profissionais de estética facial comunicarem com clareza, confiança e responsabilidade.">
-  <style>
-    :root{--wine:#5F7F68;--wine-dark:#3F5F4A;--blush:#E8F0EA;--ivory:#f7f2ea;--ink:#24201f;--muted:#665f5b;--line:#ddd3c9;--white:#fff}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ivory);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
-    img{display:block;max-width:100%}a{color:inherit}.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
-    .topbar{height:74px;display:flex;align-items:center;border-bottom:1px solid rgba(36,32,31,.1);background:rgba(247,242,234,.94)}
-    .nav{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:Georgia,serif;letter-spacing:.08em;font-size:15px}
-    .brand img{width:35px;height:35px;object-fit:contain}.back{text-decoration:none;font-size:13px;font-weight:700;border-bottom:1px solid var(--ink)}
-    .hero{min-height:690px;display:grid;grid-template-columns:46% 54%;align-items:stretch;background:#eee4d8}
-    .hero-copy{display:flex;align-items:center;padding:80px max(28px,calc((100vw - 1180px)/2));padding-right:55px;background:var(--ivory)}
-    .eyebrow{display:block;color:var(--wine);font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:22px}
-    h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;line-height:1.08;margin:0}
-    h1{font-size:clamp(46px,5.3vw,78px);letter-spacing:-.035em}.hero p{max-width:560px;color:var(--muted);font-size:19px;margin:26px 0 30px}
-    .hero-photo{position:relative;overflow:hidden}.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
-    .button{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 26px;background:var(--wine);color:var(--white);text-decoration:none;font-weight:800;border-radius:2px;transition:.2s}
-    .button:hover{background:var(--wine-dark);transform:translateY(-1px)}.micro{display:block;margin-top:14px;color:var(--muted);font-size:12px}
-    section{padding:100px 0}.intro{text-align:center}.intro h2{font-size:clamp(36px,4vw,58px);max-width:850px;margin:auto}.intro p{max-width:690px;margin:24px auto 0;color:var(--muted);font-size:18px}
-    .pain{background:var(--ink);color:var(--white);padding:0}.split{display:grid;grid-template-columns:1fr 1fr;min-height:680px}.split-image img{width:100%;height:100%;object-fit:cover}
-    .split-copy{display:flex;align-items:center;padding:70px clamp(32px,7vw,105px)}.split-copy h2{font-size:clamp(38px,4.6vw,64px)}.split-copy p{color:#d9d1cc;font-size:18px;margin:24px 0}
-    .pain-list{list-style:none;padding:0;margin:30px 0 0}.pain-list li{padding:13px 0;border-top:1px solid rgba(255,255,255,.16)}.pain-list li:before{content:"—";color:#d39aac;margin-right:12px}
-    .solution{background:var(--blush)}.solution-head{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:60px}.solution h2{font-size:clamp(38px,4.4vw,62px)}.solution-head p{color:var(--muted);font-size:18px;margin:0}
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:var(--white);padding:35px;border:1px solid rgba(111,36,59,.12)}.card b{display:block;color:var(--wine);font-size:12px;letter-spacing:.15em;margin-bottom:45px}.card h3{font-size:28px}.card p{color:var(--muted);margin:15px 0 0}
-    .showcase{padding:0;background:var(--white)}.showcase .split{min-height:630px}.showcase .split-copy{background:var(--white)}.showcase h2{font-size:clamp(38px,4.4vw,62px)}.showcase p{color:var(--muted);font-size:18px}
-    .days h2{text-align:center;font-size:clamp(38px,4.4vw,62px)}.days>div>p{text-align:center;color:var(--muted);font-size:18px;margin:20px auto 45px;max-width:690px}
-    .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.day{padding:24px;border:1px solid var(--line);background:rgba(255,255,255,.45)}.day small{color:var(--wine);font-weight:800}.day h3{font-family:Arial,sans-serif;font-size:17px;font-weight:800;line-height:1.3;margin-top:10px}
-    .for-you{background:var(--wine);color:var(--white)}.for-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px}.for-you h2{font-size:clamp(40px,4.5vw,64px)}.checks{display:grid;gap:14px}.check{padding:17px 0;border-bottom:1px solid rgba(255,255,255,.24);font-size:18px}.check:before{content:"✓";margin-right:14px;font-weight:900}
-    .offer{text-align:center}.offer h2{font-size:clamp(42px,5vw,68px)}.offer>div>p{max-width:620px;margin:22px auto;color:var(--muted);font-size:18px}
-    .price-box{width:min(540px,100%);margin:45px auto 0;background:var(--white);border:1px solid var(--line);padding:45px;box-shadow:0 20px 60px rgba(60,35,25,.08)}
-    .price-box .label{color:var(--wine);font-size:12px;font-weight:800;letter-spacing:.16em}.price{font-family:Georgia,serif;font-size:70px;line-height:1;margin:18px 0 8px}.price-box ul{text-align:left;list-style:none;padding:20px 0;margin:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.price-box li{padding:7px 0}.price-box li:before{content:"✓";color:var(--wine);margin-right:10px;font-weight:900}.price-box .button{width:100%}
-    .faq{background:#efe7de}.faq h2{font-size:clamp(38px,4vw,58px);margin-bottom:45px}.faq details{border-top:1px solid #cfc3b8;padding:21px 0}.faq summary{cursor:pointer;font-weight:800;font-size:17px}.faq details p{color:var(--muted);max-width:800px}
-    footer{padding:38px 0;background:var(--ink);color:#d8ceca;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px}
-    @media(max-width:800px){
-      .wrap{width:min(100% - 28px,680px)}.topbar{height:64px}.brand{font-size:12px}.brand img{width:30px;height:30px}
-      .hero{display:flex;flex-direction:column;min-height:0}.hero-copy{order:2;padding:45px 22px 52px}.hero-photo{height:55vh;min-height:420px}.hero-photo img{object-position:66% center}
-      h1{font-size:45px}.hero p{font-size:17px;margin:20px 0 25px}.button{width:100%}
-      section{padding:72px 0}.split{grid-template-columns:1fr;min-height:0}.split-image{height:430px}.split-copy{padding:55px 24px}.pain .split-image img{object-position:center}
-      .solution-head,.for-grid{grid-template-columns:1fr;gap:25px}.cards,.day-grid{grid-template-columns:1fr}.card b{margin-bottom:28px}.showcase .split-image{order:1}.showcase .split-copy{order:2}
-      .price-box{padding:32px 22px}.price{font-size:62px}.foot{flex-direction:column}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agenda Ativa™ | Estética Facial Edition</title>
+<meta name="description" content="Sistema editorial pronto a usar para profissionais de estética facial que querem comunicar cuidado, confiança e marcações com responsabilidade." />
+<style>
+:root{
+  --accent:#5F7F68;
+  --accent-dark:#3F5F4A;
+  --gold:#B08D57;
+  --bg:#FBF8F2;
+  --paper:#FFFDF8;
+  --paper-soft:#F4EEE5;
+  --text:#1B1B1B;
+  --muted:#5D625F;
+  --line:rgba(95,127,104,.18);
+  --shadow:0 28px 80px rgba(63,95,74,.14);
+  --shadow-soft:0 18px 56px rgba(63,95,74,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.48;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.page{overflow:hidden;background:radial-gradient(circle at 12% 4%,rgba(95,127,104,.10),transparent 26%),linear-gradient(180deg,#FBF8F2 0%,#F6EFE4 48%,#FBF8F2 100%)}
+.container{width:min(1120px,calc(100% - 42px));margin:0 auto}
+.header{position:absolute;inset:0 0 auto;z-index:20;padding-top:28px}
+.nav{display:flex;align-items:flex-start;justify-content:space-between;gap:26px}
+.logo-area{display:flex;align-items:center;gap:15px}
+.aa-logo{width:72px;height:72px;border:1px solid rgba(95,127,104,.22);border-radius:50%;display:grid;place-items:center;font-family:Georgia,"Times New Roman",serif;font-size:25px;color:var(--accent);background:rgba(255,253,248,.68)}
+.logo-divider{width:1px;height:42px;background:rgba(95,127,104,.20)}
+.brand-name{font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1;letter-spacing:.02em;text-transform:uppercase}
+.brand-sub{display:block;margin-top:6px;font-family:Georgia,"Times New Roman",serif;font-style:italic;color:var(--gold);font-size:15px}
+.nav-links{display:flex;gap:34px;padding-top:14px;font-size:12px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--text)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:white;font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 18px 34px rgba(63,95,74,.22);transition:transform .18s ease,background .18s ease,box-shadow .18s ease;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);background:var(--accent-dark);box-shadow:0 22px 42px rgba(63,95,74,.28)}
+.btn.secondary{background:rgba(255,253,248,.76);color:var(--text);box-shadow:none;border-color:rgba(176,141,87,.38)}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:500;line-height:1.02;letter-spacing:-.04em}
+em{color:var(--gold);font-style:normal}.kicker{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.20em;text-transform:uppercase;margin-bottom:18px}
+.hero{position:relative;min-height:610px;display:flex;align-items:center;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(251,248,242,1) 0%,rgba(251,248,242,.96) 29%,rgba(251,248,242,.72) 43%,rgba(251,248,242,.22) 63%,rgba(251,248,242,0) 100%),url("/assets/estetica-facial/1.png") center right/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:125px;background:linear-gradient(180deg,transparent,#FBF8F2 92%)}
+.hero-inner{position:relative;z-index:2;padding-top:88px;max-width:540px}.hero h1{font-size:clamp(42px,5.2vw,68px);max-width:560px;margin-bottom:22px}.hero p{max-width:430px;margin-bottom:26px;font-size:16px;line-height:1.56;color:#2D3130}.actions{display:flex;gap:14px;flex-wrap:wrap}
+.benefits{position:relative;z-index:5;margin-top:-38px}.benefit-box{background:rgba(255,253,248,.94);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden}.benefit{display:grid;grid-template-columns:64px 1fr;gap:20px;align-items:center;padding:31px 42px;border-right:1px solid var(--line)}.benefit:last-child{border-right:0}.icon{width:52px;height:52px;border:1.5px solid var(--gold);border-radius:50%;color:var(--gold);display:grid;place-items:center;font-family:Georgia,serif;font-size:27px}.benefit strong{display:block;margin-bottom:7px;font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.benefit span{display:block;max-width:250px;font-size:14px;color:#343938}
+section{padding:62px 0}.steps-section{text-align:center;padding-top:42px;padding-bottom:38px}.steps{display:grid;grid-template-columns:1fr 80px 1fr 80px 1fr;align-items:center;max-width:920px;margin:0 auto}.step{display:grid;grid-template-columns:74px 1fr;gap:20px;text-align:left;align-items:start}.num{font-family:Georgia,serif;color:var(--gold);font-size:54px;line-height:.9}.step strong{display:block;margin-bottom:8px;font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.step p{color:#3D4240;font-size:14px;line-height:1.45}.arrow{height:1px;background:var(--gold);position:relative}.arrow::after{content:"";position:absolute;right:0;top:-5px;width:10px;height:10px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);transform:rotate(45deg)}
+.editorial-split{display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:stretch}.panel{border:1px solid var(--line);background:rgba(255,253,248,.72);border-radius:8px;padding:38px 42px;box-shadow:var(--shadow-soft)}.panel.dark{background:var(--accent);color:white;border-color:rgba(255,255,255,.18)}.panel.dark h2,.panel.dark h3{color:white}.panel.dark p{color:rgba(255,255,255,.82)}.panel h2{font-size:clamp(34px,4vw,52px);margin-bottom:20px}.line-list{display:grid}.line-list div{padding:17px 0;border-bottom:1px solid var(--line);color:#2F3635;font-size:16px}.line-list div:last-child{border-bottom:0}
+.content-card{border:1px solid var(--line);border-radius:8px;background:rgba(255,253,248,.72);box-shadow:0 20px 60px rgba(63,95,74,.08);padding:36px 40px;display:grid;grid-template-columns:1fr 380px 76px;gap:38px;align-items:center}.content-card h2{font-size:clamp(34px,4vw,52px);max-width:500px}.content-card p{margin-top:22px;max-width:390px;font-size:15px;color:#3D4240}.preview{background:linear-gradient(135deg,#FFFDF8,#F4EEE5);border:1px solid rgba(184,117,120,.12);border-radius:8px;padding:30px}.preview strong{display:block;color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px}.preview h3{font-size:31px;line-height:1.12}.preview-meta{display:grid;gap:8px;margin-top:20px;color:#5D625F;font-size:13px}.circle-btn{width:54px;height:54px;border-radius:50%;background:var(--accent);color:white;display:grid;place-items:center;font-size:32px;justify-self:end}
+.receive-title{color:var(--gold);text-align:center;font-size:12px;font-weight:900;letter-spacing:.20em;text-transform:uppercase;margin-bottom:22px}.receive{display:grid;grid-template-columns:1fr 1px 1fr;gap:50px;align-items:start}.list{list-style:none;display:grid;gap:11px}.list li{display:flex;gap:12px;color:#2F3635;font-size:15px}.list li::before{content:"✓";color:var(--gold);font-weight:900}.negative li::before{content:"×"}.divider{background:var(--line);min-height:150px}.bonus{display:grid;grid-template-columns:96px 1fr;gap:28px;align-items:center}.gift{width:96px;height:96px;border-radius:50%;background:#EFE5D6;color:var(--gold);display:grid;place-items:center;font-size:44px}.bonus strong{display:block;margin-bottom:12px;font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}.bonus p{max-width:360px;color:#3D4240}
+.middle-band{padding:46px 0;text-align:center;background:linear-gradient(180deg,rgba(244,238,229,.45),rgba(244,238,229,.65))}.middle-band h2{font-size:clamp(34px,4vw,52px)}.middle-band p{max-width:650px;margin:16px auto 0;color:#2F3635;font-size:16px}.focus-box{background:var(--accent);color:white;border-radius:8px;padding:48px 52px;box-shadow:var(--shadow);text-align:center}.focus-box h2{color:white;font-size:clamp(34px,4vw,52px);margin-bottom:16px}.focus-box p{color:rgba(255,255,255,.86);max-width:720px;margin:0 auto;font-size:18px;line-height:1.55}
+.image-split{display:grid;grid-template-columns:.95fr 1.05fr;gap:46px;align-items:center}.image-card{border-radius:8px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);height:420px;background:var(--paper-soft)}.image-card img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}.image-copy h2{font-size:clamp(34px,4vw,52px);margin-bottom:18px}.image-copy p{color:#3D4240;font-size:16px;max-width:470px}
+.objection{display:grid;grid-template-columns:1fr 1px 1fr;gap:56px;align-items:center}.objection h2{font-size:clamp(34px,4vw,52px)}.objection p{margin-top:20px;color:#3D4240}.compare{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:rgba(255,253,248,.72);box-shadow:var(--shadow-soft)}.compare-col{padding:34px 42px}.compare-col:first-child{border-right:1px solid var(--line)}.compare-col h3{font-size:32px;margin-bottom:20px}
+.price-box{margin-top:34px;border:1px solid var(--line);border-radius:8px;background:rgba(255,253,248,.72);display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center;padding:34px 52px}.price-box h2{font-size:clamp(32px,3.6vw,48px)}.price-card{border:1px solid var(--gold);border-radius:7px;padding:24px 34px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px}.price{font-family:Georgia,serif;font-size:64px;line-height:.9}.price small{font-family:Inter,sans-serif;font-size:18px}.price-text{color:#3D4240;font-size:13px}.faq{display:grid;gap:10px}.faq-item{background:rgba(255,253,248,.72);border:1px solid var(--line);border-radius:8px;padding:22px 26px}.faq-item h3{font-size:25px;margin-bottom:8px}.faq-item p{color:#3D4240;font-size:15px}.footer-cta{background:var(--accent);color:white;text-align:center;padding:38px 0 42px}.footer-cta h2{color:white;font-size:36px;margin-bottom:8px}.footer-cta p{margin-bottom:22px;color:rgba(255,255,255,.85);font-size:13px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.footer-cta .btn{background:#FFFDF8;color:var(--accent);border-color:#FFFDF8;box-shadow:none}footer{padding:26px 0 42px;color:#5D625F;font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+@media (max-width:980px){.header{position:relative;background:#FBF8F2;padding:18px 0}.nav{align-items:center}.nav-links{display:none}.hero::before{background:linear-gradient(90deg,rgba(251,248,242,.98),rgba(251,248,242,.82) 55%,rgba(251,248,242,.08)),url("/assets/estetica-facial/1.png") center right/cover no-repeat}.benefit-box,.steps,.editorial-split,.content-card,.receive,.objection,.compare,.price-box,.price-card,.image-split{grid-template-columns:1fr}.benefit{border-right:0;border-bottom:1px solid var(--line)}.benefit:last-child{border-bottom:0}.arrow,.divider{display:none}.content-card{gap:26px}.circle-btn{justify-self:start}.compare-col:first-child{border-right:0;border-bottom:1px solid var(--line)}.image-card{height:360px}}
+@media (max-width:640px){.container{width:min(100% - 28px,1120px)}.aa-logo{width:54px;height:54px}.brand-name{font-size:16px}.brand-sub{font-size:13px}.hero{min-height:auto}.hero::before{background:linear-gradient(180deg,rgba(251,248,242,.18),rgba(251,248,242,.82) 38%,#FBF8F2 66%),url("/assets/estetica-facial/1.png") top center/170% auto no-repeat}.hero-inner{padding:250px 0 80px}.hero h1{font-size:40px}.actions .btn{width:100%}.content-card,.price-box,.panel,.focus-box{padding:28px}.preview h3{font-size:26px}.receive{gap:28px}.middle-band h2,.objection h2,.content-card h2,.panel h2,.focus-box h2{font-size:36px}}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap nav">
-      <a class="brand" href="#"><img src="aa-monogram.svg" alt=""><span>AGENDA ATIVA™</span></a>
-      <a class="back" href="#">Voltar à homepage</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <div>
-          <span class="eyebrow">Estética Facial Edition</span>
-          <h1>A sua forma de cuidar também precisa de ser comunicada.</h1>
-          <p>30 dias de conteúdos prontos para educar clientes, gerir expectativas e transformar confiança em marcações responsáveis.</p>
-          <a class="button" href="#oferta">Quero comunicar com confiança</a>
-          <span class="micro">Pagamento único · Acesso digital imediato</span>
-        </div>
-      </div>
-      <div class="hero-photo"><img src="imagens/1.png" alt="Profissional de estética facial em ambiente cuidado"></div>
-    </section>
-
-    <section class="intro">
-      <div class="wrap">
-        <span class="eyebrow">Cuidar já exige presença</span>
-        <h2>Não devia precisar de escolher entre cuidar das clientes e explicar todos os dias o valor do seu trabalho.</h2>
-        <p>A Agenda Ativa transforma a comunicação numa tarefa simples: abrir o conteúdo do dia, copiar e publicar com segurança.</p>
-      </div>
-    </section>
-
-    <section class="pain">
-      <div class="split">
-        <div class="split-image"><img src="imagens/2.png" alt="Profissional de estética facial num ambiente premium"></div>
-        <div class="split-copy">
-          <div>
-            <span class="eyebrow" style="color:#d9a8b7">A realidade de quem cuida</span>
-            <h2>A sessão termina. A confiança continua.</h2>
-            <p>Entre avaliações, sessões, cuidados posteriores e mensagens de clientes, explicar bem cada serviço acaba muitas vezes por ficar para depois.</p>
-            <ul class="pain-list">
-              <li>Falta de tempo para planear conteúdo</li>
-              <li>Dúvida sobre como explicar tratamentos</li>
-              <li>Sem energia para escrever legendas educativas</li>
-              <li>Muito cuidado no gabinete, pouca clareza nas redes</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="solution">
-      <div class="wrap">
-        <div class="solution-head">
-          <div><span class="eyebrow">Uma comunicação pronta</span><h2>Conteúdo pensado para profissionais que precisam de comunicar com responsabilidade.</h2></div>
-          <p>São textos finais, organizados numa sequência estratégica, que ajudam a cliente a compreender cuidados, expectativas, limites e a importância de uma avaliação profissional.</p>
-        </div>
-        <div class="cards">
-          <article class="card"><b>01 · CLAREZA</b><h3>Explique antes de vender</h3><p>Eduque sobre pele, rotina, cuidados e decisões conscientes antes de qualquer marcação.</p></article>
-          <article class="card"><b>02 · CONFIANÇA</b><h3>Crie segurança</h3><p>Mostre critério, higiene, limites profissionais e cuidado com expectativas reais.</p></article>
-          <article class="card"><b>03 · MARCAÇÃO</b><h3>Convide à avaliação</h3><p>Crie marcações com chamadas à ação responsáveis, sem promessas exageradas.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="showcase">
-      <div class="split">
-        <div class="split-copy">
-          <div>
-            <span class="eyebrow">A cliente vê o resultado</span>
-            <h2>A Agenda ajuda-a a explicar o processo.</h2>
-            <p>Quando a cliente compreende avaliação, cuidados e limites, deixa de procurar apenas promessas rápidas. Começa a reconhecer critério, segurança e confiança.</p>
-            <p>É essa perceção que os conteúdos constroem ao longo dos 30 dias.</p>
-          </div>
-        </div>
-        <div class="split-image"><img src="imagens/3.png" alt="Profissional de estética facial em atendimento cuidado"></div>
-      </div>
-    </section>
-
-    <section class="days">
-      <div class="wrap">
-        <span class="eyebrow" style="text-align:center">Alguns dos 30 conteúdos</span>
-        <h2>Todos os dias, um tema que aumenta confiança.</h2>
-        <p>Uma sequência editorial equilibrada entre educação, segurança, proximidade e marcação.</p>
-        <div class="day-grid">
-          <article class="day"><small>DIA 01</small><h3>A sua pele não precisa de “tudo”.</h3></article>
-          <article class="day"><small>DIA 05</small><h3>O protetor solar não serve apenas para a praia.</h3></article>
-          <article class="day"><small>DIA 10</small><h3>O “antes e depois” não conta a história toda.</h3></article>
-          <article class="day"><small>DIA 16</small><h3>O tratamento mais popular pode não ser o certo.</h3></article>
-          <article class="day"><small>DIA 23</small><h3>Cinco perguntas antes de qualquer tratamento.</h3></article>
-          <article class="day"><small>DIA 30</small><h3>A melhor transformação não precisa de promessa impossível.</h3></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="showcase">
-      <div class="split">
-        <div class="split-image"><img src="imagens/4.png" alt="Ambiente de estética facial cuidado e profissional"></div>
-        <div class="split-copy">
-          <div>
-            <span class="eyebrow">Enquanto cuida</span>
-            <h2>A sua comunicação continua a criar confiança.</h2>
-            <p>Os conteúdos certos mantêm a marca presente, explicam o cuidado profissional e ajudam a cliente a chegar mais informada à avaliação.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="for-you">
-      <div class="wrap for-grid">
-        <div><span class="eyebrow" style="color:#e5bdc9">Esta edição é para si se</span><h2>Tem cuidado para entregar, mas falta-lhe tempo para o explicar.</h2></div>
-        <div class="checks">
-          <div class="check">Trabalha com estética facial, pele ou tratamentos avançados</div>
-          <div class="check">Quer comunicar sem prometer resultados impossíveis</div>
-          <div class="check">Perde demasiado tempo a escrever legendas educativas</div>
-          <div class="check">Quer atrair clientes que valorizem avaliação e segurança</div>
-          <div class="check">Precisa de uma solução simples para utilizar no telemóvel</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="offer" id="oferta">
-      <div class="wrap">
-        <span class="eyebrow">Estética Facial Edition</span>
-        <h2>30 dias para comunicar cuidado, confiança e critério.</h2>
-        <p>Aceda no telemóvel, encontre o conteúdo do dia, copie e publique. Sem páginas em branco e sem promessas exageradas.</p>
-        <div class="price-box">
-          <span class="label">PAGAMENTO ÚNICO</span>
-          <div class="price">97 €</div>
-          <small>Sem mensalidade</small>
-          <ul>
-            <li>30 conteúdos finais prontos a publicar</li>
-            <li>30 chamadas à ação responsáveis</li>
-            <li>Sequência editorial organizada</li>
-            <li>Acesso digital no telemóvel</li>
-            <li>Progresso diário durante 30 dias</li>
-          </ul>
-          <a class="button" href="#">Quero a Estética Facial Edition</a>
-          <span class="micro">O botão de pagamento será ligado depois da aprovação.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="faq">
-      <div class="wrap">
-        <span class="eyebrow">Perguntas frequentes</span>
-        <h2>Antes de começar.</h2>
-        <details><summary>Os textos já estão prontos a publicar?</summary><p>Sim. Cada dia inclui título, texto e chamada à ação. Pode copiar e publicar diretamente. Adaptar serviços ou enquadramento profissional é opcional quando necessário.</p></details>
-        <details><summary>Serve para qualquer profissional de estética?</summary><p>Esta edição foi construída para estética facial, pele e tratamentos estéticos comunicados com responsabilidade.</p></details>
-        <details><summary>Preciso de utilizar um computador?</summary><p>Não. A experiência foi pensada principalmente para telemóvel, permitindo consultar e copiar o conteúdo do dia.</p></details>
-        <details><summary>É uma subscrição?</summary><p>Não. O valor de 97 € corresponde a um pagamento único.</p></details>
-      </div>
-    </section>
-  </main>
-
-  <footer><div class="wrap foot"><span>AGENDA ATIVA™ · Estética Facial Edition</span><span>Pré-visualização para aprovação</span></div></footer>
+<main class="page">
+<header class="header"><div class="container nav"><a class="logo-area" href="#" aria-label="Voltar à homepage"><div class="aa-logo">AA</div><div class="logo-divider"></div><div><div class="brand-name">Agenda Ativa™</div><span class="brand-sub">Hoje já está tratado.</span></div></a><nav class="nav-links"><a href="#como-funciona">Como funciona</a><a href="#preview">Preview</a><a href="#preco">Preço</a></nav></div></header>
+<section id="inicio" class="hero"><div class="container"><div class="hero-inner"><div class="kicker">Agenda Ativa™ Estética Facial</div><h1>A sua forma de cuidar também precisa de ser <em>comunicada.</em></h1><p>Um sistema editorial pronto a usar para profissionais de estética facial que querem explicar cuidado, confiança e marcações sem promessas exageradas.</p><div class="actions"><a class="btn" href="#preco">Quero a minha edição</a><a class="btn secondary" href="#preview">Ver preview</a></div></div></div></section>
+<section class="benefits"><div class="container"><div class="benefit-box"><div class="benefit"><div class="icon">◇</div><div><strong>Tempo recuperado</strong><span>Menos horas a pensar em legendas. Mais energia para clientes, avaliações e tratamentos.</span></div></div><div class="benefit"><div class="icon">□</div><div><strong>Presença consistente</strong><span>A sua comunicação continua ativa mesmo nos dias em que a agenda está cheia.</span></div></div><div class="benefit"><div class="icon">◎</div><div><strong>Confiança percebida</strong><span>Conteúdo preparado para mostrar critério, segurança e confiança antes da marcação.</span></div></div></div></div></section>
+<section id="como-funciona" class="steps-section"><div class="container"><div class="kicker">Três passos. Zero complicação.</div><div class="steps"><div class="step"><div class="num">01</div><div><strong>Abra</strong><p>Aceda à sua edição e escolha o conteúdo do dia.</p></div></div><div class="arrow"></div><div class="step"><div class="num">02</div><div><strong>Copie</strong><p>Copie a legenda estratégica já preparada.</p></div></div><div class="arrow"></div><div class="step"><div class="num">03</div><div><strong>Publique</strong><p>Mantenha a comunicação ativa em menos de dois minutos.</p></div></div></div></div></section>
+<section><div class="container editorial-split"><div class="panel dark"><h2>A maioria comunica tratamentos.</h2><p>As melhores comunicam confiança.</p></div><div class="panel"><div class="line-list"><div>A cliente não escolhe apenas um procedimento.</div><div>Escolhe confiança.</div><div>Escolhe segurança.</div><div>Escolhe critério.</div><div>Escolhe quem explica antes de vender.</div></div></div></div></section>
+<section id="preview"><div class="container"><div class="content-card"><div><div class="kicker">Preview do sistema</div><h2>Uma única decisão: publicar o conteúdo que <em>já está pronto.</em></h2><p>Uma demonstração simples do método, da clareza e da intenção profissional presentes em cada conteúdo.</p></div><div class="preview"><strong>Dia 5 — Educação</strong><h3>O protetor solar não serve apenas para a praia.</h3><div class="preview-meta"><span>Objetivo: educar com responsabilidade</span><span>Formato: legenda educativa</span><span>Tempo de publicação: menos de 2 minutos</span></div></div><div class="circle-btn">›</div></div></div></section>
+<section><div class="container image-split"><div class="image-card"><img src="/assets/estetica-facial/2.png" alt="Profissional de estética facial em atendimento cuidado"></div><div class="image-copy"><div class="kicker">Confiança antes da marcação</div><h2>O cuidado começa antes da sessão.</h2><p>Entre avaliações, tratamentos, mensagens e cuidados posteriores, explicar bem cada serviço acaba muitas vezes por ficar para depois. A Agenda Ativa mantém essa comunicação ativa.</p></div></div></section>
+<section><div class="container"><div class="receive-title">O que recebe</div><div class="receive"><ul class="list"><li>Conteúdo para explicar pele, rotina e cuidados.</li><li>Conteúdo para reforçar segurança, higiene e confiança.</li><li>Conteúdo para responder a dúvidas frequentes das clientes.</li><li>Conteúdo para incentivar avaliações sem promessas exageradas.</li><li>Conteúdo para manter a presença ativa durante 30 dias.</li></ul><div class="divider"></div><div class="bonus"><div class="gift">□</div><div><strong>Sistema editorial para estética facial</strong><p>Não recebe ideias soltas. Recebe uma agenda editorial pronta a usar, criada para reforçar cuidado, confiança e responsabilidade.</p></div></div></div></div></section>
+<section class="middle-band"><div class="container"><h2>O problema não é falta de cuidado.<br><em>É falta de tempo para o explicar.</em></h2><p>Entre avaliações, tratamentos, mensagens e gestão da agenda, o conteúdo acaba por ficar para depois. Mas as futuras clientes continuam a observar.</p></div></section>
+<section><div class="container"><div class="focus-box"><h2>Continue focada nas clientes.</h2><p>A sua comunicação continua ativa com 30 dias de conteúdo estratégico pronto a copiar, adaptar e publicar.</p></div></div></section>
+<section><div class="container"><div class="objection"><div><div class="kicker">Para quem é</div><h2>Criado para profissionais que comunicam com <em>responsabilidade.</em></h2><p>Para profissionais de estética facial que querem presença consistente, confiança percebida e comunicação pronta, sem contratar uma agência.</p></div><div class="divider"></div><ul class="list"><li>Profissionais de estética facial.</li><li>Clínicas e gabinetes de estética.</li><li>Quem trabalha com pele, rotina e tratamentos faciais.</li><li>Quem quer publicar sem começar do zero.</li><li>Quem quer transformar cuidado em confiança.</li></ul></div></div></section>
+<section><div class="container compare"><div class="compare-col"><h3>Não é para si se...</h3><ul class="list negative"><li>Procura apenas truques de viralidade.</li><li>Quer conteúdo genérico sem estratégia.</li><li>Não pretende manter presença regular.</li><li>Não valoriza comunicação responsável.</li><li>Quer continuar a improvisar todos os dias.</li></ul></div><div class="compare-col"><h3>É para si se...</h3><ul class="list"><li>Quer presença consistente.</li><li>Quer mostrar critério e profissionalismo.</li><li>Quer poupar tempo todas as semanas.</li><li>Quer educar clientes sem textos longos para criar.</li><li>Quer facilitar pedidos de avaliação.</li></ul></div></div></section>
+<section id="preco"><div class="container"><div class="price-box"><div><div class="kicker">Edição Estética Facial</div><h2>Menos do que algumas horas perdidas a tentar escrever publicações.</h2><p style="margin-top:16px;color:#3D4240;">Um mês de conteúdos prontos para manter a sua presença ativa.</p></div><div class="price-card"><div class="price">97€<small>pagamento único</small></div><div class="price-text">Acesso à Agenda Ativa™ Estética Facial Edition.</div><a class="btn" href="#">Quero a minha edição</a></div></div></div></section>
+<section><div class="container faq"><div class="faq-item"><h3>Isto é uma ferramenta de IA?</h3><p>Não. A Agenda Ativa™ entrega decisões editoriais já tomadas e textos prontos a publicar. Não recebe uma folha em branco.</p></div><div class="faq-item"><h3>Preciso de saber copywriting?</h3><p>Não. A lógica é abrir, escolher o dia, copiar e publicar. Pode adaptar ao seu tom, mas não precisa de começar do zero.</p></div><div class="faq-item"><h3>Serve para que tipo de profissional?</h3><p>Foi pensada para profissionais de estética facial, pele e tratamentos estéticos comunicados com responsabilidade.</p></div></div></section>
+<section class="footer-cta"><div class="container"><h2>Hoje já está tratado.</h2><p>Continue focado nos clientes. A sua comunicação permanece ativa.</p><a class="btn" href="#">Quero a minha edição →</a></div></section>
+<footer><div class="container footer-inner"><span>Agenda Ativa™ | Estética Facial Edition</span><span>Sistema editorial pronto a usar para estética facial.</span></div></footer>
+</main>
 </body>
 </html>
