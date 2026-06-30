@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F8F7F4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Agenda Ativa">
+  <title>Agenda Ativa™ — Advogados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F8F7F4;
+      --surface: #fffefb;
+      --ink: #171C21;
+      --muted: #6F7A78;
+      --rose: #7B6038;
+      --rose-light: #B08D57;
+      --rose-dim: rgba(138,111,90,.13);
+      --gold: #D8D4CC;
+      --gold-dim: rgba(216,212,204,.38);
+      --line: rgba(111,36,59,.14);
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "Inter", system-ui, sans-serif;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body {
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: contain;
+    }
+
+    /* ── SPLASH — FIX 5: 800ms instead of 1400ms ── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .splash.hide {
+      opacity: 0;
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+    .splash-brand {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: var(--ink);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp .5s ease .1s forwards;
+    }
+    .splash-brand sup { font-size: 13px; color: var(--rose); vertical-align: super; }
+    .splash-line {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      animation: growLine .6s ease .2s forwards;
+    }
+    .splash-edition {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp .5s ease .35s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes growLine { to { width: 100px; } }
+
+    /* ── ENTRANCE ANIMATIONS ── */
+    .animate {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .animate.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .04s; }
+    .d2 { transition-delay: .12s; }
+    .d3 { transition-delay: .20s; }
+    .d4 { transition-delay: .28s; }
+    .d5 { transition-delay: .36s; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,247,243,.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: .05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .nav-brand sup { font-size: 10px; color: var(--rose); vertical-align: super; }
+    .nav-pill {
+      background: var(--rose-dim);
+      color: var(--rose);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 20px calc(36px + var(--safe-bottom));
+    }
+
+    /* ── GREETING ── */
+    .greeting { margin-bottom: 28px; }
+    .greeting-name {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--rose-light);
+      margin-bottom: 8px;
+      letter-spacing: .04em;
+    }
+    .greeting-h1 {
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 300;
+      line-height: .92;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .greeting-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── PROGRESS — FIX 4: today dot is celebratory ── */
+    .progress { margin-bottom: 24px; }
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-count {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--rose);
+    }
+    .progress-track {
+      height: 3px;
+      background: var(--rose-dim);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose), var(--rose-light));
+      border-radius: 2px;
+    }
+    .progress-dots { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose-dim); flex-shrink: 0; transition: background .3s; }
+    .dot.done { background: var(--rose-light); }
+    /* FIX 4: today dot is larger and has a pulse — not just one grey dot among 29 */
+    .dot.today {
+      width: 10px;
+      height: 10px;
+      background: var(--rose);
+      box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose);
+      animation: pulse 2s ease 1s 2;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--rose); }
+      50% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px rgba(111,36,59,.35); }
+    }
+
+    /* ── META ROW ── */
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .tag-format { background: var(--rose-dim); color: var(--rose); }
+    .tag-pilar { background: var(--gold-dim); color: #4F5963; }
+    .tag-time {
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      background: transparent;
+    }
+    .tag-time svg { width: 11px; height: 11px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(111,36,59,.11);
+      border-top: 3px solid var(--rose);
+      border-radius: 6px;
+      box-shadow: 0 24px 56px rgba(43,32,36,.10), 0 4px 16px rgba(43,32,36,.06);
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: box-shadow .3s;
+    }
+    .card-body { padding: 28px 24px 24px; }
+
+    .card-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-eyebrow::before { content: ""; width: 14px; height: 1px; background: var(--rose); }
+
+    .card-topic {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .card-hook {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 14px;
+      border-left: 2px solid var(--rose-dim);
+    }
+
+    /* ── CONTENT BLOCK (visible by default, no dark bg) ── */
+    .content-block {
+      background: var(--rose-dim);
+      border-top: 1px solid var(--line);
+      padding: 22px 24px;
+    }
+    .content-label {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .content-label::before { content: ""; width: 6px; height: 6px; background: var(--rose); border-radius: 50%; }
+    .content-scroll {
+      max-height: 140px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(111,36,59,.22) transparent;
+    }
+    .content-scroll::-webkit-scrollbar { width: 3px; }
+    .content-scroll::-webkit-scrollbar-thumb { background: rgba(111,36,59,.22); border-radius: 2px; }
+    .content-text {
+      font-size: 13px;
+      color: #171C21;
+      line-height: 1.85;
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 16px;
+    }
+    .ph { color: var(--rose); font-weight: 600; }
+
+    /* ── ACTIONS ── */
+    .card-actions {
+      padding: 14px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* FIX 3: single primary + single secondary */
+    .btn-copy {
+      width: 100%;
+      min-height: 52px;
+      background: #171C21;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .25s ease, transform .12s, letter-spacing .2s;
+    }
+    .btn-copy:active { transform: translateY(2px); box-shadow: 0 1px 4px rgba(111,36,59,.22); }
+    .btn-copy.copied { background: #56614F; letter-spacing: .06em; }
+    .btn-copy svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* FIX 3: one secondary button that expands everything extra */
+    .btn-more {
+      width: 100%;
+      min-height: 44px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s;
+      font-family: var(--sans);
+    }
+    .btn-more:active { border-color: var(--rose); color: var(--rose); }
+    .chevron { display: inline-block; transition: transform .25s; font-style: normal; font-size: 12px; }
+    .btn-more.open .chevron { transform: rotate(180deg); }
+
+    /* ── EXTRA PANEL (FIX 1: collapses strategic info + legenda) ── */
+    .extra-wrap {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .35s ease;
+      opacity: 0;
+    }
+    .extra-wrap.open { max-height: 800px; opacity: 1; }
+    .extra-inner {
+      margin: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* strategic grid inside extra */
+    .strat-grid {
+      background: linear-gradient(135deg, rgba(216,212,204,.24), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.55);
+      border-radius: 6px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .strat-item {}
+    .strat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #4F5963;
+      margin-bottom: 4px;
+    }
+    .strat-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+    .strat-full { grid-column: 1 / -1; }
+
+    /* legenda inside extra */
+    .legenda-box {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 22px 20px;
+      background: var(--paper);
+    }
+    .legenda-eyebrow {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .legenda-text {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+    .legenda-text p + p { margin-top: 14px; }
+    .legenda-cta {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .legenda-cta strong { color: var(--rose); font-weight: 600; }
+
+    /* resultado inside extra — FIX 3: merged here */
+    .resultado-box {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      background: rgba(111,36,59,.05);
+    }
+    .resultado-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 5px;
+    }
+    .resultado-text { font-size: 13px; color: var(--ink); line-height: 1.65; }
+
+    /* ── NEXT CARD ── */
+    .next-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      margin-bottom: 36px;
+    }
+    .next-icon {
+      width: 38px; height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .next-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .next-topic { font-family: var(--serif); font-size: 18px; font-weight: 400; color: var(--ink); line-height: 1.3; }
+    .next-sub { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; gap: 6px; }
+    .next-pilar { color: #4F5963; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer { text-align: center; padding-top: 24px; border-top: 1px solid var(--line); }
+    .footer-text { font-family: var(--serif); font-size: 13px; font-weight: 300; letter-spacing: .1em; color: var(--muted); }
+    .footer-tagline { font-size: 11px; color: rgba(138,122,112,.55); margin-top: 6px; font-style: italic; font-family: var(--serif); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--ink);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 13px 22px;
+      border-radius: 6px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width: 7px; height: 7px; background: #56614F; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── TABLET 768px: 2 colunas ── */
+    @media(min-width: 768px) {
+      main {
+        max-width: 100%;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: auto 1fr;
+        min-height: calc(100dvh - 57px);
+      }
+      /* Nav edition label visible on tablet+ */
+      .nav-edition { display: block; }
+
+      /* Left column: greeting + progress */
+      .col-left {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        padding: 40px 32px;
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+      }
+
+      /* Right column: everything else */
+      .col-right {
+        grid-column: 2;
+        padding: 36px 36px 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Greeting bigger on tablet */
+      .greeting { margin-bottom: 32px; }
+      .greeting-h1 { font-size: 56px; }
+
+      /* Progress in left col */
+      .progress { margin-bottom: 28px; }
+
+      /* Meta row inline */
+      .meta-row { margin-bottom: 16px; }
+
+      /* Card full width in right col, no stacking */
+      .card { margin-bottom: 0; }
+      .card-body { padding: 28px 28px 20px; }
+      .card-topic { font-size: 30px; }
+      .card-actions { padding: 14px 28px 24px; flex-direction: row; gap: 10px; }
+      .btn-copy { flex: 1; }
+      .btn-more { flex-shrink: 0; padding: 0 20px; width: auto; min-width: 180px; }
+      .extra-inner { margin: 0 28px 28px; }
+      .content-block { padding: 20px 28px; }
+
+      /* Next card in right col */
+      .next-card { margin-bottom: 0; }
+
+      /* Footer in right col */
+      .footer { margin-top: auto; padding-top: 32px; }
+
+      /* Hide .animate layout shift on tablet — already visible */
+    }
+
+    /* ── DESKTOP 1100px: 3 colunas ── */
+    @media(min-width: 1100px) {
+      main {
+        grid-template-columns: 300px 1fr 260px;
+      }
+
+      /* Strategy sidebar — 3rd col */
+      .col-right {
+        grid-column: 2;
+        padding: 40px 40px 60px;
+      }
+
+      .col-strategy {
+        grid-column: 3;
+        grid-row: 1 / -1;
+        padding: 40px 28px;
+        border-left: 1px solid var(--line);
+        position: sticky;
+        top: 57px;
+        height: calc(100dvh - 57px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* On desktop hide btn-more (strategy always visible in sidebar) */
+      .btn-more { display: none; }
+      .extra-wrap { max-height: none !important; opacity: 1 !important; }
+      .extra-inner { margin: 0; }
+
+      /* Left col bigger */
+      .col-left { padding: 48px 36px; }
+      .greeting-h1 { font-size: 64px; }
+
+      /* Card topic bigger */
+      .card-topic { font-size: 34px; }
+      .content-scroll { max-height: 180px; }
+    }
+
+    /* Strategy sidebar label */
+    .strategy-sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strategy-sidebar-label { display: block; } }
+
+    /* Strat items for sidebar (reuse strat-grid items standalone) */
+    .strat-sidebar-item {
+      background: linear-gradient(135deg, var(--gold-dim), rgba(216,212,204,.16));
+      border: 1px solid rgba(216,212,204,.58);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: none;
+    }
+    @media(min-width: 1100px) { .strat-sidebar-item { display: block; } }
+
+    /* Next day in sidebar */
+    .next-sidebar {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      margin-top: auto;
+      display: none;
+    }
+    @media(min-width: 1100px) {
+      .next-sidebar { display: block; }
+      /* Hide next-card from right col on desktop — it's in sidebar */
+      .next-card { display: none; }
+    }
+
+    @media(min-width: 1100px) { #sidebarResultado { display: block !important; } }
+    @media(prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH — FIX 5: 800ms total -->
+<div class="splash" id="splash">
+  <div class="splash-brand">Agenda Ativa<sup>™</sup></div>
+  <div class="splash-line"></div>
+  <div class="splash-edition">Advogados Edition</div>
+</div>
+
+<nav class="nav">
+  <div>
+    <div class="nav-brand">Agenda Ativa<sup>™</sup></div>
+    <div class="nav-edition" style="display:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;">Advogados Edition</div>
+  </div>
+  <div class="nav-pill" id="navPill">Dia 1 de 30</div>
+</nav>
+
+<main>
+  <!-- COL LEFT: greeting + progress + meta (tablet/desktop) -->
+  <div class="col-left">
+
+  <!-- GREETING -->
+  <header class="greeting animate d1">
+    <div class="greeting-name">Olá</div>
+    <h1 class="greeting-h1">O seu<br>escritório<br>continua ativo.</h1>
+    <p class="greeting-sub">O conteúdo de hoje já está pronto a publicar.</p>
+  </header>
+
+  <!-- PROGRESS — FIX 4: celebratory today dot -->
+  <div class="progress animate d2">
+    <div class="progress-header">
+      <span class="progress-label">O teu progresso</span>
+      <span class="progress-count" id="progressCount">Dia 1 de 30</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="pFill"></div>
+    </div>
+    <div class="progress-dots" id="pDots"></div>
+  </div>
+
+  <!-- META ROW -->
+  <div class="meta-row animate d3">
+    <span class="tag tag-format">Reel</span>
+    <span class="tag tag-pilar">Autoridade</span>
+    <span class="tag tag-time">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      2 minutos
+    </span>
+  </div>
+
+  </div><!-- /col-left -->
+
+  <!-- COL RIGHT: card + next + footer (tablet/desktop) -->
+  <div class="col-right">
+
+  <!-- CARD — FIX 1: stripped to topic + hook + content + actions -->
+  <article class="card animate d4">
+    <div class="card-body">
+
+      <div class="card-eyebrow">Conteúdo estratégico</div>
+
+      <h2 class="card-topic" id="cardTopic">Um despedimento não se avalia apenas pela palavra &ldquo;despedido&rdquo;.</h2>
+
+      <p class="card-hook" id="cardHook">Pronto a reforçar a sua autoridade.</p>
+
+    </div>
+
+    <!-- CONTENT BLOCK — legenda já escrita, pronta a copiar -->
+    <div class="content-block">
+      <div class="content-label">Legenda pronta a publicar</div>
+      <div class="content-scroll">
+        <div class="content-text" id="cardText"></div>
+      </div>
+      <div style="padding:10px 24px 0;border-top:1px solid var(--line);margin-top:2px;">
+        <div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:4px;">CTA sugerido</div>
+        <div style="font-size:12px;color:#24303A;font-style:italic;padding-bottom:10px;" id="cardCta"></div>
+      </div>
+    </div>
+
+    <!-- ACTIONS — FIX 3: primary + single secondary -->
+    <div class="card-actions">
+      <button class="btn-copy" id="btnCopy" onclick="copyReadyText()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar conteúdo
+      </button>
+      <button class="btn-more" id="btnMore" onclick="toggleExtra()">
+        Ver contexto estratégico
+        <em class="chevron">˅</em>
+      </button>
+    </div>
+
+    <!-- EXTRA PANEL — FIX 1 + FIX 3: everything collapsed here -->
+    <div class="extra-wrap" id="extraWrap">
+      <div class="extra-inner">
+
+        <!-- strategic context only — legenda already shown above -->
+        <div class="strat-grid">
+          <div class="strat-item">
+            <div class="strat-label">Pilar</div>
+            <div class="strat-value">Autoridade</div>
+          </div>
+          <div class="strat-item">
+            <div class="strat-label">Gatilho</div>
+            <div class="strat-value">Clareza</div>
+          </div>
+          <div class="strat-item strat-full">
+            <div class="strat-label">Objetivo</div>
+            <div class="strat-value">Reforçar autoridade e confiança antes do contacto</div>
+          </div>
+        </div>
+
+        <!-- resultado — FIX 3: moved inside, no longer duplicated -->
+        <div class="resultado-box">
+          <div class="resultado-label">Resultado esperado</div>
+          <div class="resultado-text">As suas seguidoras vão reconhecer uma profissional cuidadosa, responsável e digna de confiança.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </article>
+
+  <!-- NEXT DAY — FIX 5: appears earlier, no delay -->
+  <div class="next-card animate d5" style="cursor:pointer;" onclick="renderDay(currentDay+1)">
+    <div class="next-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" id="nextTopic">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-text">Agenda Ativa™ — Advogados Edition</div>
+    <div class="footer-tagline">30 conteúdos prontos para manter a agenda visível.</div>
+  </footer>
+
+  </div><!-- /col-right -->
+
+  <!-- COL STRATEGY: visible only on desktop 1100px+ -->
+  <aside class="col-strategy">
+    <div class="strategy-sidebar-label">Contexto estratégico</div>
+
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Pilar</div>
+      <div class="strat-value">Autoridade</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Gatilho</div>
+      <div class="strat-value">Segurança</div>
+    </div>
+    <div class="strat-sidebar-item">
+      <div class="strat-label">Objetivo</div>
+      <div class="strat-value" style="font-size:12.5px;font-weight:400;line-height:1.5;">Reforçar autoridade e confiança antes do contacto</div>
+    </div>
+    <div class="resultado-box" style="display:none;" id="sidebarResultado">
+      <div class="resultado-label">Resultado esperado</div>
+      <div class="resultado-text">As suas seguidoras vão reconhecer uma profissional cuidadosa, responsável e digna de confiança.</div>
+    </div>
+
+    <div class="next-sidebar">
+      <div class="next-label" id="nextLabel">Próximo — Dia 2</div>
+      <div class="next-topic" style="font-size:16px;margin-bottom:4px;">“Não sou fotogénico” é uma frase que ouvimos muitas vezes.</div>
+      <div class="next-sub">
+        <span>Editorial</span>
+        <span>&middot;</span>
+        <span class="next-pilar">Autoridade</span>
+        <span>&middot;</span>
+        <span>2 min</span>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  Conteúdo copiado — cole no Instagram
+</div>
+
+<script>
+const DAYS = [{"num":1,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Um despedimento não se avalia apenas pela palavra “despedido”.","text":"Quando uma relação laboral termina, os direitos envolvidos dependem do tipo de contrato, do fundamento invocado, do procedimento seguido e das datas relevantes.\n\nUma comunicação verbal, uma carta ou um acordo não produzem necessariamente as mesmas consequências.\n\nAntes de assinar ou responder, é prudente guardar documentos, confirmar prazos e perceber exatamente o que está a ser proposto.\n\nEm direito laboral, um detalhe aparentemente administrativo pode alterar todo o enquadramento.","cta":"Guarde esta informação antes de tomar uma decisão sobre a cessação do contrato."},{"num":2,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Arrendamento: ser proprietário não permite decidir tudo sozinho.","text":"Num contrato de arrendamento, senhorio e arrendatário têm direitos e obrigações.\n\nQuestões como entrada no imóvel, atualização da renda, obras, denúncia do contrato ou restituição da caução não devem ser resolvidas apenas com base no que “sempre se fez”.\n\nO contrato é importante, mas não afasta regras legais imperativas.\n\nQuando surge um conflito, mensagens, recibos, comunicações formais e datas podem ser decisivos para compreender o caso.","cta":"Antes de agir, releia o contrato e organize todas as comunicações."},{"num":3,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Porque escolhi exercer advocacia.","text":"O Direito raramente chega à vida das pessoas em momentos neutros.\n\nSurge quando existe uma decisão difícil, um conflito, uma perda, um projeto ou algo importante a proteger.\n\nFoi essa responsabilidade que me aproximou da advocacia: transformar complexidade em clareza e ajudar cada pessoa a compreender as opções que tem.\n\nNem todos os problemas têm uma resposta simples. Mas todos merecem ser ouvidos com rigor, independência e respeito.","cta":"O que mais valoriza num profissional que o acompanha numa decisão importante?"},{"num":4,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"A pergunta certa pode evitar um problema jurídico.","text":"Muitas pessoas procuram informação apenas quando o conflito já existe.\n\nNo entanto, uma dúvida esclarecida antes de assinar um contrato, iniciar uma parceria ou assumir uma obrigação pode evitar custos e incerteza.\n\nPrevenção jurídica não significa desconfiar de todos. Significa compreender aquilo com que se está a comprometer.\n\nLer, perguntar e pedir esclarecimento antes de decidir é normalmente mais simples do que tentar reconstruir intenções depois.","cta":"Qual é o tema jurídico do quotidiano que lhe levanta mais dúvidas?"},{"num":5,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Divórcio por acordo e divórcio sem acordo não são o mesmo caminho.","text":"Quando ambos pretendem divorciar-se e existe entendimento sobre as questões necessárias, o processo pode seguir uma via diferente daquela em que não há consenso.\n\nPatrimónio, casa de morada de família, alimentos e responsabilidades parentais exigem análise própria.\n\nMesmo quando existe acordo, é importante que cada pessoa compreenda o alcance do que aceita.\n\nUm processo mais tranquilo não deve significar uma decisão menos informada.","cta":"Guarde este conteúdo para distinguir consenso de precipitação."},{"num":6,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Depois de um acidente, a memória não substitui a prova.","text":"Nas primeiras horas, a prioridade é a segurança e a assistência necessária.\n\nQuando possível, também importa recolher identificação, contactos, fotografias, informação sobre veículos, testemunhas e participação às entidades competentes ou seguradora.\n\nEvite assumir responsabilidades sem conhecer todos os factos e conserve despesas e relatórios relacionados com o ocorrido.\n\nCada acidente tem circunstâncias próprias; documentação organizada ajuda a esclarecê-las.","cta":"Partilhe esta informação com quem conduz diariamente."},{"num":7,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"O segredo profissional é uma garantia essencial da advocacia.","text":"Quem procura aconselhamento jurídico precisa de poder falar com confiança.\n\nO dever de segredo profissional protege factos e informações conhecidos no exercício da profissão, nos termos legalmente aplicáveis.\n\nNão é apenas uma regra de discrição. É uma condição para que o cidadão possa expor a sua situação e receber orientação independente.\n\nPor isso, casos reais não devem ser transformados em conteúdo público de forma leviana, mesmo quando parecem irreconhecíveis.","cta":"Confiança jurídica começa na proteção da informação."},{"num":8,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Um advogado não serve apenas para ir a tribunal.","text":"Grande parte do trabalho jurídico acontece antes de existir um processo.\n\nAnalisar contratos, preparar negociações, esclarecer riscos, estruturar negócios ou prevenir conflitos também faz parte da advocacia.\n\nChegar cedo permite, muitas vezes, preservar mais opções.\n\nQuando o problema já está instalado, continuam a existir caminhos — mas podem ser mais limitados, demorados ou dispendiosos.\n\nO aconselhamento preventivo não elimina todo o risco. Torna-o mais visível.","cta":"Antes de assinar, confirme se compreende consequências e alternativas."},{"num":9,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Sem testamento não significa sem regras.","text":"Quando uma pessoa morre sem testamento, a sucessão é regulada pela lei, que define quem pode herdar e em que ordem.\n\nA composição da família, o regime matrimonial, a existência de bens e outros fatores influenciam o processo.\n\nMesmo quando existe testamento, a liberdade de disposição pode encontrar limites legais.\n\nSucessões não devem ser organizadas com base em frases ouvidas informalmente. Exigem leitura do caso concreto.","cta":"Falar sobre património em vida pode evitar dúvidas futuras."},{"num":10,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"O contrato de trabalho não é apenas o salário.","text":"Funções, local, horário, período experimental, duração, retribuição e outras condições ajudam a definir a relação laboral.\n\nAntes de assinar, compare o documento com aquilo que foi acordado e peça esclarecimento sobre cláusulas que não compreende.\n\nGuarde uma cópia assinada e os documentos posteriores.\n\nUm contrato claro não impede todos os conflitos, mas reduz o espaço para versões incompatíveis sobre o que ficou combinado.","cta":"Nunca assine sem ler — e nunca tenha receio de pedir explicações."},{"num":11,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"O trabalho jurídico que o cliente não vê.","text":"Por detrás de uma reunião existem leitura, pesquisa, organização de factos, confirmação de prazos e avaliação de riscos.\n\nUma resposta responsável raramente nasce de uma impressão imediata.\n\nTambém há trabalho em dizer que falta informação, que uma tese é frágil ou que a solução desejada não é juridicamente segura.\n\nA advocacia não se mede apenas pelos momentos visíveis. Mede-se pela qualidade da preparação que os sustenta.","cta":"Rigor é, muitas vezes, aquilo que acontece antes da resposta."},{"num":12,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Três conceitos jurídicos que não significam o que parecem.","text":"Presunção de inocência não significa ausência de investigação.\n\nPrescrição não significa que todos os direitos terminam no mesmo prazo.\n\nHabeas corpus não é um recurso geral para qualquer discordância com uma decisão.\n\nNo Direito, palavras semelhantes podem ter requisitos e efeitos muito diferentes.\n\nÉ por isso que uma definição encontrada isoladamente raramente basta para avaliar um caso concreto.","cta":"Guarde este lembrete: o contexto jurídico muda o significado."},{"num":13,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Informação jurídica nas redes sociais tem limites.","text":"Um conteúdo pode explicar conceitos, alertar para cuidados ou divulgar alterações legislativas.\n\nMas não conhece documentos, datas, exceções nem todas as circunstâncias de quem o lê.\n\nPor isso, uma publicação não deve ser usada como resposta automática para uma situação individual.\n\nO objetivo da comunicação jurídica responsável é ajudar a reconhecer questões — não criar a ilusão de uma consulta completa em poucas linhas.","cta":"Use conteúdo jurídico para se informar, não para decidir sozinho um caso complexo."},{"num":14,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Comprar casa começa muito antes da escritura.","text":"Identificação do imóvel, registos, licenças, encargos, situação fiscal e conteúdo dos contratos merecem atenção antes da decisão final.\n\nO contrato-promessa pode criar obrigações relevantes e prever consequências para o incumprimento.\n\nUma visita mostra o espaço. Não mostra necessariamente a situação jurídica.\n\nVerificar documentação antes de entregar valores ou assinar reduz o risco de descobrir demasiado tarde aquilo que podia ter sido esclarecido.","cta":"Guarde esta informação antes de reservar ou prometer comprar um imóvel."},{"num":15,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Os seus dados pessoais não deixam de ser seus quando entram num sistema.","text":"O RGPD reconhece direitos relacionados com informação, acesso, retificação, apagamento em determinadas condições, limitação, oposição e portabilidade.\n\nNenhum destes direitos funciona de forma absoluta em todos os contextos.\n\nA entidade que trata os dados deve explicar finalidades, fundamento, prazos de conservação e contactos relevantes.\n\nAntes de aceitar uma explicação vaga, pergunte quem utiliza os dados, para quê e durante quanto tempo.","cta":"Privacidade começa com perguntas concretas."},{"num":16,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Acesso à justiça não significa apenas entrar num tribunal.","text":"Significa poder conhecer direitos, obter aconselhamento, defender uma posição e beneficiar de um processo com garantias.\n\nPara quem não dispõe de meios económicos, o sistema de acesso ao direito e aos tribunais pode prever modalidades de apoio, sujeitas a requisitos.\n\nConhecer estes mecanismos é essencial para que a falta de recursos não se transforme automaticamente em falta de defesa.","cta":"Informação sobre acesso ao direito também é cidadania."},{"num":17,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Pensão de alimentos não resulta de uma tabela automática.","text":"Na definição dos alimentos são relevantes as necessidades de quem os recebe e as possibilidades de quem os presta, entre outros elementos do caso.\n\nQuando se trata de crianças, o foco deve permanecer no seu interesse e nas suas necessidades.\n\nAlterações significativas podem justificar uma nova análise, mas não devem ser resolvidas por decisão unilateral.\n\nO incumprimento também tem mecanismos próprios e exige atuação adequada.","cta":"Questões familiares merecem informação individual e prudência."},{"num":18,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Nem todo o conflito no trabalho é assédio.","text":"O ambiente profissional pode incluir divergências, exigência ou episódios isolados desagradáveis.\n\nAssédio envolve um enquadramento jurídico próprio e deve ser avaliado a partir de comportamentos, repetição, finalidade ou efeito e demais circunstâncias.\n\nQuem se sente afetado deve registar factos, datas, comunicações e possíveis testemunhas, procurando apoio adequado.\n\nDar nome jurídico cedo demais pode confundir; ignorar padrões graves também pode prejudicar.","cta":"Documente factos concretos antes de tirar conclusões."},{"num":19,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Um prazo jurídico raramente deve ser calculado “de cabeça”.","text":"Prazos podem depender da matéria, do ato, da forma de notificação e das regras aplicáveis à contagem.\n\nPrescrição e caducidade também não são conceitos equivalentes.\n\nEsperar pelo último dia aumenta o risco de erro e pode limitar opções.\n\nQuando recebe uma carta, decisão, multa ou citação, registe a data e procure perceber rapidamente o seu significado.","cta":"Em Direito, guardar um documento sem confirmar o prazo pode sair caro."},{"num":20,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"O que acontece numa primeira consulta jurídica.","text":"O primeiro objetivo é compreender factos, documentos, datas e aquilo que a pessoa pretende alcançar.\n\nNem sempre existe uma resposta definitiva nesse momento. Pode ser necessário analisar contratos, consultar processos ou confirmar legislação.\n\nLevar uma cronologia simples e documentação organizada torna a conversa mais útil.\n\nUma boa consulta também esclarece riscos, alternativas, próximos passos e condições da intervenção profissional.","cta":"Prepare factos e perguntas; não precisa de preparar conclusões jurídicas."},{"num":21,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Justa causa não é apenas “uma razão forte”.","text":"No contexto laboral, a justa causa tem requisitos jurídicos e não depende apenas da opinião de uma das partes.\n\nFactos, gravidade, proporcionalidade e procedimento podem ser relevantes.\n\nDa mesma forma, considerar um despedimento injusto não basta, por si só, para determinar que é ilícito.\n\nAntes de reagir, é necessário analisar comunicações, contrato, procedimento e prazos.","cta":"Guarde os documentos recebidos e evite responder por impulso."},{"num":22,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Direitos do consumidor: reclamar melhor começa por provar melhor.","text":"Fatura, contrato, publicidade, fotografias e comunicações ajudam a demonstrar o que foi comprado e o que aconteceu.\n\nGarantia, devolução e reembolso não são a mesma coisa e variam conforme o tipo de compra, defeito e contexto.\n\nUma reclamação clara identifica produto ou serviço, datas, problema e solução pretendida.\n\nAntes de publicar apenas nas redes sociais, utilize também os canais formais disponíveis.","cta":"Guarde sempre comprovativos — mesmo quando tudo parece correr bem."},{"num":23,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"A experiência ensina que o problema apresentado nem sempre é o problema jurídico.","text":"Uma pessoa pode chegar preocupada com uma discussão e descobrir que a questão decisiva está num prazo.\n\nPode focar-se numa cláusula e ignorar um documento anterior.\n\nPode procurar uma resposta rápida quando o caso exige primeiro organizar factos.\n\nA prática ensina a ouvir antes de concluir e a separar aquilo que aconteceu daquilo que pode ser demonstrado.","cta":"No Direito, uma boa pergunta vale frequentemente mais do que uma resposta apressada."},{"num":24,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Responsabilidades parentais não são uma disputa sobre “quem ganha”.","text":"Depois da separação, decisões sobre residência, convívios, educação, saúde e alimentos devem atender ao superior interesse da criança.\n\nAs soluções variam conforme a realidade familiar e podem resultar de acordo ou decisão.\n\nUsar os filhos como instrumento de conflito prejudica todos e pode dificultar uma solução estável.\n\nO objetivo jurídico não é premiar um progenitor. É proteger a criança e organizar responsabilidades.","cta":"Em conflitos familiares, mantenha a criança fora da disputa dos adultos."},{"num":25,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"A advocacia não se resume ao preço de uma hora.","text":"O valor do trabalho inclui estudo, responsabilidade, independência, experiência, preparação e consequências da orientação prestada.\n\nTambém inclui dizer quando não existe fundamento, quando o risco é elevado ou quando outra solução é mais adequada.\n\nHonorários devem ser explicados com transparência, considerando os critérios aplicáveis e o trabalho previsível.\n\nUma relação profissional saudável começa com expectativas claras de ambos os lados.","cta":"Antes de avançar, peça clareza sobre âmbito, custos e próximos passos."},{"num":26,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Uma multa não desaparece por ser ignorada.","text":"Quando recebe uma notificação, confirme a entidade, os factos, a data, o prazo e as opções indicadas.\n\nContestar pode ser possível em determinadas circunstâncias, mas exige fundamento e respeito pelo procedimento.\n\nPagar, impugnar ou não responder podem produzir efeitos diferentes.\n\nNão use um modelo genérico sem perceber se corresponde ao seu caso.","cta":"Leia a notificação completa antes de tomar qualquer decisão."},{"num":27,"format":"Proximidade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Advogado e solicitador têm competências que se cruzam — mas não são profissões iguais.","text":"Ambos são profissionais jurídicos regulados e podem praticar atos previstos na lei.\n\nAs respetivas competências, representação e campos de intervenção não são totalmente coincidentes.\n\nA escolha deve considerar a natureza do assunto e o ato necessário, sem transformar uma profissão numa versão menor da outra.\n\nQuando tiver dúvidas, descreva o problema e confirme se o profissional está habilitado para a intervenção pretendida.","cta":"Escolha pela competência necessária, não apenas pelo título que conhece melhor."},{"num":28,"format":"Autoridade","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Um contrato encontrado online não conhece o seu negócio.","text":"Um modelo pode ajudar a identificar temas, mas não conhece a relação entre as partes, o risco, a legislação aplicável nem aquilo que precisa de acontecer se algo correr mal.\n\nCláusulas copiadas de contextos diferentes podem contradizer-se ou criar uma falsa sensação de proteção.\n\nO valor da revisão jurídica está na adaptação e na antecipação de cenários — não apenas na linguagem formal.","cta":"Antes de reutilizar um contrato, confirme para que realidade foi escrito."},{"num":29,"format":"Educação jurídica","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Três mitos jurídicos que continuam a circular.","text":"“Se não assinei, não existe contrato.” Nem sempre.\n\n“Se está na Internet, posso usar livremente.” Nem sempre.\n\n“Se ninguém respondeu, significa que aceitaram.” Nem sempre.\n\nO efeito jurídico depende do contexto, da matéria, da forma exigida e dos atos praticados.\n\nFrases absolutas são fáceis de memorizar — e perigosas para decidir.","cta":"Partilhe este conteúdo com alguém que já ouviu uma destas afirmações."},{"num":30,"format":"Prevenção","pilar":"Clareza jurídica","gatilho":"Confiança","objetivo":"Informar com rigor, clareza e responsabilidade.","title":"Fazer testamento é organizar uma decisão dentro dos limites da lei.","text":"O testamento permite manifestar vontades para depois da morte, mas não afasta todas as regras sucessórias.\n\nA existência de herdeiros legitimários pode limitar a parte do património disponível.\n\nForma, capacidade e conteúdo também importam para a validade e execução da vontade.\n\nPlanear não é antecipar conflitos inevitáveis. É reduzir ambiguidades e permitir decisões mais conscientes.","cta":"Se pretende organizar a sucessão, procure informação adaptada à sua situação familiar e patrimonial."}];
+let currentDay = 1;
+
+// Splash
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("splash").classList.add("hide");
+    setTimeout(() => {
+      document.querySelectorAll(".animate").forEach(el => el.classList.add("in"));
+      renderDay(1);
+    }, 250);
+  }, 800);
+});
+
+// Init progress dots
+const dotsEl = document.getElementById("pDots");
+for (let i = 1; i <= 30; i++) {
+  const d = document.createElement("div");
+  d.className = "dot" + (i === 1 ? " today" : "");
+  dotsEl.appendChild(d);
+}
+
+function renderDay(n) {
+  const d = DAYS.find(x => x.num === n);
+  if (!d) return;
+  currentDay = n;
+
+  // Nav + progress count
+  document.getElementById("navPill").textContent = "Dia " + n + " de 30";
+  document.getElementById("progressCount").textContent = "Dia " + n + " de 30";
+
+  // Card title + metadata
+  document.getElementById("cardTopic").textContent = d.title;
+  const formatTag = document.querySelector(".tag-format");
+  const pilarTag = document.querySelector(".tag-pilar");
+  if (formatTag) formatTag.textContent = d.format || "Conteúdo";
+  if (pilarTag) pilarTag.textContent = d.pilar || "Estratégia";
+  document.querySelectorAll(".strat-value").forEach((el, idx) => {
+    if (idx === 0) el.textContent = d.pilar || "Estratégia";
+    if (idx === 1) el.textContent = d.gatilho || "Confiança";
+    if (idx === 2) el.textContent = d.objetivo || "Reforçar autoridade e confiança antes do contacto.";
+  });
+
+  // Card text — render paragraphs
+  const textEl = document.getElementById("cardText");
+  const paragraphs = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n").split("\n\n");
+  textEl.innerHTML = paragraphs.map(p => `<p style="margin-bottom:12px;">${p.replace(/\n/g,"<br>")}</p>`).join("");
+
+  // CTA
+  document.getElementById("cardCta").textContent = d.cta;
+
+  // Progress bar
+  document.getElementById("pFill").style.width = (n / 30 * 100) + "%";
+
+  // Progress dots
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.className = "dot" + (i + 1 < n ? " done" : i + 1 === n ? " today" : "");
+  });
+
+  // Next day
+  const next = DAYS.find(x => x.num === n + 1);
+  const nextCard = document.querySelector(".next-card");
+  if (next && nextCard) {
+    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
+    document.getElementById("nextTopic").textContent = next.title;
+    nextCard.style.display = "";
+    nextCard.style.cursor = "pointer";
+    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
+  } else if (nextCard) {
+    nextCard.style.display = "none";
+  }
+}
+
+function copyReadyText() {
+  const d = DAYS.find(x => x.num === currentDay);
+  if (!d) return;
+  const clean = d.text.replace(/\\n\\n/g,"\n\n").replace(/\\n/g,"\n");
+  const full = clean + "\n\n" + d.cta;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById("btnCopy");
+    btn.classList.add("copied");
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><polyline points="20,6 9,17 4,12"/></svg> Copiado!`;
+    document.getElementById("toast").classList.add("show");
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar conteúdo`;
+      document.getElementById("toast").classList.remove("show");
+    }, 3000);
+  });
+}
+
+let extraOpen = false;
+function toggleExtra() {
+  extraOpen = !extraOpen;
+  document.getElementById("extraWrap").classList.toggle("open", extraOpen);
+  const btn = document.getElementById("btnMore");
+  btn.classList.toggle("open", extraOpen);
+  btn.innerHTML = (extraOpen ? "Fechar" : "Ver contexto estratégico") + ` <em class="chevron" style="transform:${extraOpen?"rotate(180deg)":"none"}">˅</em>`;
+}
+</script>
+</body>
+</html>

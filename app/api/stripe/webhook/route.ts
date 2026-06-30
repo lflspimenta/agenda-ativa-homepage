@@ -12,6 +12,7 @@ type AgendaProduct =
   | "fotografos"
   | "estetica_facial"
   | "medicina_estetica"
+  | "advogados"
   | "cabeleireiros"
   | "unhas";
 
@@ -20,6 +21,7 @@ const paidProducts: AgendaProduct[] = [
   "fotografos",
   "estetica_facial",
   "medicina_estetica",
+  "advogados",
   "cabeleireiros",
   "unhas"
 ];
@@ -89,7 +91,7 @@ export async function POST(request: Request) {
     const { data: existing } = await admin
       .from("users")
       .select(
-        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date, medicina_estetica_purchase_date, cabeleireiros_purchase_date, unhas_purchase_date"
+        "email, products, wedding_purchase_date, imobiliario_purchase_date, fotografos_purchase_date, estetica_facial_purchase_date, medicina_estetica_purchase_date, advogados_purchase_date, cabeleireiros_purchase_date, unhas_purchase_date"
       )
       .eq("email", email)
       .maybeSingle();
@@ -105,6 +107,7 @@ export async function POST(request: Request) {
         fotografos_purchase_date?: string;
         estetica_facial_purchase_date?: string;
         medicina_estetica_purchase_date?: string;
+        advogados_purchase_date?: string;
         cabeleireiros_purchase_date?: string;
         unhas_purchase_date?: string;
       } = {};
@@ -127,6 +130,11 @@ export async function POST(request: Request) {
         !existing.medicina_estetica_purchase_date
       ) {
         updates.medicina_estetica_purchase_date = purchaseDate;
+      } else if (
+        product === "advogados" &&
+        !existing.advogados_purchase_date
+      ) {
+        updates.advogados_purchase_date = purchaseDate;
       } else if (
         product === "cabeleireiros" &&
         !existing.cabeleireiros_purchase_date
@@ -156,6 +164,8 @@ export async function POST(request: Request) {
           product === "estetica_facial" ? purchaseDate : null,
         medicina_estetica_purchase_date:
           product === "medicina_estetica" ? purchaseDate : null,
+        advogados_purchase_date:
+          product === "advogados" ? purchaseDate : null,
         cabeleireiros_purchase_date:
           product === "cabeleireiros" ? purchaseDate : null,
         unhas_purchase_date: product === "unhas" ? purchaseDate : null
@@ -179,6 +189,8 @@ export async function POST(request: Request) {
                 ? "/estetica-facial/agenda"
                 : product === "medicina_estetica"
                   ? "/medicina-estetica/agenda"
+                  : product === "advogados"
+                    ? "/advogados/agenda"
                   : product === "cabeleireiros"
                     ? "/cabeleireiros/agenda"
                     : product === "unhas"

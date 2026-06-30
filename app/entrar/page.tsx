@@ -15,6 +15,7 @@ const productLabels = {
   fotografos: "Edição Fotógrafos",
   estetica_facial: "Edição Estética Facial",
   medicina_estetica: "Edição Medicina Estética",
+  advogados: "Edição Advogados",
   cabeleireiros: "Edição Cabeleireiros",
   unhas: "Edição Nails / Unhas"
 } as const;
