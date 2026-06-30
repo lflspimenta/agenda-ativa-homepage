@@ -65,6 +65,7 @@ export const config = {
     "/estetica-facial/agenda/:path*",
     "/medicina-estetica/agenda/:path*",
     "/advogados/agenda/:path*",
+    "/psicologos/agenda/:path*",
     "/cabeleireiros/agenda/:path*",
     "/unhas/agenda/:path*"
   ]

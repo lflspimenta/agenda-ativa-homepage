@@ -19,6 +19,7 @@ const labels = {
   esteticaFacial: "Est\u00e9tica Facial",
   medicinaEstetica: "Medicina Est\u00e9tica",
   advogados: "Advogados",
+  psicologos: "Psic\u00f3logos",
   cabeleireiros: "Cabeleireiros",
   unhas: "Nails / Unhas",
   quick: "ACESSO R\u00c1PIDO",
@@ -111,6 +112,14 @@ export default async function MinhaAgendaPage() {
           <a className="customer-product advogados-product" href="/advogados/agenda">
             <small>{labels.edition}</small>
             <h2>{labels.advogados}</h2>
+            <p>{labels.premium}</p>
+          </a>
+        )}
+
+        {products.includes("psicologos") && (
+          <a className="customer-product psicologos-product" href="/psicologos/agenda">
+            <small>{labels.edition}</small>
+            <h2>{labels.psicologos}</h2>
             <p>{labels.premium}</p>
           </a>
         )}

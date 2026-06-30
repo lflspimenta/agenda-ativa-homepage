@@ -8,7 +8,8 @@ const editions = [
   { name: "Medicina EstÃ©tica Edition", status: "DisponÃ­vel", href: "/medicina-estetica", available: true },
   { name: "Cabeleireiros Edition", status: "DisponÃ­vel", href: "/cabeleireiros", available: true },
   { name: "Nails / Unhas Edition", status: "DisponÃ­vel", href: "/unhas", available: true },
-  { name: "Advogados Edition", status: "Dispon\u00edvel", href: "/advogados", available: true }
+  { name: "Advogados Edition", status: "Dispon\u00edvel", href: "/advogados", available: true },
+  { name: "Psic\u00f3logos Edition", status: "Dispon\u00edvel", href: "/psicologos", available: true }
 ];
 
 const benefits = [
