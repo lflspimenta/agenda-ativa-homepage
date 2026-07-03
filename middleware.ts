@@ -38,7 +38,11 @@ export async function middleware(request: NextRequest) {
   }
 
   let response = authResponse;
-  if (request.nextUrl.pathname === "/imobiliario") {
+  if (request.nextUrl.pathname === "/wedding") {
+    response = NextResponse.rewrite(
+      new URL("/landing-wedding.html", request.url)
+    );
+  } else if (request.nextUrl.pathname === "/imobiliario") {
     response = NextResponse.rewrite(
       new URL("/agenda-imobiliario-landing.html", request.url)
     );
@@ -57,6 +61,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/",
+    "/wedding",
     "/imobiliario",
     "/minha-agenda/:path*",
     "/agenda/:path*",
