@@ -45,10 +45,7 @@ export default function HomePage() {
       <nav className="brand-nav" aria-label="NavegaÃ§Ã£o principal">
         <a className="brand-wordmark" href="#inicio" aria-label="Agenda Ativa, inÃ­cio">AGENDA ATIVA<sup>â„¢</sup></a>
         <div className="brand-nav-links"><a href="#como-funciona">Como funciona</a><a href="#edicoes">EdiÃ§Ãµes</a><a href="#faq">FAQ</a></div>
-        <div className="brand-nav-actions">
-          <a className="brand-nav-explore" href="#edicoes">Explorar ediÃ§Ãµes</a>
-          <a className="brand-nav-cta" href="/entrar?area=1">Já sou cliente</a>
-        </div>
+        <a className="brand-nav-cta" href="#edicoes">Explorar ediÃ§Ãµes</a>
       </nav>
 
       <section className="brand-hero" id="inicio">
@@ -143,7 +140,7 @@ export default function HomePage() {
                   {editions.map((edition) => (
                     <article className={edition.available ? "is-available" : ""} key={edition.name}>
                       <h3>{edition.name}</h3><small>{edition.status}</small>
-                      {edition.available && edition.href ? <a href={edition.href}>Conhecer esta ediÃ§Ã£o <b>â†’</b></a> : <p>Em preparaÃ§Ã£o</p>}
+                      {edition.available && edition.href ? <a href={edition.href}>Ver ediÃ§Ã£o <b>â†’</b></a> : <p>Em preparaÃ§Ã£o</p>}
                     </article>
                   ))}
                 </div>
