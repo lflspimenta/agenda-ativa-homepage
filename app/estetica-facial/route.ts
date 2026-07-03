@@ -12,11 +12,13 @@ export async function GET() {
   );
 
   const html = htmlTemplate
+    .replace('<nav class="nav-links">', '<nav class="nav-links"><a href="/">Homepage</a>')
     .replace(/src="aa-monogram\.svg"/g, 'src="/aa-monogram-official.svg"')
     .replace(/src="imagens\/1\.png"/g, 'src="/assets/estetica-facial/1.png"')
     .replace(/src="imagens\/2\.png"/g, 'src="/assets/estetica-facial/2.png"')
     .replace(/src="imagens\/3\.png"/g, 'src="/assets/estetica-facial/3.png"')
     .replace(/src="imagens\/4\.png"/g, 'src="/assets/estetica-facial/4.png"')
+    .replace(/href="#" aria-label=/g, 'href="/" aria-label=')
     .replace(/href="#">Voltar/g, 'href="/">Voltar')
     .replace(/href="#">Quero a Estética Facial Edition/g, `href="${stripePaymentLink}">Quero a Estética Facial Edition`)
     .replace(/href="#">Quero a minha edição/g, `href="${stripePaymentLink}">Quero a minha edição`)

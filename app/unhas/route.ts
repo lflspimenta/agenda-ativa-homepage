@@ -14,6 +14,7 @@ export async function GET() {
   );
 
   const html = htmlTemplate
+    .replace('<nav class="nav-links">', '<nav class="nav-links"><a href="/">Homepage</a>')
     .replace(/url\("\.\.\/imagens\/1\.png"\)/g, 'url("/assets/unhas/1.png")')
     .replace(/url\("\.\.\/imagens\/2\.png"\)/g, 'url("/assets/unhas/2.png")')
     .replace(/url\("\.\.\/imagens\/3\.png"\)/g, 'url("/assets/unhas/3.png")')

@@ -13,6 +13,7 @@ export async function GET() {
   );
 
   const html = htmlTemplate
+    .replace('<nav class="nav-links">', '<nav class="nav-links"><a href="/">Homepage</a>')
     .replace(/\.\.\/imagens\/2\.png/g, "/assets/advogados/2.png")
     .replace(/\.\.\/imagens\/3\.png/g, "/assets/advogados/3.png")
     .replace(/\.\.\/imagens\/4\.png/g, "/assets/advogados/4.png")
