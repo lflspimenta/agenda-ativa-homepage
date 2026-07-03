@@ -14,6 +14,7 @@ export async function GET() {
 
   const html = htmlTemplate
     .replace('<nav class="nav-links">', '<nav class="nav-links"><a href="/">Homepage</a>')
+    .replace("</head>", '<style>@media(max-width:640px){.middle-band h2,.objection h2,.content-card h2,.panel h2,.focus-box h2,.image-copy h2,.price-box h2{font-size:32px;line-height:1.08}.preview h3{font-size:24px}.footer-cta h2{font-size:34px}}</style></head>')
     .replace(
       /url\("\.\.\/imagens\/hero-medicina-estetica\.png"\)/g,
       'url("/assets/medicina-estetica/hero-medicina-estetica.png")'
