@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const next =
     requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
       ? requestedNext
-      : "/agenda";
+      : "/minha-agenda";
   const redirectUrl = new URL(next, url.origin);
   const errorUrl = new URL("/entrar?estado=erro", url.origin);
   const supabase = createSupabaseServerClient();
