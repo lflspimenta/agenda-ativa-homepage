@@ -3,6 +3,29 @@
 import { useEffect } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 
+const productDestinations: Record<string, string> = {
+  wedding: "/agenda",
+  imobiliario: "/imobiliario/agenda",
+  fotografos: "/fotografos/agenda",
+  estetica_facial: "/estetica-facial/agenda",
+  medicina_estetica: "/medicina-estetica/agenda",
+  advogados: "/advogados/agenda",
+  psicologos: "/psicologos/agenda",
+  cabeleireiros: "/cabeleireiros/agenda",
+  unhas: "/unhas/agenda"
+};
+
+function getFallbackDestination(search: string) {
+  const params = new URLSearchParams(search);
+
+  if (params.get("area") === "1") {
+    return "/minha-agenda";
+  }
+
+  const product = params.get("produto") || "wedding";
+  return productDestinations[product] || "/agenda";
+}
+
 export function LoginSessionHandler() {
   useEffect(() => {
     async function handleMagicLinkHash() {
@@ -44,7 +67,8 @@ export function LoginSessionHandler() {
       }
 
       const destination =
-        new URLSearchParams(window.location.search).get("next") || "/agenda";
+        new URLSearchParams(window.location.search).get("next") ||
+        getFallbackDestination(window.location.search);
       window.history.replaceState(null, "", "/entrar");
       window.location.replace(destination);
     }
