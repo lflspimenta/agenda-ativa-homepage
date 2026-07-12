@@ -12,7 +12,10 @@ export async function GET(request: Request) {
       ? requestedNext
       : "/minha-agenda";
   const redirectUrl = new URL(next, url.origin);
-  const errorUrl = new URL("/entrar?estado=erro", url.origin);
+  const errorUrl = new URL(
+    next === "/minha-agenda" ? "/entrar?area=1&estado=erro" : "/entrar?estado=erro",
+    url.origin
+  );
   const supabase = createSupabaseServerClient();
 
   if (code) {
