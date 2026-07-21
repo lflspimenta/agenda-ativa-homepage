@@ -4,12 +4,12 @@ const editions = [
   { name: "Wedding Edition", status: "DisponÃ­vel", href: "/wedding", available: true },
   { name: "ImobiliÃ¡rio Edition", status: "DisponÃ­vel", href: "/imobiliario", available: true },
   { name: "FotÃ³grafos Edition", status: "DisponÃ­vel", href: "/fotografos", available: true },
-  { name: "EstÃ©tica Facial Edition", status: "DisponÃ­vel", href: "/estetica-facial", available: true },
-  { name: "Medicina EstÃ©tica Edition", status: "DisponÃ­vel", href: "/medicina-estetica", available: true },
-  { name: "Cabeleireiros Edition", status: "DisponÃ­vel", href: "/cabeleireiros", available: true },
-  { name: "Nails / Unhas Edition", status: "DisponÃ­vel", href: "/unhas", available: true },
   { name: "Advogados Edition", status: "Dispon\u00edvel", href: "/advogados", available: true },
-  { name: "Psic\u00f3logos Edition", status: "Dispon\u00edvel", href: "/psicologos", available: true }
+  { name: "Cabeleireiros Edition", status: "DisponÃ­vel", href: "/cabeleireiros", available: true },
+  { name: "Psic\u00f3logos Edition", status: "Dispon\u00edvel", href: "/psicologos", available: true },
+  { name: "Medicina EstÃ©tica Edition", status: "DisponÃ­vel", href: "/medicina-estetica", available: true },
+  { name: "EstÃ©tica Facial Edition", status: "DisponÃ­vel", href: "/estetica-facial", available: true },
+  { name: "Nails / Unhas Edition", status: "DisponÃ­vel", href: "/unhas", available: true }
 ];
 
 const benefits = [
