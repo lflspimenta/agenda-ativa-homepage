@@ -28,8 +28,96 @@ const paidProducts: AgendaProduct[] = [
   "unhas"
 ];
 
+const productNames: Record<AgendaProduct, string> = {
+  wedding: "Wedding Edition",
+  imobiliario: "Imobiliário Edition",
+  fotografos: "Fotógrafos Edition",
+  estetica_facial: "Estética Facial Edition",
+  medicina_estetica: "Medicina Estética Edition",
+  advogados: "Advogados Edition",
+  psicologos: "Psicólogos Edition",
+  cabeleireiros: "Cabeleireiros Edition",
+  unhas: "Unhas Edition"
+};
+
 function getFirstName(name?: string | null) {
   return name?.trim().split(/\s+/)[0] || null;
+}
+
+function escapeHtml(value: string) {
+  return value.replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character] ?? character
+  );
+}
+
+async function sendSalesNotification(
+  session: Stripe.Checkout.Session,
+  product: AgendaProduct,
+  purchaseDate: string
+) {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    console.warn("RESEND_API_KEY is not configured; sales notification skipped.");
+    return;
+  }
+
+  const recipient =
+    process.env.SALES_NOTIFICATION_EMAIL ?? "luisfpimenta@gmail.com";
+  const sender =
+    process.env.SALES_NOTIFICATION_FROM ??
+    "Agenda Ativa <onboarding@resend.dev>";
+  const customerName = session.customer_details?.name?.trim() || "Não indicado";
+  const customerEmail =
+    session.customer_details?.email?.toLowerCase() || "Não indicado";
+  const amount =
+    session.amount_total === null
+      ? "Não indicado"
+      : new Intl.NumberFormat("pt-PT", {
+          style: "currency",
+          currency: session.currency?.toUpperCase() || "EUR"
+        }).format(session.amount_total / 100);
+  const date = new Intl.DateTimeFormat("pt-PT", {
+    dateStyle: "long",
+    timeStyle: "short",
+    timeZone: "Europe/Lisbon"
+  }).format(new Date(purchaseDate));
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: sender,
+      to: [recipient],
+      subject: `Nova compra — ${productNames[product]}`,
+      html: `
+        <h1>Nova compra na Agenda Ativa</h1>
+        <p><strong>Edição:</strong> ${escapeHtml(productNames[product])}</p>
+        <p><strong>Cliente:</strong> ${escapeHtml(customerName)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>
+        <p><strong>Valor:</strong> ${escapeHtml(amount)}</p>
+        <p><strong>Data:</strong> ${escapeHtml(date)}</p>
+        <p><strong>Pagamento Stripe:</strong> ${escapeHtml(session.payment_intent?.toString() || session.id)}</p>
+      `
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Resend sales notification failed with status ${response.status}`
+    );
+  }
 }
 
 async function getProductFromSession(
@@ -89,6 +177,7 @@ export async function POST(request: Request) {
     const purchaseDate = new Date().toISOString();
     const firstName = getFirstName(session.customer_details?.name);
     const product = await getProductFromSession(stripe, session);
+    let isNewPurchase = false;
 
     const { data: existing } = await admin
       .from("users")
@@ -157,6 +246,10 @@ export async function POST(request: Request) {
       if (Object.keys(updates).length > 0) {
         await admin.from("users").update(updates).eq("email", email);
       }
+
+      isNewPurchase = Object.keys(updates).some((key) =>
+        key.endsWith("_purchase_date")
+      );
     } else {
       await admin.from("users").insert({
         email,
@@ -180,6 +273,7 @@ export async function POST(request: Request) {
           product === "cabeleireiros" ? purchaseDate : null,
         unhas_purchase_date: product === "unhas" ? purchaseDate : null
       });
+      isNewPurchase = true;
     }
 
     const supabase = createClient(
@@ -211,6 +305,14 @@ export async function POST(request: Request) {
         }`
       }
     });
+
+    if (isNewPurchase) {
+      try {
+        await sendSalesNotification(session, product, purchaseDate);
+      } catch (error) {
+        console.error("Could not send sales notification", error);
+      }
+    }
   }
 
   return NextResponse.json({ received: true });
