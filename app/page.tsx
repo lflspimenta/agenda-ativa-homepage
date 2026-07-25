@@ -33,7 +33,7 @@ const professionals = [
 const faqs = [
   ["O que Ã© a Agenda Ativaâ„¢?", "Ã‰ uma biblioteca de ediÃ§Ãµes especializadas com 30 dias de conteÃºdo estratÃ©gico, preparado para adaptar e publicar."],
   ["O que preciso de fazer para comeÃ§ar?", "Nada. O conteÃºdo jÃ¡ sai escrito e pronto."],
-  ["Como recebo o acesso?", "O acesso Ã  ediÃ§Ã£o disponÃ­vel Ã© enviado imediatamente apÃ³s a confirmaÃ§Ã£o da compra."],
+  ["O que acontece depois do pagamento?", "Assim que o pagamento for confirmado, recebe no email usado na compra um link seguro para entrar na sua Ã¡rea de cliente. NÃ£o precisa de criar uma palavra-passe: basta abrir o link e a sua ediÃ§Ã£o estarÃ¡ disponÃ­vel. Se nÃ£o encontrar o email, verifique tambÃ©m a pasta de spam."],
   ["Posso adaptar o conteÃºdo Ã  minha marca?", "Sim. A estrutura, a legenda e a estratÃ©gia estÃ£o definidas, mas pode ajustar o tom e usar as suas prÃ³prias imagens."],
   ["VÃ£o existir novas ediÃ§Ãµes?", "Sim. A Agenda Ativaâ„¢ continuarÃ¡ a crescer com ediÃ§Ãµes dedicadas a diferentes Ã¡reas profissionais."]
 ];
