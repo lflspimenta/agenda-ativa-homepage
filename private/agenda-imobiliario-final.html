@@ -129,6 +129,40 @@
       padding: 5px 12px;
       border-radius: 20px;
     }
+    .nav-actions { display:flex; align-items:center; gap:5px; }
+    .nav-view-btn {
+      border:0; background:transparent; color:var(--muted); font:600 10px var(--sans);
+      letter-spacing:.08em; text-transform:uppercase; padding:8px 7px; border-radius:5px; cursor:pointer;
+    }
+    .nav-view-btn.active { background:var(--rose-dim); color:var(--rose); }
+
+    /* ── BIBLIOTECA ── */
+    .library-shell { display:none; }
+    body.library-open .col-left, body.library-open .col-right, body.library-open .col-strategy { display:none !important; }
+    body.library-open .library-shell { display:block; }
+    body.library-open main { display:block; max-width:1180px; min-height:calc(100dvh - 57px); padding:32px 20px calc(42px + var(--safe-bottom)); }
+    .library-kicker { font-size:10px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--rose); margin-bottom:10px; }
+    .library-title { font-family:var(--serif); font-size:48px; font-weight:300; line-height:.95; color:var(--ink); }
+    .library-sub { max-width:600px; margin:13px 0 24px; font-size:14px; line-height:1.6; color:var(--muted); }
+    .library-toolbar { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+    .library-search { width:100%; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); font:400 14px var(--sans); padding:15px 16px; outline:none; }
+    .library-search:focus { border-color:var(--rose); box-shadow:0 0 0 3px var(--rose-dim); }
+    .library-filters { display:flex; flex-wrap:wrap; gap:7px; }
+    .library-filter { border:1px solid var(--line); border-radius:99px; background:transparent; color:var(--muted); padding:7px 10px; font:600 10px var(--sans); letter-spacing:.06em; cursor:pointer; }
+    .library-filter.active { background:var(--rose); border-color:var(--rose); color:#fff; }
+    .library-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+    .library-item { position:relative; border:1px solid var(--line); border-radius:7px; background:var(--surface); padding:18px 52px 18px 18px; cursor:pointer; transition:transform .2s ease, box-shadow .2s ease; }
+    .library-item:hover { transform:translateY(-2px); box-shadow:0 14px 28px rgba(31,49,59,.08); }
+    .library-day { display:block; font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--rose); margin-bottom:8px; }
+    .library-item h2 { font-family:var(--serif); font-weight:400; font-size:25px; line-height:1.04; color:var(--ink); margin-bottom:10px; }
+    .library-item p { font-size:12px; color:var(--muted); line-height:1.55; }
+    .library-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:13px; }
+    .library-tags span { font-size:9px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--rose); background:var(--rose-dim); padding:5px 7px; border-radius:2px; }
+    .favorite-toggle { position:absolute; top:16px; right:14px; width:30px; height:30px; border:1px solid var(--line); border-radius:50%; background:var(--surface); color:var(--rose); font-size:16px; line-height:1; cursor:pointer; }
+    .favorite-toggle.is-favorite { background:var(--rose); border-color:var(--rose); color:#fff; }
+    .library-empty { border:1px dashed var(--line); border-radius:7px; padding:32px 20px; text-align:center; color:var(--muted); font-size:14px; line-height:1.6; }
+    .btn-favorite { width:100%; min-height:48px; border:1px solid var(--line); border-radius:4px; background:transparent; color:var(--rose); font:600 11px var(--sans); letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+    .btn-favorite.is-favorite { background:var(--rose-dim); border-color:rgba(47,75,89,.28); }
 
     /* ── MAIN ── */
     main {
@@ -662,6 +696,15 @@
     }
 
     @media(min-width: 1100px) { #sidebarResultado { display: block !important; } }
+    @media(min-width: 768px) {
+      body.library-open main { padding:44px 40px 64px; }
+      .library-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .library-title { font-size:58px; }
+      .btn-favorite { flex:1; }
+    }
+    @media(min-width: 1100px) {
+      .library-grid { grid-template-columns:repeat(3, minmax(0,1fr)); }
+    }
     @media(prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   </style>
 </head>
@@ -679,7 +722,12 @@
     <div class="nav-brand">Agenda Ativa<sup>™</sup></div>
     <div class="nav-edition" style="display:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;">Imobiliário Edition</div>
   </div>
-  <div class="nav-pill" id="navPill">Dia 1 de 30</div>
+  <div class="nav-actions" aria-label="Vistas da Agenda Ativa">
+    <button class="nav-view-btn active" type="button" data-view="agenda" onclick="showView('agenda')">Agenda</button>
+    <button class="nav-view-btn" type="button" data-view="library" onclick="showView('library')">Biblioteca</button>
+    <button class="nav-view-btn" type="button" data-view="favorites" onclick="showView('favorites')">Favoritos</button>
+    <div class="nav-pill" id="navPill">Dia 1 de 30</div>
+  </div>
 </nav>
 
 <main>
@@ -750,6 +798,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         Copiar conteúdo
       </button>
+      <button class="btn-favorite" id="btnFavorite" type="button" onclick="toggleFavorite(currentDay)">Guardar nos favoritos</button>
       <button class="btn-more" id="btnMore" onclick="toggleExtra()">
         Ver contexto estratégico
         <em class="chevron">˅</em>
@@ -845,6 +894,17 @@
       </div>
     </div>
   </aside>
+
+  <section class="library-shell" id="libraryShell" aria-live="polite">
+    <div class="library-kicker" id="libraryKicker">Biblioteca de conteúdos</div>
+    <h1 class="library-title" id="libraryTitle">Encontre o conteúdo certo, quando precisa dele.</h1>
+    <p class="library-sub" id="librarySub">Pesquise nos 30 conteúdos da sua edição ou filtre por categoria. Ao abrir um conteúdo, volta à Agenda para o copiar e publicar.</p>
+    <div class="library-toolbar" id="libraryToolbar">
+      <input class="library-search" id="librarySearch" type="search" placeholder="Pesquisar: herança, angariação, clientes..." autocomplete="off" oninput="renderLibrary()">
+      <div class="library-filters" id="libraryFilters"></div>
+    </div>
+    <div class="library-grid" id="libraryGrid"></div>
+  </section>
 
 </main>
 
@@ -1434,6 +1494,138 @@ Constrói-se muito antes dela.`,cta:"Se está a pensar vender, envie mensagem. V
 ];
 
 let currentDay = 1;
+let activeView = "agenda";
+let activeCategory = "Todos";
+const favoriteDays = new Set();
+
+function escapeLibraryText(value) {
+  return String(value).replace(/[&<>"]/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
+  })[character]);
+}
+
+function showView(view) {
+  activeView = view;
+  const isAgenda = view === "agenda";
+  document.body.classList.toggle("library-open", !isAgenda);
+  document.querySelectorAll(".nav-view-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === view);
+  });
+  document.getElementById("navPill").textContent = isAgenda
+    ? `Dia ${currentDay} de 30`
+    : view === "favorites" ? "Favoritos" : "Biblioteca";
+
+  if (!isAgenda) {
+    document.getElementById("libraryKicker").textContent = view === "favorites" ? "Conteúdos guardados" : "Biblioteca de conteúdos";
+    document.getElementById("libraryTitle").textContent = view === "favorites" ? "Os seus favoritos." : "Encontre o conteúdo certo, quando precisa dele.";
+    document.getElementById("librarySub").textContent = view === "favorites"
+      ? "Guarde aqui os conteúdos que quer reutilizar ou ter à mão numa conversa com um cliente."
+      : "Pesquise nos 30 conteúdos da sua edição ou filtre por categoria. Ao abrir um conteúdo, volta à Agenda para o copiar e publicar.";
+    document.getElementById("libraryToolbar").hidden = view === "favorites";
+    renderLibrary();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+function openLibraryDay(day) {
+  showView("agenda");
+  renderDay(day);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderLibraryFilters() {
+  const filters = document.getElementById("libraryFilters");
+  if (!filters) return;
+  const categories = ["Todos", ...new Set(DAYS.map(day => day.pilar).filter(Boolean))];
+  filters.innerHTML = categories.map(category => `<button class="library-filter ${category === activeCategory ? "active" : ""}" type="button" data-category="${escapeLibraryText(category)}">${escapeLibraryText(category)}</button>`).join("");
+  filters.querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", () => {
+      activeCategory = button.dataset.category || "Todos";
+      renderLibrary();
+    });
+  });
+}
+
+function renderLibrary() {
+  const grid = document.getElementById("libraryGrid");
+  if (!grid) return;
+  const query = (document.getElementById("librarySearch")?.value || "").trim().toLocaleLowerCase("pt-PT");
+  const isFavorites = activeView === "favorites";
+  const days = DAYS.filter(day => {
+    const searchable = [day.title, day.text, day.cta, day.format, day.pilar].join(" ").toLocaleLowerCase("pt-PT");
+    const categoryMatches = isFavorites || activeCategory === "Todos" || day.pilar === activeCategory;
+    return categoryMatches && (!isFavorites || favoriteDays.has(day.num)) && (!query || searchable.includes(query));
+  });
+
+  if (!isFavorites) renderLibraryFilters();
+  if (!days.length) {
+    grid.innerHTML = `<div class="library-empty">${isFavorites ? "Ainda não guardou nenhum conteúdo. Na Agenda ou na Biblioteca, use o botão de favorito para guardar os que quer ter sempre à mão." : "Não encontrámos conteúdos com essa pesquisa. Tente outra palavra ou categoria."}</div>`;
+    return;
+  }
+
+  grid.innerHTML = days.map(day => `<article class="library-item" data-day="${day.num}" tabindex="0" role="button" aria-label="Abrir dia ${day.num}: ${escapeLibraryText(day.title)}">
+    <button class="favorite-toggle ${favoriteDays.has(day.num) ? "is-favorite" : ""}" type="button" data-favorite-day="${day.num}" aria-label="${favoriteDays.has(day.num) ? "Remover dos favoritos" : "Guardar nos favoritos"}">${favoriteDays.has(day.num) ? "★" : "☆"}</button>
+    <span class="library-day">Dia ${day.num}</span>
+    <h2>${escapeLibraryText(day.title)}</h2>
+    <p>${escapeLibraryText(day.objetivo || "Conteúdo pronto a publicar.")}</p>
+    <div class="library-tags"><span>${escapeLibraryText(day.pilar || "Estratégia")}</span><span>${escapeLibraryText(day.format || "Conteúdo")}</span></div>
+  </article>`).join("");
+
+  grid.querySelectorAll(".library-item").forEach(item => {
+    const open = () => openLibraryDay(Number(item.dataset.day));
+    item.addEventListener("click", open);
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
+    });
+  });
+  grid.querySelectorAll("[data-favorite-day]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.stopPropagation();
+      toggleFavorite(Number(button.dataset.favoriteDay));
+    });
+  });
+}
+
+function updateFavoriteUi() {
+  const button = document.getElementById("btnFavorite");
+  if (button) {
+    const saved = favoriteDays.has(currentDay);
+    button.classList.toggle("is-favorite", saved);
+    button.textContent = saved ? "Guardado nos favoritos" : "Guardar nos favoritos";
+  }
+  if (activeView === "favorites") renderLibrary();
+}
+
+async function loadFavorites() {
+  try {
+    const response = await fetch("/api/favoritos?produto=imobiliario", { credentials: "same-origin" });
+    if (!response.ok) return;
+    const data = await response.json();
+    (data.days || []).forEach(day => favoriteDays.add(Number(day)));
+    updateFavoriteUi();
+  } catch {
+    // A agenda continua utilizável se a ligação aos favoritos falhar.
+  }
+}
+
+async function toggleFavorite(day) {
+  const wasFavorite = favoriteDays.has(day);
+  if (wasFavorite) favoriteDays.delete(day); else favoriteDays.add(day);
+  updateFavoriteUi();
+  try {
+    const response = await fetch("/api/favoritos", {
+      method: wasFavorite ? "DELETE" : "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ produto: "imobiliario", dia: day })
+    });
+    if (!response.ok) throw new Error("favorite request failed");
+  } catch {
+    if (wasFavorite) favoriteDays.add(day); else favoriteDays.delete(day);
+    updateFavoriteUi();
+    alert("Não foi possível guardar este favorito. Tente novamente.");
+  }
+}
 
 // Splash
 window.addEventListener("load", () => {
@@ -1453,6 +1645,8 @@ for (let i = 1; i <= 30; i++) {
   d.className = "dot" + (i === 1 ? " today" : "");
   dotsEl.appendChild(d);
 }
+renderLibrary();
+loadFavorites();
 
 function renderDay(n) {
   const d = DAYS.find(x => x.num === n);
@@ -1460,7 +1654,7 @@ function renderDay(n) {
   currentDay = n;
 
   // Nav + progress count
-  document.getElementById("navPill").textContent = "Dia " + n + " de 30";
+  if (activeView === "agenda") document.getElementById("navPill").textContent = "Dia " + n + " de 30";
   document.getElementById("progressCount").textContent = "Dia " + n + " de 30";
 
   // Card title + metadata
@@ -1503,6 +1697,7 @@ function renderDay(n) {
   } else if (nextCard) {
     nextCard.style.display = "none";
   }
+  updateFavoriteUi();
 }
 
 function copyPrompt() {
