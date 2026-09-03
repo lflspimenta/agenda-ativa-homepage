@@ -65,5 +65,22 @@
     <section class="footer-cta"><h2>Hoje já está tratado.</h2><p>Continue focada nos noivos. O Instagram continua ativo.</p><a class="btn" href="https://buy.stripe.com/9B69AT3Efee94qTboedjO0b">Quero a minha edição →</a></section>
   </main>
   <footer><div class="container footer-inner"><span>Agenda Ativa™ | Wedding Planner Edition</span><a href="/">Voltar à homepage</a></div></footer>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    [
+      [document.querySelector(".price-card .btn"), "pricing"],
+      [document.querySelector(".footer-cta .btn"), "final_cta"]
+    ].forEach(function ([cta, position]) {
+      if (cta) {
+        cta.addEventListener("click", function () {
+          window.va("event", {
+            name: "wedding_checkout_click",
+            data: { source: "wedding_landing", position: position }
+          });
+        });
+      }
+    });
+  </script>
+  <script defer src="/_vercel/insights/script.js" data-sdkn="@vercel/analytics" data-sdkv="2.0.1"></script>
 </body>
 </html>
