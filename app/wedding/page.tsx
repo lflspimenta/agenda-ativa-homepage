@@ -1,3 +1,6 @@
+"use client";
+
+import { track } from "@vercel/analytics";
 import { LoginSessionHandler } from "../entrar/login-session-handler";
 
 export default function LandingPage() {
@@ -16,7 +19,7 @@ export default function LandingPage() {
             src="/hero_agenda_ativa_wedding_v10_5_left_hierarchy.png"
             alt="Agenda Ativa Wedding Planner"
           />
-          <a className="landing-hero-cta" href={stripePaymentLink} aria-label="Quero a minha Agenda Ativa" />
+          <a className="landing-hero-cta" href={stripePaymentLink} aria-label="Quero a minha Agenda Ativa" onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "hero_desktop" })} />
         </div>
 
         <div className="landing-hero-mobile">
@@ -66,7 +69,7 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <a className="landing-cta landing-mobile-cta" href={stripePaymentLink}>
+            <a className="landing-cta landing-mobile-cta" href={stripePaymentLink} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "hero_mobile" })}>
               QUERO A MINHA AGENDA ATIVA™
             </a>
           </div>
@@ -185,7 +188,7 @@ export default function LandingPage() {
             <div><span>✓</span>Acesso imediato</div>
           </div>
           <p>Pagamento único. Sem mensalidades. Sem subscrições.</p>
-          <a className="landing-cta" href={stripePaymentLink}>QUERO A MINHA AGENDA ATIVA™ →</a>
+          <a className="landing-cta" href={stripePaymentLink} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "pricing" })}>QUERO A MINHA AGENDA ATIVA™ →</a>
         </div>
       </section>
 
@@ -202,7 +205,7 @@ export default function LandingPage() {
 
       <section className="landing-final">
         <p>Continue focada nos noivos. O Instagram continua ativo.</p>
-        <a className="landing-cta" href={stripePaymentLink}>QUERO A MINHA AGENDA ATIVA™ →</a>
+        <a className="landing-cta" href={stripePaymentLink} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "final_cta" })}>QUERO A MINHA AGENDA ATIVA™ →</a>
         <small>Acesso imediato após compra.</small>
       </section>
     </main>
