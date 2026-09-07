@@ -131,6 +131,7 @@ export async function serveEdition360(
       `<div class="greeting-name">${greeting}</div>`
     );
   }
+  html = enableEditionContinuationCheckout(html, config.product);
 
   return new Response(html, { headers: {
     "Content-Type": "text/html; charset=utf-8",
@@ -142,6 +143,29 @@ export async function serveEdition360(
 export function getEdition360Content(contents: Edition360Content[], number: number, accessLimit: number) {
   if (!Number.isInteger(number) || number < 1 || number > accessLimit) return null;
   return contents[number - 1] ?? null;
+}
+
+export function enableEditionContinuationCheckout(html: string, product: string) {
+  const endpoint = JSON.stringify(`/api/stripe/checkout/${product.replaceAll("_", "-")}/continuacao`);
+  return html.replace(
+    /button\.setAttribute\("aria-disabled", "true"\);\s*button\.onclick = null;/,
+    `button.removeAttribute("aria-disabled");
+      button.onclick = async () => {
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = "A preparar checkout…";
+        try {
+          const response = await fetch(${endpoint}, { method: "POST" });
+          const data = await response.json();
+          if (!response.ok || !data.url) throw new Error(data.error || "Checkout unavailable");
+          window.location.href = data.url;
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = originalText;
+          window.alert("Não foi possível abrir o checkout. Tente novamente.");
+        }
+      };`
+  );
 }
 
 export async function serveEdition360Content(

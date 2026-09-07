@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { requireFotografosAccess } from "@/lib/fotografos-360-access";
 import { getUnlockedFotografosContents } from "@/lib/fotografos-360";
+import { enableEditionContinuationCheckout } from "@/lib/edition-360";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,11 +34,12 @@ export async function GET(request: Request) {
   }));
   const serialized = JSON.stringify(unlockedContents).replace(/</g, "\\u003c");
   const greeting = firstName ? `Olá, ${escapeHtml(firstName)}` : "Olá";
-  const html = template
+  let html = template
     .replace("__UNLOCKED_CONTENTS__", serialized)
     .replace("__ACCESS_LIMIT__", String(accessLimit))
     .replace("Olá, Sofia", greeting)
     .replace("Olá, Luís", greeting);
+  html = enableEditionContinuationCheckout(html, "fotografos");
 
   return new Response(html, {
     headers: {

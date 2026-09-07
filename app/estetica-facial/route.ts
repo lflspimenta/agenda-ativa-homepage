@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { renderCommercePricing } from "@/lib/commerce-editions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,7 +12,7 @@ export async function GET() {
     "utf8"
   );
 
-  const html = htmlTemplate
+  let html = htmlTemplate
     .replace('<nav class="nav-links">', '<nav class="nav-links"><a href="/">Homepage</a>')
     .replace("</head>", '<style>@media(max-width:640px){.middle-band h2,.objection h2,.content-card h2,.panel h2,.focus-box h2,.image-copy h2,.price-box h2{font-size:32px;line-height:1.08}.preview h3{font-size:24px}.footer-cta h2{font-size:34px}}</style></head>')
     .replace(/src="aa-monogram\.svg"/g, 'src="/aa-monogram-official.svg"')
@@ -26,6 +27,7 @@ export async function GET() {
     .replace(/O botão de pagamento será ligado depois da aprovação\./g, "Acesso imediato após compra.")
     .replace(/Pré-visualização para aprovação/g, "Acesso digital imediato");
 
+  html = renderCommercePricing(html, "estetica-facial");
   return new Response(html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
