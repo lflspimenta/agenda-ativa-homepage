@@ -52,12 +52,12 @@ const contentNavigation = `
 
 html = html.replace("  </style>", `${css}\n  </style>`);
 html = html.replace("  <footer class=\"footer\">", `${continuation}\n  <footer class=\"footer\">`);
-html = html.replace("  </article>\n\n  <!-- NEXT DAY", `  </article>\n\n${contentNavigation}\n  <!-- NEXT DAY`);
+html = html.replace(/  <\/article>\r?\n\r?\n  <!-- NEXT DAY/, `  </article>\n\n${contentNavigation}\n  <!-- NEXT DAY`);
 html = html.replace(
   '    <div class="progress-header">',
   '    <div class="completed-blocks" id="completedBlocks"></div>\n    <div class="progress-header">'
 );
-html = html.replace(/const DAYS=\[[\s\S]*?\n\];\n\nlet currentDay/, "const DAYS=__UNLOCKED_CONTENTS__;\nconst ACCESS_LIMIT=__ACCESS_LIMIT__;\n\nlet currentDay");
+html = html.replace(/const DAYS\s*=\s*\[[\s\S]*?\];\s*\n\s*let currentDay/, "const DAYS=__UNLOCKED_CONTENTS__;\nconst ACCESS_LIMIT=__ACCESS_LIMIT__;\n\nlet currentDay");
 html = html.replace("      renderDay(1);", "      const requestedDay = Number(new URLSearchParams(window.location.search).get(\"dia\"));\n      renderDay(Number.isInteger(requestedDay) && requestedDay >= 1 && requestedDay <= ACCESS_LIMIT ? requestedDay : 1);");
 html = html.replace("  currentDay = n;", "  currentDay = n;\n  const dayInBlock = ((n - 1) % 30) + 1;");
 html = html.replace(
@@ -75,7 +75,7 @@ html = html.replace(
 html = html.replace('(n / 30 * 100)', '(dayInBlock / 30 * 100)');
 html = html.replace('i + 1 < n ? " done" : i + 1 === n', 'i + 1 < dayInBlock ? " done" : i + 1 === dayInBlock');
 html = html.replace(
-  "  // Next day\n  const next = DAYS.find(x => x.num === n + 1);",
+  /  \/\/ Next day\r?\n  const next = DAYS\.find\(x => x\.num === n \+ 1\);/,
   `  // Navegação livre dentro de todos os conteúdos adquiridos.
   const previousContent = document.getElementById("previousContent");
   const nextContent = document.getElementById("nextContent");
@@ -153,7 +153,7 @@ html = html.replace(
   const next = DAYS.find(x => x.num === n + 1);`
 );
 
-if (html.includes("const DAYS=[") || !html.includes("__UNLOCKED_CONTENTS__") || !html.includes("__ACCESS_LIMIT__") || !html.includes("continuationPanel")) {
+if (/const DAYS\s*=\s*\[/.test(html) || !html.includes("__UNLOCKED_CONTENTS__") || !html.includes("__ACCESS_LIMIT__") || !html.includes("continuationPanel") || !html.includes("previousContent") || !html.includes("completedBlocks")) {
   throw new Error("Não foi possível gerar o template experimental com segurança.");
 }
 
