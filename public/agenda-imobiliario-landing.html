@@ -104,12 +104,17 @@ section{padding:62px 0}
 .compare-col{padding:34px 42px}
 .compare-col:first-child{border-right:1px solid var(--line)}
 .compare-col h3{font-size:32px;margin-bottom:20px}
-.price-box{margin-top:34px;border:1px solid var(--line);border-radius:8px;background:rgba(255,253,248,.72);display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center;padding:34px 52px}
+.price-box{margin-top:34px;border:1px solid var(--line);border-radius:8px;background:rgba(255,253,248,.72);padding:34px 52px}
 .price-box h2{font-size:clamp(32px,3.6vw,48px)}
-.price-card{border:1px solid var(--gold);border-radius:7px;padding:24px 34px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px}
-.price{font-family:Georgia,serif;font-size:64px;line-height:.9}
-.price small{font-family:Inter,sans-serif;font-size:18px}
-.price-text{color:#3D4240;font-size:13px}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.price-card{border:1px solid var(--line);border-radius:7px;padding:26px 24px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;background:#FFFDF8}
+.price-card.featured{border-color:var(--gold);box-shadow:0 12px 30px rgba(83,67,43,.09)}
+.plan-name{font-size:12px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.plan-contents{font-family:Georgia,serif;font-size:28px;line-height:1.1}
+.price{font-family:Georgia,serif;font-size:48px;line-height:1}
+.price small{font-family:Inter,sans-serif;font-size:12px;color:#5D625F}
+.price-text{color:#3D4240;font-size:13px;line-height:1.5;min-height:40px}
+.price-card .btn{width:100%;margin-top:auto;text-align:center}
 .faq{display:grid;gap:10px}
 .faq-item{background:rgba(255,253,248,.72);border:1px solid var(--line);border-radius:8px;padding:22px 26px}
 .faq-item h3{font-size:25px;margin-bottom:8px}
@@ -125,7 +130,8 @@ footer{padding:26px 0 42px;color:#5D625F;font-size:13px}
   .nav{align-items:center}
   .nav-links{display:none}
   .hero::before{background:linear-gradient(90deg,rgba(251,248,242,.98),rgba(251,248,242,.82) 55%,rgba(251,248,242,.08)),url("assets/hero-imobiliario.png") center right/cover no-repeat}
-  .benefit-box,.steps,.editorial-split,.content-card,.receive,.objection,.compare,.price-box,.price-card{grid-template-columns:1fr}
+  .benefit-box,.steps,.editorial-split,.content-card,.receive,.objection,.compare{grid-template-columns:1fr}
+  .plans-grid{grid-template-columns:1fr}
   .benefit{border-right:0;border-bottom:1px solid var(--line)}
   .benefit:last-child{border-bottom:0}
   .arrow,.divider{display:none}
@@ -183,7 +189,7 @@ footer{padding:26px 0 42px;color:#5D625F;font-size:13px}
       <h1>Ser lembrado antes de ser <em>necessário.</em></h1>
       <p>Um sistema editorial pronto a usar para consultores imobiliários portugueses que pretendem manter presença, confiança e autoridade sem perder horas a criar conteúdo.</p>
       <div class="actions">
-        <a class="btn" href="#preco">Ver oferta de lançamento — 24,25€</a>
+        <a class="btn" href="#preco">Ver opções disponíveis</a>
         <a class="btn secondary" href="#preview">Ver preview</a>
       </div>
     </div>
@@ -339,14 +345,31 @@ footer{padding:26px 0 42px;color:#5D625F;font-size:13px}
     <div class="price-box">
       <div>
         <div class="kicker">Edição Imobiliário</div>
-        <h2>Menos do que uma única publicação criada por uma agência.</h2>
-        <p style="margin-top:16px;color:#3D4240;">Menos do que um jantar por mês. Disponível durante todo o ano.</p>
+        <h2>Escolha até onde quer levar a sua presença ativa.</h2>
+        <p style="margin-top:16px;color:#3D4240;">Todos os planos são de pagamento único e dão acesso imediato aos conteúdos adquiridos.</p>
       </div>
-      <div class="price-card">
-        <div class="price"><span style="font-size:clamp(54px,6vw,82px);line-height:.9;">24,25€</span><small style="display:block;margin-top:8px;font-size:13px;text-decoration:line-through;opacity:.62;">97€</small><small style="display:block;margin-top:4px;">pagamento único</small></div>
-        <div class="price-text">Acesso à Agenda Ativa™ Imobiliário Edition.</div>
-        <a class="btn" href="https://buy.stripe.com/28EdR9a2Dc616z177YdjO0e">Quero a minha edição</a>
-        <div style="grid-column:1/-1;margin-top:6px;padding:12px 14px;border:1px solid rgba(176,141,87,.42);border-radius:9px;background:rgba(255,249,241,.92);font-size:13px;line-height:1.45;color:#5D625F;"><strong style="display:block;font-size:11px;letter-spacing:.11em;color:#9A5A2C;">OFERTA DE LANÇAMENTO · 75% DE DESCONTO</strong><span style="display:block;margin-top:3px;"><strong style="font-size:18px;color:#293139;">24,25€</strong> com o código <strong>PROMO</strong> · primeiros 25 clientes.</span></div>
+      <div class="plans-grid">
+        <article class="price-card">
+          <div class="plan-name">Entrada</div>
+          <div class="plan-contents">30 conteúdos</div>
+          <div class="price">97 € <small>pagamento único</small></div>
+          <div class="price-text">Comece com o primeiro bloco da Agenda Ativa™ Imobiliário.</div>
+          <a class="btn" href="/api/stripe/checkout/imobiliario?plano=30">Escolher Entrada</a>
+        </article>
+        <article class="price-card featured">
+          <div class="plan-name">Pro</div>
+          <div class="plan-contents">120 conteúdos</div>
+          <div class="price">227 € <small>pagamento único</small></div>
+          <div class="price-text">Quatro blocos de conteúdo estratégico prontos a publicar.</div>
+          <a class="btn" href="/api/stripe/checkout/imobiliario?plano=120">Escolher Pro</a>
+        </article>
+        <article class="price-card">
+          <div class="plan-name">Edição Completa</div>
+          <div class="plan-contents">360 conteúdos</div>
+          <div class="price">397 € <small>pagamento único</small></div>
+          <div class="price-text">Acesso integral aos 12 blocos da edição Imobiliário.</div>
+          <a class="btn" href="/api/stripe/checkout/imobiliario?plano=360">Escolher Edição Completa</a>
+        </article>
       </div>
     </div>
   </div>
@@ -364,7 +387,7 @@ footer{padding:26px 0 42px;color:#5D625F;font-size:13px}
   <div class="container">
     <h2>Hoje já está tratado.</h2>
     <p>Continue focado nos clientes. A sua comunicação permanece ativa.</p>
-    <a class="btn" href="https://buy.stripe.com/28EdR9a2Dc616z177YdjO0e">Quero a minha edição →</a>
+    <a class="btn" href="#preco">Escolher a minha edição →</a>
   </div>
 </section>
 
