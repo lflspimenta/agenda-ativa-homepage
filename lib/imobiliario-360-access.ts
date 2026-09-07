@@ -23,6 +23,7 @@ export async function requireImobiliarioAccess(request: Request) {
       accessLimit: isValidAccessLimit(configuredLimit)
         ? configuredLimit
         : DEFAULT_ACCESS_LIMIT,
+      firstName: "Luís",
       response: null
     };
   }
@@ -36,6 +37,7 @@ export async function requireImobiliarioAccess(request: Request) {
   if (authError || !user?.email) {
     return {
       accessLimit: 0,
+      firstName: null,
       response: NextResponse.redirect(new URL("/entrar?produto=imobiliario", request.url))
     };
   }
@@ -43,7 +45,7 @@ export async function requireImobiliarioAccess(request: Request) {
   const admin = createSupabaseAdminClient();
   const { data: buyer, error: buyerError } = await admin
     .from("users")
-    .select("products")
+    .select("first_name, products")
     .eq("email", user.email.toLowerCase())
     .maybeSingle();
 
@@ -55,11 +57,16 @@ export async function requireImobiliarioAccess(request: Request) {
   ) {
     return {
       accessLimit: 0,
+      firstName: null,
       response: NextResponse.redirect(
         new URL("/entrar?estado=sem_acesso&produto=imobiliario", request.url)
       )
     };
   }
 
-  return { accessLimit: getAccessLimit(buyer.products), response: null };
+  return {
+    accessLimit: getAccessLimit(buyer.products),
+    firstName: buyer.first_name?.trim() || null,
+    response: null
+  };
 }

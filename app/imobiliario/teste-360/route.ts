@@ -6,8 +6,22 @@ import { getUnlockedContents } from "@/lib/imobiliario-360";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+function escapeHtml(value: string) {
+  return value.replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]!
+  );
+}
+
 export async function GET(request: Request) {
-  const { accessLimit, response: accessResponse } = await requireImobiliarioAccess(request);
+  const { accessLimit, firstName, response: accessResponse } = await requireImobiliarioAccess(request);
   if (accessResponse) return accessResponse;
 
   const template = await readFile(
@@ -28,7 +42,8 @@ export async function GET(request: Request) {
   const serialized = JSON.stringify(unlockedContents).replace(/</g, "\\u003c");
   const html = template
     .replace("__UNLOCKED_CONTENTS__", serialized)
-    .replace("__ACCESS_LIMIT__", String(accessLimit));
+    .replace("__ACCESS_LIMIT__", String(accessLimit))
+    .replace("Olá, Luís", firstName ? `Olá, ${escapeHtml(firstName)}` : "Olá");
 
   return new Response(html, {
     headers: {
