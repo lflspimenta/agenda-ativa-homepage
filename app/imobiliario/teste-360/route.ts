@@ -40,9 +40,11 @@ export async function GET(request: Request) {
     resultado: content.expectedResult
   }));
   const serialized = JSON.stringify(unlockedContents).replace(/</g, "\\u003c");
+  const checkoutEnabled = new URL(request.url).pathname === "/imobiliario/teste-360";
   const html = template
     .replace("__UNLOCKED_CONTENTS__", serialized)
     .replace("__ACCESS_LIMIT__", String(accessLimit))
+    .replace("__CONTINUATION_CHECKOUT_ENABLED__", String(checkoutEnabled))
     .replace("Olá, Luís", firstName ? `Olá, ${escapeHtml(firstName)}` : "Olá");
 
   return new Response(html, {

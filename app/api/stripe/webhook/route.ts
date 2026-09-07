@@ -3,6 +3,10 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { createSupabaseAdminClient } from "@/lib/supabase-server";
 import { requiredEnv } from "@/lib/env";
+import {
+  isValidContentLimit,
+  setProductAccessLimit
+} from "@/lib/stripe-entitlements";
 
 export const runtime = "nodejs";
 
@@ -18,6 +22,7 @@ type AgendaProduct =
   | "unhas";
 
 const paidProducts: AgendaProduct[] = [
+  "wedding",
   "imobiliario",
   "fotografos",
   "estetica_facial",
@@ -141,7 +146,15 @@ async function getProductFromSession(
   return typeof product !== "string" &&
     paidProducts.includes(product?.metadata?.product as AgendaProduct)
     ? (product?.metadata?.product as AgendaProduct)
-    : "wedding";
+    : null;
+}
+
+function getTargetLimit(session: Stripe.Checkout.Session) {
+  const rawLimit = session.metadata?.target_limit;
+  if (!rawLimit) return null;
+
+  const limit = Number(rawLimit);
+  return isValidContentLimit(limit) ? limit : null;
 }
 
 export async function POST(request: Request) {
@@ -177,6 +190,15 @@ export async function POST(request: Request) {
     const purchaseDate = new Date().toISOString();
     const firstName = getFirstName(session.customer_details?.name);
     const product = await getProductFromSession(stripe, session);
+    if (!product) {
+      console.error(`Stripe product not recognised for session ${session.id}`);
+      return NextResponse.json({ error: "Unrecognised product" }, { status: 422 });
+    }
+    const targetLimit = getTargetLimit(session);
+    if (session.metadata?.target_limit && targetLimit === null) {
+      console.error(`Invalid target_limit for session ${session.id}`);
+      return NextResponse.json({ error: "Invalid access limit" }, { status: 422 });
+    }
     let isNewPurchase = false;
 
     const { data: existing } = await admin
@@ -204,7 +226,12 @@ export async function POST(request: Request) {
         unhas_purchase_date?: string;
       } = {};
 
-      if (!products.includes(product)) {
+      if (targetLimit !== null) {
+        const updatedProducts = setProductAccessLimit(products, product, targetLimit);
+        if (JSON.stringify(updatedProducts) !== JSON.stringify(products)) {
+          updates.products = updatedProducts;
+        }
+      } else if (!products.includes(product)) {
         updates.products = [...products, product];
       }
 
@@ -255,7 +282,10 @@ export async function POST(request: Request) {
         email,
         first_name: firstName,
         purchase_date: purchaseDate,
-        products: [product],
+        products:
+          targetLimit === null
+            ? [product]
+            : setProductAccessLimit([], product, targetLimit),
         wedding_purchase_date: product === "wedding" ? purchaseDate : null,
         imobiliario_purchase_date:
           product === "imobiliario" ? purchaseDate : null,

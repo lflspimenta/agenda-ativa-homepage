@@ -898,6 +898,7 @@
 <script>
 const DAYS=__UNLOCKED_CONTENTS__;
 const ACCESS_LIMIT=__ACCESS_LIMIT__;
+const CONTINUATION_CHECKOUT_ENABLED=__CONTINUATION_CHECKOUT_ENABLED__;
 
 let currentDay = 1;
 
@@ -994,8 +995,29 @@ function renderDay(n) {
       title.textContent = "Quer continuar?";
       copy.textContent = "Tem mais 30 conteúdos estratégicos preparados para continuar a sua presença ativa.";
       button.textContent = "Desbloquear próximos 30 conteúdos";
-      button.setAttribute("aria-disabled", "true");
-      button.onclick = null;
+      if (CONTINUATION_CHECKOUT_ENABLED) {
+        button.removeAttribute("aria-disabled");
+        button.onclick = async () => {
+          button.disabled = true;
+          const originalLabel = button.textContent;
+          button.textContent = "A preparar checkout…";
+          try {
+            const response = await fetch("/api/stripe/checkout/imobiliario-continuacao", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" }
+            });
+            const result = await response.json();
+            if (!response.ok || !result.url) throw new Error("Checkout unavailable");
+            window.location.assign(result.url);
+          } catch {
+            button.disabled = false;
+            button.textContent = originalLabel;
+          }
+        };
+      } else {
+        button.setAttribute("aria-disabled", "true");
+        button.onclick = null;
+      }
       blockState.textContent = "🔒 Conteúdos " + nextStart + "–" + nextEnd;
     }
   }
