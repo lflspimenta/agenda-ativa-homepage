@@ -8,6 +8,9 @@ let html = await readFile(sourcePath, "utf8");
 const css = `
     /* Extensão 360 experimental: visível exclusivamente no final do Dia 30 */
     .completed-blocks { display:none; margin-bottom:7px; color:var(--rose); font-size:10px; font-weight:600; letter-spacing:.06em; }
+    .content-navigation { display:flex; gap:10px; margin:0 0 20px; }
+    .content-navigation button { flex:1; min-height:48px; border:1px solid var(--line); border-radius:5px; background:var(--surface); color:var(--ink); cursor:pointer; font:600 11px var(--sans); letter-spacing:.07em; text-transform:uppercase; }
+    .content-navigation button:hover { border-color:var(--rose); }
     .continuation-panel { display:none; margin:0 0 28px; border:1px solid var(--line); border-top:3px solid var(--rose); border-radius:6px; background:var(--surface); box-shadow:0 12px 32px rgba(31,49,59,.07); overflow:hidden; }
     .continuation-panel.show { display:block; }
     .continuation-main { padding:28px 24px 24px; }
@@ -40,8 +43,16 @@ const continuation = `
   </section>
 `;
 
+const contentNavigation = `
+  <nav class="content-navigation" aria-label="Navegação entre conteúdos">
+    <button id="previousContent" type="button">← Conteúdo anterior</button>
+    <button id="nextContent" type="button">Conteúdo seguinte →</button>
+  </nav>
+`;
+
 html = html.replace("  </style>", `${css}\n  </style>`);
 html = html.replace("  <footer class=\"footer\">", `${continuation}\n  <footer class=\"footer\">`);
+html = html.replace("  </article>\n\n  <!-- NEXT DAY", `  </article>\n\n${contentNavigation}\n  <!-- NEXT DAY`);
 html = html.replace(
   '    <div class="progress-header">',
   '    <div class="completed-blocks" id="completedBlocks"></div>\n    <div class="progress-header">'
@@ -63,6 +74,23 @@ html = html.replace(
 );
 html = html.replace('(n / 30 * 100)', '(dayInBlock / 30 * 100)');
 html = html.replace('i + 1 < n ? " done" : i + 1 === n', 'i + 1 < dayInBlock ? " done" : i + 1 === dayInBlock');
+html = html.replace(
+  "  // Next day\n  const next = DAYS.find(x => x.num === n + 1);",
+  `  // Navegação livre dentro de todos os conteúdos adquiridos.
+  const previousContent = document.getElementById("previousContent");
+  const nextContent = document.getElementById("nextContent");
+  if (previousContent) {
+    previousContent.style.display = n > 1 ? "" : "none";
+    previousContent.onclick = n > 1 ? () => { renderDay(n - 1); window.scrollTo({top:0,behavior:"smooth"}); } : null;
+  }
+  if (nextContent) {
+    nextContent.style.display = n < ACCESS_LIMIT ? "" : "none";
+    nextContent.onclick = n < ACCESS_LIMIT ? () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); } : null;
+  }
+
+  // Next day
+  const next = DAYS.find(x => x.num === n + 1);`
+);
 html = html.replace(
   `  const nextCard = document.querySelector(".next-card");
   if (next && nextCard) {
