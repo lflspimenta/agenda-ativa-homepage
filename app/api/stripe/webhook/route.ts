@@ -158,7 +158,10 @@ function getTargetLimit(session: Stripe.Checkout.Session) {
 }
 
 export async function POST(request: Request) {
-  const stripe = new Stripe(requiredEnv("STRIPE_SECRET_KEY"));
+  const previewEnvironment = process.env.VERCEL_ENV === "preview";
+  const stripe = new Stripe(
+    requiredEnv(previewEnvironment ? "STRIPE_TEST_SECRET_KEY" : "STRIPE_SECRET_KEY")
+  );
   const signature = request.headers.get("stripe-signature");
   const body = await request.text();
 
@@ -172,7 +175,9 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      requiredEnv("STRIPE_WEBHOOK_SECRET")
+      requiredEnv(
+        previewEnvironment ? "STRIPE_TEST_WEBHOOK_SECRET" : "STRIPE_WEBHOOK_SECRET"
+      )
     );
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });

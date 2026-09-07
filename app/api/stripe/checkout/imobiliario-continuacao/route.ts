@@ -6,6 +6,14 @@ import { CONTENT_LIMIT_MAX, CONTENT_LIMIT_STEP, getProductAccessLimit } from "@/
 
 export const runtime = "nodejs";
 
+function stripeSecretKey() {
+  return requiredEnv(
+    process.env.VERCEL_ENV === "preview"
+      ? "STRIPE_TEST_SECRET_KEY"
+      : "STRIPE_SECRET_KEY"
+  );
+}
+
 export async function POST(request: Request) {
   const supabase = createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -35,13 +43,17 @@ export async function POST(request: Request) {
   }
 
   const targetLimit = Math.min(currentLimit + CONTENT_LIMIT_STEP, CONTENT_LIMIT_MAX);
-  const stripe = new Stripe(requiredEnv("STRIPE_SECRET_KEY"));
-  const appUrl = requiredEnv("NEXT_PUBLIC_APP_URL");
+  const stripe = new Stripe(stripeSecretKey());
+  const appUrl = new URL(request.url).origin;
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     customer_email: email,
     line_items: [{
-      price: requiredEnv("STRIPE_IMOBILIARIO_CONTINUATION_PRICE_ID"),
+      price: requiredEnv(
+        process.env.VERCEL_ENV === "preview"
+          ? "STRIPE_TEST_IMOBILIARIO_CONTINUATION_PRICE_ID"
+          : "STRIPE_IMOBILIARIO_CONTINUATION_PRICE_ID"
+      ),
       quantity: 1
     }],
     metadata: {
