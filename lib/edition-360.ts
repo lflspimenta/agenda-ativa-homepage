@@ -143,3 +143,21 @@ export function getEdition360Content(contents: Edition360Content[], number: numb
   if (!Number.isInteger(number) || number < 1 || number > accessLimit) return null;
   return contents[number - 1] ?? null;
 }
+
+export async function serveEdition360Content(
+  request: Request,
+  config: Edition360Config,
+  contents: Edition360Content[],
+  number: number
+) {
+  const { accessLimit, response } = await requireEdition360Access(request, config);
+  if (response) return response;
+  const content = getEdition360Content(contents, number, accessLimit);
+  if (!content) return new NextResponse("Conteúdo ainda não disponível.", {
+    status: 403,
+    headers: { "Cache-Control": "private, no-store, max-age=0" }
+  });
+  return NextResponse.json(content, {
+    headers: { "Cache-Control": "private, no-store, max-age=0" }
+  });
+}
