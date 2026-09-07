@@ -907,6 +907,16 @@ h1{
   text-transform:uppercase;
 }
 .price-card .landing-cta{margin-top:28px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;max-width:1160px;margin:40px auto 0;align-items:stretch}
+.pricing-grid .price-card{margin:0;max-width:none;display:flex;flex-direction:column;text-align:left;position:relative}
+.pricing-grid .price-card p{font-size:15px;line-height:1.55;flex:1}
+.pricing-grid .landing-cta{width:100%;font-size:11px;padding:18px 14px;letter-spacing:.1em;text-align:center}
+.plan-name{text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:800;color:var(--landing-rose)}
+.plan-content-count{font-family:var(--font-cormorant),serif;font-size:31px;line-height:1.1;margin-top:14px}
+.plan-price{font-family:var(--font-cormorant),serif;font-size:68px;line-height:1;margin:18px 0 12px}
+.plan-featured{border-color:rgba(180,91,72,.5);transform:translateY(-10px)}
+.plan-badge{position:absolute;top:-14px;right:24px;background:var(--landing-rose);color:#fff;border-radius:999px;padding:7px 12px;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.pricing-note{display:block;margin:28px auto 0;color:var(--landing-muted);font-size:13px}
 .landing-cta{display:inline-flex;align-items:center;justify-content:center;gap:18px;background:var(--landing-rose);color:white;border-radius:7px;padding:22px 32px;width:480px;max-width:100%;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:14px;box-shadow:0 20px 38px rgba(152,96,86,.25);transition:.25s ease}
 .landing-cta:hover{transform:translateY(-2px);background:var(--landing-rose-dark)}
 
@@ -958,6 +968,8 @@ h1{
   .product-glimpse-frame{width:min(280px,100%)}
   .faq-list div{grid-template-columns:1fr;gap:8px;padding:22px 0}
   .price-card{padding:34px 24px}
+  .pricing-grid{grid-template-columns:1fr;gap:18px}
+  .plan-featured{transform:none}
   .landing-cta{padding:18px 14px;font-size:11px;letter-spacing:.12em;gap:10px}
 }
 

@@ -1,7 +1,8 @@
 import { LoginSessionHandler } from "../entrar/login-session-handler";
 
 export default function ImobiliarioLandingPage() {
-  const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_IMOBILIARIO_LINK ?? "#";
+  const checkoutLink = (plan: 30 | 120 | 360) =>
+    `/api/stripe/checkout/imobiliario?plano=${plan}`;
 
   return (
     <main className="landing">
@@ -47,7 +48,7 @@ export default function ImobiliarioLandingPage() {
               </span>
             </div>
 
-            <a className="landing-cta landing-mobile-cta" href={stripePaymentLink}>
+            <a className="landing-cta landing-mobile-cta" href={checkoutLink(30)}>
               QUERO A MINHA AGENDA ATIVA™
             </a>
           </div>
@@ -163,20 +164,33 @@ export default function ImobiliarioLandingPage() {
       <section className="price-section" id="comprar">
         <h2>Pronto para ter o Instagram sob controlo?</h2>
         <p>Pagamento único. Sem mensalidades. Sem subscrições. Acesso imediato.</p>
-        <div className="price-card">
-          <div className="price-value-title">O que recebe hoje</div>
-          <div className="price-includes">
-            <div><span>✓</span>30 dias de conteúdo prontos a publicar</div>
-            <div><span>✓</span>Legendas preparadas</div>
-            <div><span>✓</span>CTA incluída</div>
-            <div><span>✓</span>Menos de 5 minutos por dia</div>
-            <div><span>✓</span>Acesso imediato</div>
-          </div>
-          <p>Pagamento único. Sem mensalidades. Sem subscrições.</p>
-          <a className="landing-cta" href={stripePaymentLink}>
-            QUERO A MINHA AGENDA ATIVA™ →
-          </a>
+        <div className="pricing-grid">
+          <article className="price-card plan-card">
+            <div className="plan-name">Entrada</div>
+            <div className="plan-content-count">30 conteúdos</div>
+            <div className="plan-price">97€</div>
+            <p>Uma primeira sequência estratégica pronta a publicar.</p>
+            <a className="landing-cta" href={checkoutLink(30)}>ESCOLHER ENTRADA →</a>
+          </article>
+
+          <article className="price-card plan-card plan-featured">
+            <div className="plan-badge">Mais escolhido</div>
+            <div className="plan-name">Pro</div>
+            <div className="plan-content-count">120 conteúdos</div>
+            <div className="plan-price">227€</div>
+            <p>Quatro blocos de conteúdo para uma presença mais consistente.</p>
+            <a className="landing-cta" href={checkoutLink(120)}>ESCOLHER PRO →</a>
+          </article>
+
+          <article className="price-card plan-card">
+            <div className="plan-name">Edição Completa</div>
+            <div className="plan-content-count">360 conteúdos</div>
+            <div className="plan-price">397€</div>
+            <p>A biblioteca completa para manter a comunicação ativa.</p>
+            <a className="landing-cta" href={checkoutLink(360)}>ESCOLHER EDIÇÃO COMPLETA →</a>
+          </article>
         </div>
+        <small className="pricing-note">Cada opção é um pagamento único. Pode desbloquear mais 30 conteúdos posteriormente.</small>
       </section>
 
       <section className="landing-faq" aria-label="Perguntas frequentes">
@@ -192,8 +206,8 @@ export default function ImobiliarioLandingPage() {
 
       <section className="landing-final">
         <p>Continue focado nos clientes. O Instagram continua ativo.</p>
-        <a className="landing-cta" href={stripePaymentLink}>
-          QUERO A MINHA AGENDA ATIVA™ →
+        <a className="landing-cta" href="#comprar">
+          ESCOLHER A MINHA EDIÇÃO →
         </a>
         <small>Acesso imediato após compra.</small>
       </section>
