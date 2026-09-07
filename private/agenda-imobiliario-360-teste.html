@@ -665,6 +665,7 @@
     @media(prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 
     /* Extensão 360 experimental: visível exclusivamente no final do Dia 30 */
+    .completed-blocks { display:none; margin-bottom:7px; color:var(--rose); font-size:10px; font-weight:600; letter-spacing:.06em; }
     .continuation-panel { display:none; margin:0 0 28px; border:1px solid var(--line); border-top:3px solid var(--rose); border-radius:6px; background:var(--surface); box-shadow:0 12px 32px rgba(31,49,59,.07); overflow:hidden; }
     .continuation-panel.show { display:block; }
     .continuation-main { padding:28px 24px 24px; }
@@ -711,6 +712,7 @@
 
   <!-- PROGRESS — FIX 4: celebratory today dot -->
   <div class="progress animate d2">
+    <div class="completed-blocks" id="completedBlocks"></div>
     <div class="progress-header">
       <span class="progress-label">O teu progresso</span>
       <span class="progress-count" id="progressCount">Dia 1 de 30</span>
@@ -944,6 +946,12 @@ function renderDay(n) {
   const blockStart = n - dayInBlock + 1;
   const blockEnd = blockStart + 29;
   document.querySelector(".progress-label").textContent = "Conteúdos " + blockStart + "–" + blockEnd;
+  const completedBlocks = document.getElementById("completedBlocks");
+  if (completedBlocks) {
+    const completedEnd = blockStart - 1;
+    completedBlocks.textContent = completedEnd > 0 ? "✓ Conteúdos 1–" + completedEnd + " concluídos" : "";
+    completedBlocks.style.display = completedEnd > 0 ? "block" : "none";
+  }
 
   // Progress bar
   document.getElementById("pFill").style.width = (dayInBlock / 30 * 100) + "%";
@@ -986,15 +994,18 @@ function renderDay(n) {
 
   // Next day
   const next = DAYS.find(x => x.num === n + 1);
-  const nextCard = document.querySelector(".next-card");
-  if (next && nextCard && n % 30 !== 0) {
-    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
-    document.getElementById("nextTopic").textContent = next.title;
-    nextCard.style.display = "";
-    nextCard.style.cursor = "pointer";
-    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
-  } else if (nextCard) {
-    nextCard.style.display = "none";
+  const nextCards = document.querySelectorAll(".next-card, .next-sidebar");
+  if (next && n % 30 !== 0) {
+    document.querySelectorAll(".next-label").forEach(el => { el.textContent = "Próximo — Dia " + (dayInBlock + 1); });
+    document.querySelectorAll(".next-topic").forEach(el => { el.textContent = next.title; });
+    document.querySelectorAll(".next-pilar").forEach(el => { el.textContent = next.pilar || "Estratégia"; });
+    nextCards.forEach(nextCard => {
+      nextCard.style.display = "";
+      nextCard.style.cursor = "pointer";
+      nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
+    });
+  } else {
+    nextCards.forEach(nextCard => { nextCard.style.display = "none"; });
   }
 }
 
