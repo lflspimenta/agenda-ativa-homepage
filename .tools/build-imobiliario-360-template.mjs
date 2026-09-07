@@ -44,7 +44,18 @@ html = html.replace("  <footer class=\"footer\">", `${continuation}\n  <footer c
 html = html.replace(/const DAYS=\[[\s\S]*?\n\];\n\nlet currentDay/, "const DAYS=__UNLOCKED_CONTENTS__;\nconst ACCESS_LIMIT=__ACCESS_LIMIT__;\n\nlet currentDay");
 html = html.replace("      renderDay(1);", "      const requestedDay = Number(new URLSearchParams(window.location.search).get(\"dia\"));\n      renderDay(Number.isInteger(requestedDay) && requestedDay >= 1 && requestedDay <= ACCESS_LIMIT ? requestedDay : 1);");
 html = html.replace("  currentDay = n;", "  currentDay = n;\n  const dayInBlock = ((n - 1) % 30) + 1;");
-html = html.replaceAll('"Dia " + n + " de 30"', '"Dia " + dayInBlock + " de 30"');
+html = html.replace(
+  'document.getElementById("navPill").textContent = "Dia " + n + " de 30";',
+  'document.getElementById("navPill").textContent = "Conteúdo " + n + " de " + ACCESS_LIMIT;'
+);
+html = html.replace(
+  'document.getElementById("progressCount").textContent = "Dia " + n + " de 30";',
+  'document.getElementById("progressCount").textContent = "Dia " + dayInBlock + " de 30";'
+);
+html = html.replace(
+  '  // Progress bar\n  document.getElementById("pFill")',
+  '  const blockStart = n - dayInBlock + 1;\n  const blockEnd = blockStart + 29;\n  document.querySelector(".progress-label").textContent = "Conteúdos " + blockStart + "–" + blockEnd;\n\n  // Progress bar\n  document.getElementById("pFill")'
+);
 html = html.replace('(n / 30 * 100)', '(dayInBlock / 30 * 100)');
 html = html.replace('i + 1 < n ? " done" : i + 1 === n', 'i + 1 < dayInBlock ? " done" : i + 1 === dayInBlock');
 html = html.replace("  if (next && nextCard) {", "  if (next && nextCard && n % 30 !== 0) {");
