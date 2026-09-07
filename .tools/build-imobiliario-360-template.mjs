@@ -92,16 +92,7 @@ html = html.replace(
   const next = DAYS.find(x => x.num === n + 1);`
 );
 html = html.replace(
-  `  const nextCard = document.querySelector(".next-card");
-  if (next && nextCard) {
-    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
-    document.getElementById("nextTopic").textContent = next.title;
-    nextCard.style.display = "";
-    nextCard.style.cursor = "pointer";
-    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
-  } else if (nextCard) {
-    nextCard.style.display = "none";
-  }`,
+  /  const nextCard = document\.querySelector\("\.next-card"\);\r?\n  if \(next && nextCard\) \{[\s\S]*?  \} else if \(nextCard\) \{\r?\n    nextCard\.style\.display = "none";\r?\n  \}/,
   `  const nextCards = document.querySelectorAll(".next-card, .next-sidebar");
   if (next && n % 30 !== 0) {
     document.querySelectorAll(".next-label").forEach(el => { el.textContent = "Próximo — Dia " + (dayInBlock + 1); });

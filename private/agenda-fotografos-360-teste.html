@@ -1005,15 +1005,18 @@ function renderDay(n) {
 
   // Next day
   const next = DAYS.find(x => x.num === n + 1);
-  const nextCard = document.querySelector(".next-card");
-  if (next && nextCard) {
-    document.getElementById("nextLabel").textContent = "Próximo — Dia " + (n + 1);
-    document.getElementById("nextTopic").textContent = next.title;
-    nextCard.style.display = "";
-    nextCard.style.cursor = "pointer";
-    nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
-  } else if (nextCard) {
-    nextCard.style.display = "none";
+  const nextCards = document.querySelectorAll(".next-card, .next-sidebar");
+  if (next && n % 30 !== 0) {
+    document.querySelectorAll(".next-label").forEach(el => { el.textContent = "Próximo — Dia " + (dayInBlock + 1); });
+    document.querySelectorAll(".next-topic").forEach(el => { el.textContent = next.title; });
+    document.querySelectorAll(".next-pilar").forEach(el => { el.textContent = next.pilar || "Estratégia"; });
+    nextCards.forEach(nextCard => {
+      nextCard.style.display = "";
+      nextCard.style.cursor = "pointer";
+      nextCard.onclick = () => { renderDay(n + 1); window.scrollTo({top:0,behavior:"smooth"}); };
+    });
+  } else {
+    nextCards.forEach(nextCard => { nextCard.style.display = "none"; });
   }
 }
 
