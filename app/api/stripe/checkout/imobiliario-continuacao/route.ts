@@ -49,11 +49,14 @@ export async function POST(request: Request) {
     mode: "payment",
     customer_email: email,
     line_items: [{
-      price: requiredEnv(
-        process.env.VERCEL_ENV === "preview"
-          ? "STRIPE_TEST_IMOBILIARIO_CONTINUATION_PRICE_ID"
-          : "STRIPE_IMOBILIARIO_CONTINUATION_PRICE_ID"
-      ),
+      price_data: {
+        currency: "eur",
+        unit_amount: 6700,
+        product_data: {
+          name: `Agenda Ativa™ Imobiliário — conteúdos ${currentLimit + 1}–${targetLimit}`,
+          metadata: { product: "imobiliario", target_limit: String(targetLimit) }
+        }
+      },
       quantity: 1
     }],
     metadata: {

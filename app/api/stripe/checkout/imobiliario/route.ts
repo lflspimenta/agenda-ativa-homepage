@@ -5,9 +5,9 @@ import { requiredEnv } from "@/lib/env";
 export const runtime = "nodejs";
 
 const entryPlans = {
-  30: "IMOBILIARIO_30_PRICE_ID",
-  120: "IMOBILIARIO_120_PRICE_ID",
-  360: "IMOBILIARIO_360_PRICE_ID"
+  30: 9700,
+  120: 22700,
+  360: 39700
 } as const;
 
 type EntryLimit = keyof typeof entryPlans;
@@ -24,15 +24,6 @@ function stripeSecretKey() {
   );
 }
 
-function priceId(limit: EntryLimit) {
-  const baseName = entryPlans[limit];
-  return requiredEnv(
-    process.env.VERCEL_ENV === "preview"
-      ? `STRIPE_TEST_${baseName}`
-      : `STRIPE_${baseName}`
-  );
-}
-
 async function createCheckoutSession(request: Request, limit: EntryLimit, email?: string) {
   const stripe = new Stripe(stripeSecretKey());
   const appUrl = new URL(request.url).origin;
@@ -40,7 +31,17 @@ async function createCheckoutSession(request: Request, limit: EntryLimit, email?
   return stripe.checkout.sessions.create({
     mode: "payment",
     customer_email: email?.trim().toLowerCase() || undefined,
-    line_items: [{ price: priceId(limit), quantity: 1 }],
+    line_items: [{
+      price_data: {
+        currency: "eur",
+        unit_amount: entryPlans[limit],
+        product_data: {
+          name: `Agenda Ativa™ Imobiliário — ${limit} conteúdos`,
+          metadata: { product: "imobiliario", target_limit: String(limit) }
+        }
+      },
+      quantity: 1
+    }],
     metadata: {
       product: "imobiliario",
       purchase_type: "initial",
