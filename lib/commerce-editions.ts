@@ -36,5 +36,8 @@ export function renderCommercePricing(html: string, slug: CommerceEditionSlug) {
     .replace("</head>", `${css}</head>`)
     .replace(/Ver oferta de lançamento\s*—\s*24,25€/gi, "Ver opções disponíveis")
     .replace(/<section id="preco">[\s\S]*?<\/section>/, section)
-    .replace(/<a class="btn" href="[^"]*">Quero a minha edição →<\/a>/g, '<a class="btn" href="#preco">Escolher a minha edição →</a>');
+    .replace(
+      /<a class="btn" href="[^"]*">Quero (?:a minha edição|a Fotógrafos Edition)(?: →)?<\/a>/gi,
+      '<a class="btn" href="#preco">Escolher a minha edição →</a>'
+    );
 }

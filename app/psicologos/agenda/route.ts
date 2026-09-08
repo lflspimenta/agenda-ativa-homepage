@@ -1,8 +1,10 @@
-import { GET as getPsicologos360 } from "@/app/psicologos/teste-360/route";
+import contents from "@/private/psicologos-360.json";
+import { serveEdition360 } from "@/lib/edition-360";
+import { psicologos360Config } from "@/lib/additional-editions-360-config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  return getPsicologos360(request);
+  return serveEdition360(request, psicologos360Config, contents);
 }

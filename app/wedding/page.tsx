@@ -4,7 +4,8 @@ import { track } from "@vercel/analytics";
 import { LoginSessionHandler } from "../entrar/login-session-handler";
 
 export default function LandingPage() {
-  const stripePaymentLink = "https://buy.stripe.com/bJeeVddeP6LH5uXcsidjO00";
+  const checkoutLink = (limit: 30 | 120 | 360) =>
+    `/api/stripe/checkout/wedding?plano=${limit}`;
 
   return (
     <main className="landing">
@@ -19,7 +20,7 @@ export default function LandingPage() {
             src="/hero_agenda_ativa_wedding_v10_5_left_hierarchy.png"
             alt="Agenda Ativa Wedding Planner"
           />
-          <a className="landing-hero-cta" href={stripePaymentLink} aria-label="Quero a minha Agenda Ativa" onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "hero_desktop" })} />
+          <a className="landing-hero-cta" href="#comprar" aria-label="Ver opções da Agenda Ativa" />
         </div>
 
         <div className="landing-hero-mobile">
@@ -69,8 +70,8 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <a className="landing-cta landing-mobile-cta" href={stripePaymentLink} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "hero_mobile" })}>
-              QUERO A MINHA AGENDA ATIVA™
+            <a className="landing-cta landing-mobile-cta" href="#comprar">
+              VER OPÇÕES
             </a>
           </div>
         </div>
@@ -178,18 +179,31 @@ export default function LandingPage() {
       <section className="price-section" id="comprar">
         <h2>Pronta para ter o Instagram sob controlo?</h2>
         <p>Pagamento único. Sem mensalidades. Sem subscrições. Acesso imediato.</p>
-        <div className="price-card">
-          <div className="price-value-title">O que recebe hoje</div>
-          <div className="price-includes">
-            <div><span>✓</span>30 dias de conteúdo prontos a publicar</div>
-            <div><span>✓</span>Legendas preparadas</div>
-            <div><span>✓</span>CTA incluída</div>
-            <div><span>✓</span>Menos de 5 minutos por dia</div>
-            <div><span>✓</span>Acesso imediato</div>
-          </div>
-          <p>Pagamento único. Sem mensalidades. Sem subscrições.</p>
-          <a className="landing-cta" href={stripePaymentLink} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "pricing" })}>QUERO A MINHA AGENDA ATIVA™ →</a>
+        <div className="pricing-grid">
+          <article className="price-card plan-card">
+            <div className="plan-name">Entrada</div>
+            <div className="plan-content-count">30 conteúdos</div>
+            <div className="plan-price">97€</div>
+            <p>Uma primeira sequência estratégica pronta a publicar.</p>
+            <a className="landing-cta" href={checkoutLink(30)} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "pricing_30" })}>ESCOLHER ENTRADA →</a>
+          </article>
+          <article className="price-card plan-card plan-featured">
+            <div className="plan-badge">Mais escolhido</div>
+            <div className="plan-name">Pro</div>
+            <div className="plan-content-count">120 conteúdos</div>
+            <div className="plan-price">227€</div>
+            <p>Quatro blocos de conteúdo para uma presença mais consistente.</p>
+            <a className="landing-cta" href={checkoutLink(120)} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "pricing_120" })}>ESCOLHER PRO →</a>
+          </article>
+          <article className="price-card plan-card">
+            <div className="plan-name">Edição Completa</div>
+            <div className="plan-content-count">360 conteúdos</div>
+            <div className="plan-price">397€</div>
+            <p>A biblioteca completa para manter a comunicação ativa.</p>
+            <a className="landing-cta" href={checkoutLink(360)} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "pricing_360" })}>ESCOLHER EDIÇÃO COMPLETA →</a>
+          </article>
         </div>
+        <small className="pricing-note">Cada opção é um pagamento único. Pode desbloquear mais 30 conteúdos posteriormente.</small>
       </section>
 
       <section className="landing-faq" aria-label="Perguntas frequentes">
@@ -205,7 +219,7 @@ export default function LandingPage() {
 
       <section className="landing-final">
         <p>Continue focada nos noivos. O Instagram continua ativo.</p>
-        <a className="landing-cta" href={stripePaymentLink} onClick={() => track("wedding_checkout_click", { source: "wedding_landing", position: "final_cta" })}>QUERO A MINHA AGENDA ATIVA™ →</a>
+        <a className="landing-cta" href="#comprar">VER OPÇÕES →</a>
         <small>Acesso imediato após compra.</small>
       </section>
     </main>

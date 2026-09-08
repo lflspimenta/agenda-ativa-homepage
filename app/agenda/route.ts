@@ -1,8 +1,10 @@
-import { GET as getWedding360 } from "@/app/wedding/teste-360/route";
+import contents from "@/private/wedding-360.json";
+import { serveEdition360 } from "@/lib/edition-360";
+import { wedding360Config } from "@/lib/wedding-360-config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  return getWedding360(request);
+  return serveEdition360(request, wedding360Config, contents);
 }
