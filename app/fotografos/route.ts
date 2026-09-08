@@ -6,7 +6,6 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const stripePaymentLink = process.env.NEXT_PUBLIC_STRIPE_FOTOGRAFOS_LINK ?? "#";
   const htmlTemplate = await readFile(
     path.join(process.cwd(), "private", "landing-fotografos.html"),
     "utf8"
@@ -22,8 +21,6 @@ export async function GET() {
     .replace(/src="fotografa-evento-exterior\.png"/g, 'src="/assets/fotografos/fotografa-evento-exterior.png"')
     .replace(/href="#" aria-label=/g, 'href="/" aria-label=')
     .replace(/href="#">Voltar/g, 'href="/">Voltar')
-    .replace(/href="#">Quero a Fotógrafos Edition/g, `href="${stripePaymentLink}">Quero a Fotógrafos Edition`)
-    .replace(/href="#">Quero a minha edição/g, `href="${stripePaymentLink}">Quero a minha edição`)
     .replace(/O botão de pagamento será ligado depois da aprovação\./g, "Acesso imediato após compra.")
     .replace(/Pré-visualização para aprovação/g, "Acesso digital imediato");
 

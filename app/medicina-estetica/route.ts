@@ -6,8 +6,6 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const stripePaymentLink =
-    process.env.NEXT_PUBLIC_STRIPE_MEDICINA_ESTETICA_LINK ?? "#";
   const htmlTemplate = await readFile(
     path.join(process.cwd(), "private", "landing-medicina-estetica.html"),
     "utf8"
@@ -48,10 +46,7 @@ export async function GET() {
       /src="\.\.\/imagens\/consulta-medicina-estetica\.png"/g,
       'src="/assets/medicina-estetica/consulta-medicina-estetica.png"'
     )
-    .replace(/href="\/" aria-label=/g, 'href="/" aria-label=')
-    .replace(/href="#preco">Quero a minha edição/g, `href="#preco">Quero a minha edição`)
-    .replace(/href="#">Quero a minha edição/g, `href="${stripePaymentLink}">Quero a minha edição`)
-    .replace(/href="#">Quero a minha edição →/g, `href="${stripePaymentLink}">Quero a minha edição →`);
+    .replace(/href="\/" aria-label=/g, 'href="/" aria-label=');
 
   html = renderCommercePricing(html, "medicina-estetica");
   return new Response(html, {

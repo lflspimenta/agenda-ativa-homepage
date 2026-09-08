@@ -6,9 +6,6 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const stripePaymentLink =
-    process.env.NEXT_PUBLIC_STRIPE_UNHAS_LINK ??
-    "https://buy.stripe.com/14A6oHb6H9XT7D577YdjO05";
   const htmlTemplate = await readFile(
     path.join(process.cwd(), "private", "landing-unhas.html"),
     "utf8"
@@ -23,8 +20,7 @@ export async function GET() {
     .replace(/src="\.\.\/imagens\/1\.png"/g, 'src="/assets/unhas/1.png"')
     .replace(/src="\.\.\/imagens\/2\.png"/g, 'src="/assets/unhas/2.png"')
     .replace(/src="\.\.\/imagens\/3\.png"/g, 'src="/assets/unhas/3.png"')
-    .replace(/href="#" aria-label=/g, 'href="/" aria-label=')
-    .replace(/href="#">Quero a minha edição/g, `href="${stripePaymentLink}">Quero a minha edição`);
+    .replace(/href="#" aria-label=/g, 'href="/" aria-label=');
 
   html = renderCommercePricing(html, "unhas");
   return new Response(html, {
